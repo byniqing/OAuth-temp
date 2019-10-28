@@ -14,21 +14,21 @@
                    name="ScopesConsented"
                    value="@Model.Name" />
         }
-        <strong>@Model.Name</strong>
+        @*<strong>@Model.Name</strong>*@
         <strong>@Model.DisplayName</strong>
         @if (Model.Emphasize)
         {
             <span class="glyphicon glyphicon-exclamation-sign"></span>
         }
     </label>
-    @if (Model.Required)
+    @*@if (Model.Required)
     {
         <span><em>(必须)</em></span>
-    }
-    @if (Model.Description != null)
+    }*@
+    @*@if (Model.Description != null)
     {
         <div class="consent-description">
             <label for="scopes_@Model.Name">@Model.Description</label>
         </div>
-    }
+    }*@
 </li>

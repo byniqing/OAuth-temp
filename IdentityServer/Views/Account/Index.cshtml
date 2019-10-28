@@ -17,6 +17,7 @@
 
                         <div class="card-body">
                             <form asp-route="Login">
+                                <!--这里会自动映射绑定客户端跳转过来，路径中带登ReturnUrl陆参数-->
                                 <input type="hidden" asp-for="ReturnUrl" />
 
                                 <!-- E-Mail Address -->

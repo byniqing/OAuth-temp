@@ -83,8 +83,8 @@ namespace Info
                 //options.Scope.Add("profile");
                 //options.Scope.Add("email");
                 options.Scope.Add("offline_access");
-                //options.Scope.Add("OtherInfo"); //api权限
-                options.ResponseType = OpenIdConnectResponseType.CodeIdToken;// "id_token code";// OpenIdConnectResponseType.CodeIdToken;
+                options.Scope.Add("OtherInfo"); //api权限
+                options.ResponseType = OpenIdConnectResponseType.Code;// "id_token code";// OpenIdConnectResponseType.CodeIdToken;
                 options.GetClaimsFromUserInfoEndpoint = true;
                 //options.CallbackPath = $"/signin-oidc-{provider.Key}";
                 //options.SignedOutCallbackPath = $"/signout-callback-oidc-{provider.Key}";

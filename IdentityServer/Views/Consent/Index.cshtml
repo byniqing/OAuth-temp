@@ -21,7 +21,7 @@
         <div class="col-sm-8">
             <form asp-action="Index" class="consent-form">
                 <input type="hidden" asp-for="ReturnUrl" />
-                <div>选择.</div>
+                @*<div>选择.</div>*@
 
                 @if (Model.IdentityScopes != null && Model.IdentityScopes.Any())
                 {

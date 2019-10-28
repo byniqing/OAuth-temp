@@ -14,21 +14,27 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using IdentityServer.Models;
 
 namespace IdentityServer.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly TestUserStore _userStore;
+        //private readonly TestUserStore _userStore;
+        //private readonly IClientStore _clientStore;
+
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signinManager;
         private readonly IIdentityServerInteractionService _interaction;
-        private readonly IClientStore _clientStore;
+
         public AccountController(
-            TestUserStore userStore,
-            IClientStore clientStore,
-            IIdentityServerInteractionService interaction)
+             UserManager<ApplicationUser> userManager,
+             SignInManager<ApplicationUser> signinManager,
+             IIdentityServerInteractionService interaction)
         {
-            _userStore = userStore;
-            _clientStore = clientStore;
+            _userManager = userManager;
+            _signinManager = signinManager;
             _interaction = interaction;
         }
         //[HttpGet]
@@ -82,10 +88,11 @@ namespace IdentityServer.Controllers
 
             if (ModelState.IsValid)
             {
-                // 验证用户名和密码
-                if (_userStore.ValidateCredentials(model.Email, model.Password))
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                // 验证用户名和密码ValidateCredentials
+                //_signinManager.CheckPasswordSignInAsync 是登陆
+                if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
                 {
-                    var user = _userStore.FindByUsername(model.Email);
 
                     #region identityserver4封装的扩展方法,也可以
                     ////idsrv验证sub是必须的
@@ -114,12 +121,8 @@ namespace IdentityServer.Controllers
                             ExpiresUtc = DateTimeOffset.UtcNow.Add(AccountOptions.RememberMeLoginDuration) //过期时间
                         };
                     };
-
-                    /*
-                     依赖：Microsoft.AspNetCore.Http
-                     登录成功
-                     */
-                    await HttpContext.SignInAsync(user.SubjectId, user.Username, props);
+                   
+                    await _signinManager.SignInAsync(user, props);
 
                     if (context != null)
                     {
@@ -128,6 +131,8 @@ namespace IdentityServer.Controllers
                     }
 
                     //判断是否是本地登录
+                    //判断是否是returnUrl页面，是自己网站带的returnUrl也不会通过
+                    //指示在登录或同意后，返回URL是否是用于重定向的有效URL。
                     //if (_interaction.IsValidReturnUrl(login.ReturnUrl)) //这样也可以
                     if (Url.IsLocalUrl(model.ReturnUrl))
                     {
@@ -143,14 +148,15 @@ namespace IdentityServer.Controllers
                         throw new Exception("invalid return URL");
                     }
                 }
+                //添加错误，这样会在错误页面上显示错误信息
                 ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
             }
-            var vm = new LoginViewModel
-            {
-                EnableLocalLogin = true,
-                ReturnUrl = "121212",
-                Email = "nsky",
-            };
+            //var vm = new LoginViewModel
+            //{
+            //    EnableLocalLogin = true,
+            //    ReturnUrl = "121212",
+            //    Email = "nsky",
+            //};
             // something went wrong, show form with error
             //var vm = await BuildLoginViewModelAsync(model);
             return View();

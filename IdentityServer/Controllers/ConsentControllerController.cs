@@ -85,7 +85,22 @@ namespace IdentityServer.Controllers
             {
                 if (model.ScopesConsented != null && model.ScopesConsented.Any())
                 {
-                    var scopes = model.ScopesConsented;
+                    var scopes = model.ScopesConsented.ToList();
+
+                    //获取所有
+                    var identitResource = await _resourceStore.FindIdentityResourcesByScopeAsync(request.ScopesRequested);
+
+                    if (identitResource != null && identitResource.Any())
+                    {
+                        //获取不显示在界面，但是必须项Required的
+                        identitResource.Where(i => !i.ShowInDiscoveryDocument && i.Required).ToList()
+                            .ForEach(f => { scopes.Add(f.Name); });
+                    }
+                    //if (ConsentOptions.EnableOfflineAccess == false)
+                    //{
+                    //    scopes = scopes.Where(x => x != IdentityServer4.IdentityServerConstants.StandardScopes.OfflineAccess);
+                    //}
+
                     grantedConsent = new ConsentResponse
                     {
                         RememberConsent = model.RememberConsent,
@@ -109,7 +124,7 @@ namespace IdentityServer.Controllers
                 // indicate that's it ok to redirect back to authorization endpoint
                 result.RedirectUri = model.ReturnUrl;
                 //var ck = new Uri(model.ReturnUrl);
-                result.RedirectUri = "http://localhost:5006/";
+                //result.RedirectUri = "http://localhost:5006/";
                 result.ClientId = request.ClientId;
             }
             else
@@ -125,12 +140,13 @@ namespace IdentityServer.Controllers
         {
             ConsentViewModel cvm = null;
             var request = await _interaction.GetAuthorizationContextAsync(returnUrl);
-           
+
             if (request != null)
             {
                 var client = await _clientStore.FindClientByIdAsync(request.ClientId);
                 if (client != null)
                 {
+
                     cvm = new ConsentViewModel
                     {
                         ClientName = client.ClientName,
@@ -150,12 +166,16 @@ namespace IdentityServer.Controllers
                     if (apiResource != null && apiResource.Any())
                     {
                         cvm.ResourceScopes = apiResource.SelectMany(i => i.Scopes)
+
                             .Select(s => CreateScopeViewModel(s, cvm.ScopesConsented.Contains(s.Name) || model == null));
                     }
 
                     if (identitResource != null && identitResource.Any())
                     {
-                        cvm.IdentityScopes = identitResource.Select(s => CreateScopeViewModel(s, cvm.ScopesConsented.Contains(s.Name) || model == null));
+                        cvm.IdentityScopes = identitResource
+                            //过滤掉不显示在界面的项
+                            .Where(w => w.ShowInDiscoveryDocument)
+                            .Select(s => CreateScopeViewModel(s, cvm.ScopesConsented.Contains(s.Name) || model == null));
                     }
 
                     if (resources != null && (resources.ApiResources.Any() || resources.IdentityResources.Any()))

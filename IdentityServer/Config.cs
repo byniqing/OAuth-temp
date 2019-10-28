@@ -13,16 +13,32 @@ namespace IdentityServer
     public class Config
     {
         /// <summary>
-        /// 用户的资源信息
+        /// 用户的身份信息
         /// </summary>
         /// <returns></returns>
         public static List<IdentityResource> GetIdentityResource()
         {
             return new List<IdentityResource>
             {
-                new IdentityResources.OpenId(),
-                new IdentityResources.Profile(),
+                //如果直接用这个变量，授权界面显示的英文,不好
+                //new IdentityResources.OpenId(),
+                 //new IdentityResources.Profile(),
+                 new IdentityResources.Address(),
                 new IdentityResources.Email(),
+                new IdentityResource{
+                     Name="openid",
+                     DisplayName="用户唯一标识",
+                     Description="用户获取用户标识",
+                     Required=true,
+                     ShowInDiscoveryDocument=false //既然是必须的。就不用显示在界面
+                },
+                 new IdentityResource{
+                     Name="profile",
+                     DisplayName="获得您的昵称、头像、性别",
+                     Description="一些基本信息",
+                     Required=true,
+                     ShowInDiscoveryDocument=false //既然是必须的。就不用显示在界面
+                },
                 new IdentityResource{
                     /*
                      
@@ -30,9 +46,10 @@ namespace IdentityServer
                     Name="offline_access", //这样客户端才能收到refresh_token
                     DisplayName="离线访问",
                     Description="用于返回refresh_token",
-                      UserClaims = new List<string> { JwtClaimTypes.Role }
-                    //Required=true, //是否必须，如果为true ，则授权页面不能取消勾选
-                    //Emphasize=true
+                    Required=true, //是否必须，如果为true ，则授权页面不能取消勾选
+                    //Emphasize=true, 是否强调，默认为false 
+                    //Enabled=false, //是否启用 ，默认为true
+                    ShowInDiscoveryDocument=false //是否显示在界面给用户选择
                 }
             };
         }
@@ -44,66 +61,30 @@ namespace IdentityServer
         {
             var oidc = new ApiResource
             {
-                Name = "OAuth.ApiName", //这是资源名称
-                Description = "2",
-                DisplayName = "33",
+                Name = "用户信息", //这是资源名称
+                Description = "获取用户的基本信息",
+                DisplayName = "都可以是默认值",
                 UserClaims = new List<string> { JwtClaimTypes.Role },
+                ApiSecrets = { new Secret("trtrt".Sha256())},
+                //作用域，对应下面的Cliet的 AllowedScopes
                 Scopes = {
                      new Scope{
                         Name="OtherInfo",
                         Description="描述",
-                        DisplayName="获取你的其他信息",
+                        DisplayName="获得您的昵称、头像、性别",
+                        Required=true,
+                        Emphasize=true, //是否强调
                         UserClaims=new List<string>{ JwtClaimTypes.Role}
                     },
                     new Scope{
                         Name="oidc1", //这里是指定客户端能使用的范围名称 , 是唯一的
                         Description="描述",
                         DisplayName="获得你的个人信息，好友关系",
-                        Emphasize=true,
-                        Required=true,
-                        //ShowInDiscoveryDocument=true,
-                    },
-                    new Scope{
-                        Name="oidc2",
-                        Description="描述",
-                        DisplayName="分享内容到你的博客",
-                        Emphasize=true,
-                        Required=true,
                     }
                 }
             };
+
             return new List<ApiResource> {
-                /*
-                 具有单个作用域的简单API，这样定义的话，作用域（scope）和Api名称（ApiName）相同
-                 */
-                //new ApiResource("api","描述"),
-
-                 //如果需要更多控制，则扩展版本
-                //new ApiResource{
-                //    Name="userinfo", //资源名称，对应客户端的：ApiName，必须是唯一的
-                //    Description="描述",
-                //    DisplayName="", //显示的名称
-                  
-                //    //ApiSecrets =
-                //    //{
-                //    //    new Secret("secret11".Sha256())
-                //    //},
-
-                //    //作用域，对应下面的Cliet的 AllowedScopes
-                //    Scopes={
-                //        new Scope
-                //        {
-                //            Name = "apiInfo.read_full",
-                //            DisplayName = "完全的访问权限",
-                //            UserClaims={ "super" }
-                //        },
-                //        new Scope
-                //        {
-                //            Name = "apiinfo.read_only",
-                //            DisplayName = "只读权限"
-                //        }
-                //    },
-                //},
                 oidc
             };
         }
@@ -135,7 +116,7 @@ namespace IdentityServer
                  */
 
                 //允许的授权类型
-                AllowedGrantTypes = { GrantType.Hybrid },
+                AllowedGrantTypes = { GrantType.AuthorizationCode },
                 //RequireConsent = true, //不现实授权页面
                 //ClientClaimsPrefix = "",
                 Claims = new List<Claim> {
@@ -146,6 +127,7 @@ namespace IdentityServer
                  如果客户端使用的认证是
                  */
                 //AllowedGrantTypes = GrantTypes.Hybrid,
+                //允许客户端的作用域，包括用户信息和APi资源权限
                 AllowedScopes ={
                     /*
                          Profile就是用户资料，ids 4里面定义了一个IProfileService的接口用来获取用户的一些信息，主要是为当前的认证上下文绑定claims。我们可以实现IProfileService从外部创建claim扩展到ids4里面。
@@ -156,13 +138,17 @@ namespace IdentityServer
                          客户端会根据oidc和SubjectId获取用户信息，
                          所以：Profile也必须要，Profile 就是用户信息
 
-                        如果没有Profile ，就没有办法确认身份
+                         如果没有Profile ，就没有办法确认身份
                          */
-                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.OpenId, //直接用封装的变量也行
+                        //"openid", //直接用字符串也行
                         IdentityServerConstants.StandardScopes.Email,
-                    //IdentityServerConstants.StandardScopes.OfflineAccess,
+                        //IdentityServerConstants.StandardScopes.OfflineAccess,
+                        //"offline_access",
+                        //"90",
                     //"address",
-                    "OtherInfo"
+                    "OtherInfo",
+                    "address"
                     },
 
                 //客户端默认传过来的是这个地址，如果跟这个不一直就会异常
@@ -170,7 +156,6 @@ namespace IdentityServer
                    授权成功后，返回地址
                    客户端哪里触发调用的地址，就会回调当前地址
                    比如：访问admin控制器未授权，调整授权服务器成功后，就会回调到admin页面
-                   "http://localhost:5006/signin-oidc"
                  */
                 RedirectUris = {
                      "http://localhost:5009/signin-oidc"
@@ -179,6 +164,9 @@ namespace IdentityServer
                 PostLogoutRedirectUris = {
                      "http://localhost:5009/signout-callback-oidc"
                 },
+                /*
+                 开启后，客户端才能options.Scope.Add("offline_access")
+                 */
                 AllowOfflineAccess = true, ////offline_access(开启refresh token)
 
                 /*
@@ -212,11 +200,9 @@ namespace IdentityServer
                 PostLogoutRedirectUris = { "http://localhost:5005" },
                 //RefreshTokenUsage= TokenUsage.ReUse
                 //AllowOfflineAccess = true,
-                //AllowAccessTokensViaBrowser = true
             };
             return new List<Client> {
                oidc,
-               //oauth
                 
            };
         }
@@ -239,9 +225,9 @@ namespace IdentityServer
                      */
                     Claims=new List<Claim>{
                         new Claim("name","nsky"),
-                        new Claim("email","cnblgos@sina.com"),
+                        new Claim("Email","cnblgos@sina.com"),
                         new Claim("website","http://www.cnblogs.com"),
-                        new Claim("role","admin"),
+                        new Claim("a","admin"),
                         //在System.Security.Claims中国
                         new Claim(ClaimTypes.Actor,"头像"),
                         //在IdentityModel中

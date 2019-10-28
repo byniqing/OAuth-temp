@@ -8,6 +8,13 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using IdentityServer4.AspNetIdentity;
+using IdentityServer.Models;
+using IdentityServer4.Services;
+using IdentityServer.Services;
+using Microsoft.AspNetCore.Identity;
+using IdentityServer.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace IdentityServer
 {
@@ -23,6 +30,23 @@ namespace IdentityServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("conn")));
+
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
+               .AddEntityFrameworkStores<ApplicationDbContext>()
+               .AddDefaultTokenProviders();
+
+            //≈‰÷√√‹¬Î◊¢≤·∑Ω Ω
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 1;
+            });
+
             //◊¢≤·ids÷–º‰º˛
             services.AddIdentityServer(options =>
             {
@@ -37,10 +61,13 @@ namespace IdentityServer
            .AddInMemoryApiResources(Config.GetApiResources())
            .AddInMemoryIdentityResources(Config.GetIdentityResource())
            .AddInMemoryClients(Config.GetClients())
-           .AddTestUsers(Config.GetTestUsers());
+           //.AddTestUsers(Config.GetTestUsers())
+           .AddAspNetIdentity<ApplicationUser>() //“¿¿µnuget∞¸£∫IdentityServer4.AspNetIdentity
+           .AddProfileService<ProfileService>();
 
             services.AddControllersWithViews();
         }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

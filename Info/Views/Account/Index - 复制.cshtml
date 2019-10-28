@@ -1,0 +1,65 @@
+﻿@model Info.ViewModels.LoginInputModel
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="login-page">
+    <div class="page-header">
+    </div>
+    <partial name="_ValidationSummary" />
+    @*<h1>Index</h1>*@
+    <!-- Main Content -->
+    <main class="py-4">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card card-default">
+                        <div class="card-header">Login</div>
+
+                        <div class="card-body">
+                            <form asp-route="Login">
+                                <input type="hidden" asp-for="ReturnUrl" />
+
+                                <!-- E-Mail Address -->
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right" asp-for="Email">E-Mail</label>
+
+                                    <div class="col-md-6">
+                                        <input class="form-control" asp-for="Email" placeholder="Email" autofocus>
+                                    </div>
+                                </div>
+
+                                <!-- Password -->
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right" asp-for="Password">Password</label>
+
+                                    <div class="col-md-6">
+                                        <input class="form-control" type="password"  asp-for="Password" placeholder="Password">
+                                    </div>
+                                </div>
+
+                                <!-- Remember Me -->
+                                <div class="form-group row">
+                                    <div class="col-md-6 offset-md-4">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input type="checkbox" class="form-check-input" asp-for="RememberLogin"> Remember Me
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Login Button -->
+                                <div class="form-group row mb-0">
+                                    <div class="col-md-6 offset-md-4">
+                                        <button type="submit" class="btn btn-primary" value="yes">Login</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
