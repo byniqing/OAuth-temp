@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
-namespace IdentityServer.Data
+namespace IdentityServer.Date
 {
     /// <summary>
     /// 扩展 IWebHost

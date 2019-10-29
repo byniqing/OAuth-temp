@@ -13,7 +13,7 @@ using IdentityServer.Models;
 using IdentityServer4.Services;
 using IdentityServer.Services;
 using Microsoft.AspNetCore.Identity;
-using IdentityServer.Data;
+using IdentityServer.Date;
 using Microsoft.EntityFrameworkCore;
 
 namespace IdentityServer

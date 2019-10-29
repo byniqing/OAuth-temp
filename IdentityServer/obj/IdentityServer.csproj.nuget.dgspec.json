@@ -1,26 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "F:\\project\\OAuth-Ids4\\IdentityServer\\IdentityServer.csproj": {}
+    "C:\\study\\OAuth\\IdentityServer\\IdentityServer.csproj": {}
   },
   "projects": {
-    "F:\\project\\OAuth-Ids4\\IdentityServer\\IdentityServer.csproj": {
+    "C:\\study\\OAuth\\IdentityServer\\IdentityServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\project\\OAuth-Ids4\\IdentityServer\\IdentityServer.csproj",
+        "projectUniqueName": "C:\\study\\OAuth\\IdentityServer\\IdentityServer.csproj",
         "projectName": "IdentityServer",
-        "projectPath": "F:\\project\\OAuth-Ids4\\IdentityServer\\IdentityServer.csproj",
-        "packagesPath": "C:\\Users\\dell\\.nuget\\packages\\",
-        "outputPath": "F:\\project\\OAuth-Ids4\\IdentityServer\\obj\\",
+        "projectPath": "C:\\study\\OAuth\\IdentityServer\\IdentityServer.csproj",
+        "packagesPath": "C:\\Users\\dev\\.nuget\\packages\\",
+        "outputPath": "C:\\study\\OAuth\\IdentityServer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "D:\\Microsoft\\Xamarin\\NuGet\\",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Users\\dev\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.0"
@@ -51,6 +49,10 @@
               "target": "Package",
               "version": "[3.0.2, )"
             },
+            "IdentityServer4.EntityFramework": {
+              "target": "Package",
+              "version": "[3.0.2, )"
+            },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
               "version": "[3.0.0, )"
@@ -68,6 +70,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[3.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools.DotNet": {
+              "target": "Package",
+              "version": "[2.0.3, )"
             },
             "Microsoft.Extensions.Logging.Debug": {
               "target": "Package",

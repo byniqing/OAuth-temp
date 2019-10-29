@@ -284,3 +284,7 @@ F:\project\OAuth-Ids4\Info\obj\Debug\netcoreapp3.0\Info.csprojAssemblyReference.
 F:\project\OAuth-Ids4\Info\obj\Debug\netcoreapp3.0\Razor\Views\Account\Index - 复制.cshtml.g.cs
 F:\project\OAuth-Ids4\Info\obj\Debug\netcoreapp3.0\Razor\Views\Account\UserInfo.cshtml.g.cs
 F:\project\OAuth-Ids4\Info\obj\Debug\netcoreapp3.0\Razor\Views\External\UserInfo.cshtml.g.cs
+C:\study\OAuth\Info\bin\Debug\netcoreapp3.0\libman.json
+C:\study\OAuth\Info\obj\Debug\netcoreapp3.0\Razor\Views\Account\Index - 复制.cshtml.g.cs
+C:\study\OAuth\Info\obj\Debug\netcoreapp3.0\Razor\Views\Account\UserInfo.cshtml.g.cs
+C:\study\OAuth\Info\obj\Debug\netcoreapp3.0\Razor\Views\External\UserInfo.cshtml.g.cs

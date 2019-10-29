@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using IdentityServer.Models;
+using IdentityServer4.EntityFramework.DbContexts;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace IdentityServer.Controllers
 {
@@ -25,16 +27,16 @@ namespace IdentityServer.Controllers
         //private readonly IClientStore _clientStore;
 
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signinManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IIdentityServerInteractionService _interaction;
 
         public AccountController(
              UserManager<ApplicationUser> userManager,
-             SignInManager<ApplicationUser> signinManager,
+             SignInManager<ApplicationUser> signInManager,
              IIdentityServerInteractionService interaction)
         {
             _userManager = userManager;
-            _signinManager = signinManager;
+            _signInManager = signInManager;
             _interaction = interaction;
         }
         //[HttpGet]
@@ -51,6 +53,8 @@ namespace IdentityServer.Controllers
         [HttpGet]
         public IActionResult Index(string returnUrl)
         {
+            var configurationDbContext = HttpContext.RequestServices.GetRequiredService<ConfigurationDbContext>();
+
             //ViewBag.returnUrl11 = returnUrl;
             return View();
         }
@@ -121,8 +125,8 @@ namespace IdentityServer.Controllers
                             ExpiresUtc = DateTimeOffset.UtcNow.Add(AccountOptions.RememberMeLoginDuration) //过期时间
                         };
                     };
-                   
-                    await _signinManager.SignInAsync(user, props);
+
+                    await _signInManager.SignInAsync(user, props);
 
                     if (context != null)
                     {
@@ -176,6 +180,9 @@ namespace IdentityServer.Controllers
         [HttpGet("Logout")]
         public async Task<IActionResult> Logout(string logoutId)
         {
+            //获取logoid
+            var _logoutid = await _interaction.CreateLogoutContextAsync();
+
             ////await HttpContext.SignOutAsync(IdentityServerConstants.DefaultCookieAuthenticationScheme);
             ////return RedirectToAction("index", "Home");
             //await HttpContext.SignOutAsync();
@@ -183,8 +190,17 @@ namespace IdentityServer.Controllers
             //return Redirect(logout.PostLogoutRedirectUri);
             ////return View("login");
 
+
+
+            //string url = Url.Action("Logout", new { logoutId = vm.LogoutId });
+
+            //// this triggers a redirect to the external provider for sign-out
+            //return SignOut(new AuthenticationProperties { RedirectUri = url }, vm.ExternalAuthenticationScheme);
+
             var logout = await _interaction.GetLogoutContextAsync(logoutId);
-            await HttpContext.SignOutAsync(); //本地退出
+            //await HttpContext.SignOutAsync(); //本地退出
+            await _signInManager.SignOutAsync();//本地退出
+
             if (!string.IsNullOrWhiteSpace(logout.PostLogoutRedirectUri))
             {
                 return Redirect(logout.PostLogoutRedirectUri);

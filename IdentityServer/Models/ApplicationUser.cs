@@ -10,8 +10,11 @@ namespace IdentityServer.Models
     /// <summary>
     /// 定义自己的实体
     /// </summary>
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser<int> //默认主键id是string的，所以自定义实体
     {
+        //可以新增自己的一些属性
+
+
         //[Required]
         //public string Name { get; set; }
         //[Required]
