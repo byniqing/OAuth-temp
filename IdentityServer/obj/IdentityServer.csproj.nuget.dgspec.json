@@ -1,24 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "C:\\study\\OAuth\\IdentityServer\\IdentityServer.csproj": {}
+    "F:\\project\\OAuth-Ids4\\IdentityServer\\IdentityServer.csproj": {}
   },
   "projects": {
-    "C:\\study\\OAuth\\IdentityServer\\IdentityServer.csproj": {
+    "F:\\project\\OAuth-Ids4\\IdentityServer\\IdentityServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\study\\OAuth\\IdentityServer\\IdentityServer.csproj",
+        "projectUniqueName": "F:\\project\\OAuth-Ids4\\IdentityServer\\IdentityServer.csproj",
         "projectName": "IdentityServer",
-        "projectPath": "C:\\study\\OAuth\\IdentityServer\\IdentityServer.csproj",
-        "packagesPath": "C:\\Users\\dev\\.nuget\\packages\\",
-        "outputPath": "C:\\study\\OAuth\\IdentityServer\\obj\\",
+        "projectPath": "F:\\project\\OAuth-Ids4\\IdentityServer\\IdentityServer.csproj",
+        "packagesPath": "C:\\Users\\dell\\.nuget\\packages\\",
+        "outputPath": "F:\\project\\OAuth-Ids4\\IdentityServer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
+          "D:\\Microsoft\\Xamarin\\NuGet\\",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\dev\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.0"

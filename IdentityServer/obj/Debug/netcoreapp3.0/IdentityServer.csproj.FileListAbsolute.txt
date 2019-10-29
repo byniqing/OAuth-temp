@@ -294,3 +294,8 @@ C:\study\OAuth\IdentityServer\bin\Debug\netcoreapp3.0\IdentityServer4.EntityFram
 C:\study\OAuth\IdentityServer\bin\Debug\netcoreapp3.0\IdentityServer4.EntityFramework.Storage.dll
 C:\study\OAuth\IdentityServer\obj\Debug\netcoreapp3.0\IdentityServer.MvcApplicationPartsAssemblyInfo.cache
 C:\study\OAuth\IdentityServer\bin\Debug\netcoreapp3.0\dotnet-ef.dll
+F:\project\OAuth-Ids4\IdentityServer\bin\Debug\netcoreapp3.0\appsettings - 副本.json
+F:\project\OAuth-Ids4\IdentityServer\bin\Debug\netcoreapp3.0\AutoMapper.dll
+F:\project\OAuth-Ids4\IdentityServer\bin\Debug\netcoreapp3.0\IdentityServer4.EntityFramework.dll
+F:\project\OAuth-Ids4\IdentityServer\bin\Debug\netcoreapp3.0\IdentityServer4.EntityFramework.Storage.dll
+F:\project\OAuth-Ids4\IdentityServer\bin\Debug\netcoreapp3.0\dotnet-ef.dll
