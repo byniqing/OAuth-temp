@@ -99,6 +99,7 @@ namespace IdentityServer
                 //options.UserInteraction.LogoutUrl = ""; //退出页面
                 //options.UserInteraction.ConsentUrl = ""; //同意授权页面
             })
+             //.AddExtensionGrantValidator<Authertication.SmsAuthCodeValidator>()
             .AddDeveloperSigningCredential()//设置开发者临时签名凭据
             //in-men 方式把信息添加到内存中
            .AddInMemoryApiResources(Config.GetApiResources())
