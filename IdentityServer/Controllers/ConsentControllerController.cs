@@ -8,7 +8,7 @@ using IdentityServer4.Stores;
 using Microsoft.Extensions.Logging;
 using IdentityServer4.Models;
 using IdentityServer.ViewModels;
-
+using IdentityServer.Common;
 
 namespace IdentityServer.Controllers
 {

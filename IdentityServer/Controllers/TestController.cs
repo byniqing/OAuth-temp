@@ -14,30 +14,27 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using IdentityServer.Models;
-using IdentityServer4.EntityFramework.DbContexts;
-using Microsoft.Extensions.DependencyInjection;
 using IdentityServer.Common;
 
 namespace IdentityServer.Controllers
 {
-    public class AccountController : Controller
+    /// <summary>
+    /// TestUserStore 登陆演示
+    /// 也就是GetTestUsers 配置的用户信息登陆，内存级别的
+    /// </summary>
+    public class Account1Controller : Controller
     {
-        //private readonly TestUserStore _userStore;
-        //private readonly IClientStore _clientStore;
+        private readonly TestUserStore _userStore;
 
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IIdentityServerInteractionService _interaction;
-
-        public AccountController(
-             UserManager<ApplicationUser> userManager,
-             SignInManager<ApplicationUser> signInManager,
-             IIdentityServerInteractionService interaction)
+        private readonly IClientStore _clientStore;
+        public Account1Controller(
+            TestUserStore userStore,
+            IClientStore clientStore,
+            IIdentityServerInteractionService interaction)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
+            _userStore = userStore;
+            _clientStore = clientStore;
             _interaction = interaction;
         }
         //[HttpGet]
@@ -54,8 +51,6 @@ namespace IdentityServer.Controllers
         [HttpGet]
         public IActionResult Index(string returnUrl)
         {
-            var configurationDbContext = HttpContext.RequestServices.GetRequiredService<ConfigurationDbContext>();
-
             //ViewBag.returnUrl11 = returnUrl;
             return View();
         }
@@ -93,11 +88,10 @@ namespace IdentityServer.Controllers
 
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByEmailAsync(model.Email);
-                // 验证用户名和密码ValidateCredentials
-                //_signinManager.CheckPasswordSignInAsync 是登陆
-                if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+                // 验证用户名和密码
+                if (_userStore.ValidateCredentials(model.Email, model.Password))
                 {
+                    var user = _userStore.FindByUsername(model.Email);
 
                     #region identityserver4封装的扩展方法,也可以
                     ////idsrv验证sub是必须的
@@ -126,8 +120,13 @@ namespace IdentityServer.Controllers
                             ExpiresUtc = DateTimeOffset.UtcNow.Add(AccountOptions.RememberMeLoginDuration) //过期时间
                         };
                     };
-                    
-                    await _signInManager.SignInAsync(user, props);
+
+                    /*
+                     依赖：Microsoft.AspNetCore.Http
+                     登录成功
+                     */
+                    await HttpContext.SignInAsync(user.SubjectId, user.Username, props);
+
                     if (context != null)
                     {
                         //登录成功，跳转到授权页面
@@ -135,8 +134,6 @@ namespace IdentityServer.Controllers
                     }
 
                     //判断是否是本地登录
-                    //判断是否是returnUrl页面，是自己网站带的returnUrl也不会通过
-                    //指示在登录或同意后，返回URL是否是用于重定向的有效URL。
                     //if (_interaction.IsValidReturnUrl(login.ReturnUrl)) //这样也可以
                     if (Url.IsLocalUrl(model.ReturnUrl))
                     {
@@ -152,15 +149,14 @@ namespace IdentityServer.Controllers
                         throw new Exception("invalid return URL");
                     }
                 }
-                //添加错误，这样会在错误页面上显示错误信息
                 ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
             }
-            //var vm = new LoginViewModel
-            //{
-            //    EnableLocalLogin = true,
-            //    ReturnUrl = "121212",
-            //    Email = "nsky",
-            //};
+            var vm = new LoginViewModel
+            {
+                EnableLocalLogin = true,
+                ReturnUrl = "121212",
+                Email = "nsky",
+            };
             // something went wrong, show form with error
             //var vm = await BuildLoginViewModelAsync(model);
             return View();
@@ -180,9 +176,6 @@ namespace IdentityServer.Controllers
         [HttpGet("Logout")]
         public async Task<IActionResult> Logout(string logoutId)
         {
-            //获取logoid
-            var _logoutid = await _interaction.CreateLogoutContextAsync();
-
             ////await HttpContext.SignOutAsync(IdentityServerConstants.DefaultCookieAuthenticationScheme);
             ////return RedirectToAction("index", "Home");
             //await HttpContext.SignOutAsync();
@@ -190,17 +183,8 @@ namespace IdentityServer.Controllers
             //return Redirect(logout.PostLogoutRedirectUri);
             ////return View("login");
 
-
-
-            //string url = Url.Action("Logout", new { logoutId = vm.LogoutId });
-
-            //// this triggers a redirect to the external provider for sign-out
-            //return SignOut(new AuthenticationProperties { RedirectUri = url }, vm.ExternalAuthenticationScheme);
-
             var logout = await _interaction.GetLogoutContextAsync(logoutId);
-            //await HttpContext.SignOutAsync(); //本地退出
-            await _signInManager.SignOutAsync();//本地退出
-
+            await HttpContext.SignOutAsync(); //本地退出
             if (!string.IsNullOrWhiteSpace(logout.PostLogoutRedirectUri))
             {
                 return Redirect(logout.PostLogoutRedirectUri);
@@ -208,6 +192,5 @@ namespace IdentityServer.Controllers
             var refererUrl = Request.Headers["Referer"].ToString();
             return Redirect(refererUrl);
         }
-
     }
 }

@@ -1,4 +1,5 @@
-﻿using IdentityServer.Models;
+﻿using IdentityModel;
+using IdentityServer.Models;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace IdentityServer.Date
@@ -55,6 +57,8 @@ namespace IdentityServer.Date
                 //    await context.SaveChangesAsync();
                 //}
 
+
+                //https://www.cnblogs.com/rocketRobin/p/9070684.html
                 //如果没有用户，则创建一个
                 if (!_userManger.Users.Any())
                 {
@@ -62,6 +66,7 @@ namespace IdentityServer.Date
                     {
                         UserName = "Admin",
                         Email = "cnblogs@163.com",
+                        //PasswordHash = "",
                         //Avatar = "https://www.cnblogs.com/images/logo_small.gif",
                         //SecurityStamp = "ad", //设置密码的加密key
                     };
@@ -79,6 +84,12 @@ namespace IdentityServer.Date
                             logger.LogError(e.Description);
                         });
                     }
+
+                    var result11 = _userManger.AddClaimsAsync(defaultUser, new Claim[]{
+                            new Claim(JwtClaimTypes.Name, "姓名"),
+                            new Claim(JwtClaimTypes.Email, "cnblogs@163.com"),
+                            new Claim(JwtClaimTypes.Role, "admin")
+                        }).Result;
                 }
 
             }

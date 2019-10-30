@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using IdentityServer.Extensions;
 
 namespace IdentityServer
 {
     public class Config
     {
+        //https://www.jianshu.com/p/ad20944d9446
         /// <summary>
         /// 用户的身份信息
         /// </summary>
@@ -121,7 +121,7 @@ namespace IdentityServer
                 //RequireConsent = true, //不现实授权页面
                 //ClientClaimsPrefix = "",
                 Claims = new List<Claim> {
-                    new Claim(JwtClaimTypes.Role,"admin")
+                    new Claim(JwtClaimTypes.Role, "admin")
                 },
 
                 /*
@@ -129,28 +129,28 @@ namespace IdentityServer
                  */
                 //AllowedGrantTypes = GrantTypes.Hybrid,
                 //允许客户端的作用域，包括用户信息和APi资源权限
-                AllowedScopes ={
+                AllowedScopes = {
                     /*
                          Profile就是用户资料，ids 4里面定义了一个IProfileService的接口用来获取用户的一些信息，主要是为当前的认证上下文绑定claims。我们可以实现IProfileService从外部创建claim扩展到ids4里面。
                          */
-                        IdentityServerConstants.StandardScopes.Profile,
-                          /*
-                         openid是必须要的。因为客户端接受的的是oidc
-                         客户端会根据oidc和SubjectId获取用户信息，
-                         所以：Profile也必须要，Profile 就是用户信息
+                    IdentityServerConstants.StandardScopes.Profile,
+                    /*
+                   openid是必须要的。因为客户端接受的的是oidc
+                   客户端会根据oidc和SubjectId获取用户信息，
+                   所以：Profile也必须要，Profile 就是用户信息
 
-                         如果没有Profile ，就没有办法确认身份
-                         */
-                        IdentityServerConstants.StandardScopes.OpenId, //直接用封装的变量也行
-                        //"openid", //直接用字符串也行
-                        IdentityServerConstants.StandardScopes.Email,
-                        //IdentityServerConstants.StandardScopes.OfflineAccess,
-                        //"offline_access",
-                        //"90",
+                   如果没有Profile ，就没有办法确认身份
+                   */
+                    IdentityServerConstants.StandardScopes.OpenId, //直接用封装的变量也行
+                                                                   //"openid", //直接用字符串也行
+                    IdentityServerConstants.StandardScopes.Email,
+                    //IdentityServerConstants.StandardScopes.OfflineAccess,
+                    //"offline_access",
+                    //"90",
                     //"address",
                     "OtherInfo",
                     "address"
-                    },
+                },
 
                 //客户端默认传过来的是这个地址，如果跟这个不一直就会异常
                 /*
@@ -159,17 +159,17 @@ namespace IdentityServer
                    比如：访问admin控制器未授权，调整授权服务器成功后，就会回调到admin页面
                  */
                 RedirectUris = {
-                     "http://localhost:5009/signin-oidc"
+                    "http://localhost:5009/signin-oidc"
                 },
                 //注销后重定向的地址
                 PostLogoutRedirectUris = {
-                     "http://localhost:5009/signout-callback-oidc"
+                    "http://localhost:5009/signout-callback-oidc"
                 },
                 /*
                  开启后，客户端才能options.Scope.Add("offline_access")
                  */
                 AllowOfflineAccess = true, ////offline_access(开启refresh token)
-
+                //AccessTokenLifetime = 3600, //token有效期，默认是3600秒 （一个小时）
                 /*
                  这样就会把返回的profile信息包含在idtoken中
                  */

@@ -102,10 +102,10 @@ namespace IdentityServer
              //.AddExtensionGrantValidator<Authertication.SmsAuthCodeValidator>()
             .AddDeveloperSigningCredential()//设置开发者临时签名凭据
             //in-men 方式把信息添加到内存中
-           .AddInMemoryApiResources(Config.GetApiResources())
-           .AddInMemoryIdentityResources(Config.GetIdentityResource())
-           .AddInMemoryClients(Config.GetClients())
-           .AddProfileService<ProfileService>() //配置用于自定义返回的profiel信息
+           //.AddInMemoryApiResources(Config.GetApiResources())
+           //.AddInMemoryIdentityResources(Config.GetIdentityResource())
+           //.AddInMemoryClients(Config.GetClients())
+           //.AddProfileService<ProfileService>() //配置用于自定义返回的profiel信息
                                                 //.AddTestUsers(Config.GetTestUsers())
            .AddAspNetIdentity<ApplicationUser>() //依赖nuget包：IdentityServer4.AspNetIdentity
            .AddConfigurationStore(options =>     //依赖nuget包：IdentityServer4.EntityFramework
@@ -122,11 +122,12 @@ namespace IdentityServer
                 {
                     build.UseSqlServer(persistedGrantDb, sql => sql.MigrationsAssembly(migrationAssembly));
                 };
-            });
+            })
+            .AddProfileService<ProfileService>();
+            //.Services.AddTransient<IProfileService, ProfileService>(); ;
             //.AddConfigurationStore<ConfigurationDbContext>(o => { });
 
             //.AddProfileService<ProfileService>();
-
             services.AddControllersWithViews();
         }
 

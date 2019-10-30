@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using IdentityModel;
 
 namespace Info
 {
@@ -85,7 +86,22 @@ namespace Info
                 options.Scope.Add("offline_access");
                 options.Scope.Add("OtherInfo"); //api权限
                 options.ResponseType = OpenIdConnectResponseType.Code;// "id_token code";// OpenIdConnectResponseType.CodeIdToken;
+                /*
+               这样会去请求UserInfoEndpoint获取到信息后绑定到access_token中
+               */
                 options.GetClaimsFromUserInfoEndpoint = true;
+                /*
+                 通过ClaimActions.MapJsonKey("自定义key名","JwtClaimTypes.Subject") 
+                 把ProfileService返回的Claims映射到User.Claims
+                 前提是GetClaimsFromUserInfoEndpoint=true
+                 */
+                options.ClaimActions.MapJsonKey("sub89", "sub");
+                options.ClaimActions.MapJsonKey("subject", JwtClaimTypes.Subject);
+                //options.ClaimActions.MapJsonKey("preferred_username", "preferred_username");
+                //options.ClaimActions.MapJsonKey("email", "email");
+                //options.ClaimActions.MapJsonKey("name", "name");
+                //options.ClaimActions.MapCustomJson("role", job => job["role"].ToString());
+
                 //options.CallbackPath = $"/signin-oidc-{provider.Key}";
                 //options.SignedOutCallbackPath = $"/signout-callback-oidc-{provider.Key}";
                 //options.SignedOutCallbackPath = "/signin-oidc/home";

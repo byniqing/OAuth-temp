@@ -18,9 +18,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IdentityServer
 {
-    public class Startup1
+    public class TestStartup
     {
-        public Startup1(IConfiguration configuration)
+        public TestStartup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
@@ -31,12 +31,12 @@ namespace IdentityServer
         public void ConfigureServices(IServiceCollection services)
         {
 
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(Configuration.GetConnectionString("conn")));
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("ApplicationDb")));
 
-            //services.AddIdentity<ApplicationUser, IdentityRole>()
-            //   .AddEntityFrameworkStores<ApplicationDbContext>()
-            //   .AddDefaultTokenProviders();
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
+               .AddEntityFrameworkStores<ApplicationDbContext>()
+               .AddDefaultTokenProviders();
 
             //services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
             //services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, UserClaimsFactory>();
@@ -57,9 +57,9 @@ namespace IdentityServer
            .AddInMemoryIdentityResources(Config.GetIdentityResource())
            .AddInMemoryClients(Config.GetClients())
            //.AddInMemoryPersistedGrants()
-           .AddTestUsers(Config.GetTestUsers());
-           //.AddAspNetIdentity<ApplicationUser>() //ÒÀÀµnuget°ü£ºIdentityServer4.AspNetIdentity
-           //.AddProfileService<ProfileService>();
+           //.AddTestUsers(Config.GetTestUsers());
+           .AddAspNetIdentity<ApplicationUser>() //ÒÀÀµnuget°ü£ºIdentityServer4.AspNetIdentity
+           .AddProfileService<ProfileService>();
 
             //.Services.AddScoped<IProfileService, ProfileService>();
             //services.AddIdentity<ApplicationUser, IdentityRole>()
