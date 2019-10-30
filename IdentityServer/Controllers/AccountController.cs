@@ -128,6 +128,8 @@ namespace IdentityServer.Controllers
                     };
                     
                     await _signInManager.SignInAsync(user, props);
+                    //_userManager.ChangePhoneNumberAsync
+                    //_userManager.GenerateEmailConfirmationTokenAsync(user);
                     if (context != null)
                     {
                         //登录成功，跳转到授权页面

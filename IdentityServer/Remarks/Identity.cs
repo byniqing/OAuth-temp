@@ -8,6 +8,7 @@ namespace IdentityServer.Remarks
     public class Identity
     {
         // https://www.jianshu.com/p/ad20944d9446
+        //https://segmentfault.com/a/1190000014966349
         /*
          ASP.NET Core Identity 库表分析
 
@@ -51,22 +52,57 @@ AspNetUserTokens、AspNetUserLogins存储的是用户使用的外部登陆提供
         /// 规范后的username
         /// </summary>
         public string NormalizedUserName { get; set; }
+
+        /// <summary>
+        /// 邮箱
+        /// </summary>
         public string Email { get; set; }
 
         /// <summary>
-        /// 邮件是否已经确认
+        /// 邮件是否已经验证
         /// </summary>
         public bool EmailConfirmed { get; set; }
+        /// <summary>
+        /// 密码哈希，用默认值就可以了，默认值已经很强大的
+        /// </summary>
         public string PasswordHash { get; set; }
+        /// <summary>
+        /// 安全标记,一个随机值，在用户凭据相关的内容更改时，必须更改此项的值，事实存储的是Guid
+       /* 它的更改时机有：
+            用户创建
+            更改用户名
+            移除外部登陆
+            设置/更改邮件
+            设置/更改电话号码
+            设置/更改双因子验证
+            更改密码
+            好像退出，cookie中也保存了这个值，要验证
+            还有。这个值是底层修改，还是需要程序员自己手动修改就，待验证
+             */
+            
+        /// </summary>
         public string SecurityStamp { get; set; }
 
         /// <summary>
         /// 同步标记，每当用户记录被更改时必须要更改此列的值，
         /// 事实上存储的是Guid，并且在创建用户模型的时候直接在属性上初始化随机值
+        /// 验证：程序中由代码控制更改的
         /// </summary>
         public string ConcurrencyStamp { get; set; }
+
+        /// <summary>
+        /// 手机号码
+        /// </summary>
         public string PhoneNumber { get; set; }
+
+        /// <summary>
+        /// 手机是否已经验证
+        /// </summary>
         public bool PhoneNumberConfirmed { get; set; }
+
+        /// <summary>
+        /// 指示当前用户是否开启了双因子验证
+        /// </summary>
         public bool TwoFactorEnabled { get; set; }
         public DateTime LockoutEnd { get; set; }
         public bool LockoutEnabled { get; set; }
