@@ -96,7 +96,7 @@ namespace IdentityServer
         /// <returns></returns>
         public static List<Client> GetClients()
         {
-            var oidc = new Client
+            var code = new Client
             {
                 ClientId = "Info.Client",
                 ClientName = "Info客户端",
@@ -176,6 +176,78 @@ namespace IdentityServer
                 AlwaysIncludeUserClaimsInIdToken = true,
                 //AccessTokenLifetime token 过期时间
             };
+
+            var ClientCredentials = new Client
+            {
+                ClientId = "Info.Client",
+                ClientName = "Info客户端",
+                ClientSecrets = { new Secret("secret".Sha256()) },
+                ClientUri = "http://www.cnblogs.com", //客户端
+                LogoUri = "https://www.cnblogs.com/images/logo_small.gif",
+                /*
+                  response_type(响应类型)		    Flow（流程）
+                    code			        Authorization Code Flow
+                    id_token		        Implicit Flow
+                    id_token token		    Implicit Flow
+                    code id_token		    Hybrid Flow
+                    code token		        Hybrid Flow
+                    code id_token token		Hybrid Flow
+
+                Client端传的类型跟授权服务器授权类型必须一一对应
+                AllowedGrantTypes模式决定了响应类型
+                 */
+
+                //允许的授权类型
+                AllowedGrantTypes = { GrantType.ClientCredentials },
+                //RequireConsent = true, //不现实授权页面
+                //ClientClaimsPrefix = "",
+                Claims = new List<Claim> {
+                    new Claim(JwtClaimTypes.Role, "admin")
+                },
+
+                /*
+                 如果客户端使用的认证是
+                 */
+                //AllowedGrantTypes = GrantTypes.Hybrid,
+                //允许客户端的作用域，包括用户信息和APi资源权限
+                AllowedScopes = {
+                    IdentityServerConstants.StandardScopes.Profile,
+                    IdentityServerConstants.StandardScopes.OpenId, //直接用封装的变量也行
+                                                                   //"openid", //直接用字符串也行
+                    IdentityServerConstants.StandardScopes.Email,
+                    //IdentityServerConstants.StandardScopes.OfflineAccess,
+                    //"offline_access",
+                    //"90",
+                    //"address",
+                    "OtherInfo",
+                    "address"
+                },
+
+                //客户端默认传过来的是这个地址，如果跟这个不一直就会异常
+                /*
+                   授权成功后，返回地址
+                   客户端哪里触发调用的地址，就会回调当前地址
+                   比如：访问admin控制器未授权，调整授权服务器成功后，就会回调到admin页面
+                 */
+                RedirectUris = {
+                    "http://localhost:5009/signin-oidc"
+                },
+                //注销后重定向的地址
+                PostLogoutRedirectUris = {
+                    "http://localhost:5009/signout-callback-oidc"
+                },
+                /*
+                 开启后，客户端才能options.Scope.Add("offline_access")
+                 */
+                AllowOfflineAccess = true, ////offline_access(开启refresh token)
+                //AccessTokenLifetime = 3600, //token有效期，默认是3600秒 （一个小时）
+                /*
+                 这样就会把返回的profile信息包含在idtoken中
+                 */
+                AlwaysIncludeUserClaimsInIdToken = true,
+                //AccessTokenLifetime token 过期时间
+            };
+
             var oauth = new Client
             {
                 ClientId = "OAuth.Client",
@@ -203,7 +275,7 @@ namespace IdentityServer
                 //AllowOfflineAccess = true,
             };
             return new List<Client> {
-               oidc,
+               code,
                 
            };
         }

@@ -64,7 +64,7 @@ namespace IdentityServer
              * 负责数据库中对客户端、资源和 CORS 设置的配置存储；
              * client,ApiResources,IdentityResource信息
              */
-            var configurationDb = Configuration.GetConnectionString("ConfigurationDb"); 
+            var configurationDb = Configuration.GetConnectionString("ConfigurationDb");
             #endregion
 
 
@@ -99,14 +99,14 @@ namespace IdentityServer
                 //options.UserInteraction.LogoutUrl = ""; //退出页面
                 //options.UserInteraction.ConsentUrl = ""; //同意授权页面
             })
-             //.AddExtensionGrantValidator<Authertication.SmsAuthCodeValidator>()
+            //.AddExtensionGrantValidator<Authertication.SmsAuthCodeValidator>()
             .AddDeveloperSigningCredential()//设置开发者临时签名凭据
-            //in-men 方式把信息添加到内存中
-           //.AddInMemoryApiResources(Config.GetApiResources())
-           //.AddInMemoryIdentityResources(Config.GetIdentityResource())
-           //.AddInMemoryClients(Config.GetClients())
-           //.AddProfileService<ProfileService>() //配置用于自定义返回的profiel信息
-                                                //.AddTestUsers(Config.GetTestUsers())
+                                            //in-men 方式把信息添加到内存中
+                                            //.AddInMemoryApiResources(Config.GetApiResources())
+                                            //.AddInMemoryIdentityResources(Config.GetIdentityResource())
+                                            //.AddInMemoryClients(Config.GetClients())
+                                            //.AddProfileService<ProfileService>() //配置用于自定义返回的profiel信息
+                                            //.AddTestUsers(Config.GetTestUsers())
            .AddAspNetIdentity<ApplicationUser>() //依赖nuget包：IdentityServer4.AspNetIdentity
            .AddConfigurationStore(options =>     //依赖nuget包：IdentityServer4.EntityFramework
             {

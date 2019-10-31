@@ -19,6 +19,8 @@ using IdentityServer.Models;
 using IdentityServer4.EntityFramework.DbContexts;
 using Microsoft.Extensions.DependencyInjection;
 using IdentityServer.Common;
+using IdentityServer4.Events;
+using IdentityServer4.Extensions;
 
 namespace IdentityServer.Controllers
 {
@@ -30,8 +32,10 @@ namespace IdentityServer.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IIdentityServerInteractionService _interaction;
+        private readonly IEventService _events;
 
         public AccountController(
+              IEventService events,
              UserManager<ApplicationUser> userManager,
              SignInManager<ApplicationUser> signInManager,
              IIdentityServerInteractionService interaction)
@@ -39,6 +43,7 @@ namespace IdentityServer.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _interaction = interaction;
+            _events = events;
         }
         //[HttpGet]
         //public IActionResult Index()
@@ -126,7 +131,8 @@ namespace IdentityServer.Controllers
                             ExpiresUtc = DateTimeOffset.UtcNow.Add(AccountOptions.RememberMeLoginDuration) //过期时间
                         };
                     };
-                    
+                    //撤销
+                    //await _interaction.RevokeUserConsentAsync(context.ClientId);
                     await _signInManager.SignInAsync(user, props);
                     //_userManager.ChangePhoneNumberAsync
                     //_userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -180,7 +186,7 @@ namespace IdentityServer.Controllers
         /// <param name="logoutId"></param>
         /// <returns></returns>
         [HttpGet("Logout")]
-        public async Task<IActionResult> Logout(string logoutId)
+        public async Task<IActionResult> Logout(string logoutId,string returnurl)
         {
             //获取logoid
             var _logoutid = await _interaction.CreateLogoutContextAsync();
@@ -198,6 +204,8 @@ namespace IdentityServer.Controllers
 
             //// this triggers a redirect to the external provider for sign-out
             //return SignOut(new AuthenticationProperties { RedirectUri = url }, vm.ExternalAuthenticationScheme);
+
+            //await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
 
             var logout = await _interaction.GetLogoutContextAsync(logoutId);
             //await HttpContext.SignOutAsync(); //本地退出

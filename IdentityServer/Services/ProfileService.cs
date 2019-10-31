@@ -36,6 +36,12 @@ namespace IdentityServer.Services
         /// <returns></returns>
         public async Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
+            //判断是否有请求Claim信息
+            //if (context.RequestedClaimTypes.Any())
+            //{
+
+            //}
+
             //获得登录用户的ID
             var subject = context.Subject ?? throw new ArgumentNullException(nameof(context.Subject));
 
@@ -45,11 +51,11 @@ namespace IdentityServer.Services
             if (user == null)
                 throw new ArgumentException("Invalid subject identifier");
 
-            var claims = GetClaimsFromUser(user);
+            var claims = await GetClaimsFromUser(user);
             context.IssuedClaims = claims.ToList();
         }
 
-        private IEnumerable<Claim> GetClaimsFromUser(ApplicationUser user)
+        private async Task<IEnumerable<Claim>> GetClaimsFromUser(ApplicationUser user)
         {
             var claims = new List<Claim>
             {
@@ -59,6 +65,12 @@ namespace IdentityServer.Services
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
                 new Claim(JwtClaimTypes.Name,"2刘德华")
             };
+            //获取用户权限
+            var role = await _userManager.GetRolesAsync(user);
+            role.ToList().ForEach(f =>
+            {
+                claims.Add(new Claim(JwtClaimTypes.Role, f));
+            });
             var ac = user.Email;
             //if (!string.IsNullOrWhiteSpace(user.Email))
             //    claims.Add(new Claim("name", user.Email));

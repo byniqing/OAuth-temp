@@ -27,7 +27,9 @@
     @if (User.Identity.IsAuthenticated)
     {
         <span style="color:red">id_token:</span><br />
-        @await ViewContext.HttpContext.GetTokenAsync("id_token")
+        <div>
+            @await ViewContext.HttpContext.GetTokenAsync("id_token")
+        </div>
         <br />
         <span style="color:red">access_token:</span>
         <br />

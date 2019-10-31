@@ -22,13 +22,13 @@ namespace IdentityServer.Controllers
     /// TestUserStore 登陆演示
     /// 也就是GetTestUsers 配置的用户信息登陆，内存级别的
     /// </summary>
-    public class Account1Controller : Controller
+    public class TestController : Controller
     {
         private readonly TestUserStore _userStore;
 
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IClientStore _clientStore;
-        public Account1Controller(
+        public TestController(
             TestUserStore userStore,
             IClientStore clientStore,
             IIdentityServerInteractionService interaction)
@@ -173,7 +173,7 @@ namespace IdentityServer.Controllers
         /// </summary>
         /// <param name="logoutId"></param>
         /// <returns></returns>
-        [HttpGet("Logout")]
+        [HttpGet("Logout1")]
         public async Task<IActionResult> Logout(string logoutId)
         {
             ////await HttpContext.SignOutAsync(IdentityServerConstants.DefaultCookieAuthenticationScheme);

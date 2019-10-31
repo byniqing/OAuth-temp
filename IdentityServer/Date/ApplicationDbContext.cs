@@ -36,7 +36,7 @@ namespace IdentityServer.Date
             });
         }
     }
-
+    //http://www.it1352.com/684096.html
     public class aa : DbContext, IConfigurationDbContext
     {
         private readonly ConfigurationStoreOptions storeOptions;
@@ -50,6 +50,7 @@ namespace IdentityServer.Date
         {
             this.storeOptions = storeOptions ?? throw new ArgumentNullException(nameof(storeOptions));
         }
+
         public DbSet<Client> Clients { get; set; }
         public DbSet<IdentityResource> IdentityResources { get; set; }
         public DbSet<ApiResource> ApiResources { get; set; }
@@ -67,10 +68,61 @@ namespace IdentityServer.Date
         }
     }
 
-    public class ck : ConfigurationDbContext
+    public class test : DbContext, IPersistedGrantDbContext
     {
-        public ck(DbContextOptions<ConfigurationDbContext> options, ConfigurationStoreOptions storeOptions) : base(options, storeOptions)
+        private readonly OperationalStoreOptions storeOptions;
+        
+        public test(DbContextOptions<test> options)
+         : base(options)
         {
+        }
+        //IdentityConfigurationDbContext
+        public test(DbContextOptions<PersistedGrantDbContext> options, OperationalStoreOptions storeOptions)
+        : base(options)
+        {
+            this.storeOptions = storeOptions ?? throw new ArgumentNullException(nameof(storeOptions));
+        }
+
+        public DbSet<PersistedGrant> PersistedGrants { get; set; }
+        public DbSet<DeviceFlowCodes> DeviceFlowCodes { get; set; }
+
+        public Task<int> SaveChangesAsync()
+        {
+            return base.SaveChangesAsync();
+            //throw new NotImplementedException();
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ConfigurePersistedGrantContext(storeOptions);
+            base.OnModelCreating(modelBuilder);
+        }
+    }
+
+    /// <summary>
+    /// 扩展DeviceFlowCodes表
+    /// </summary>
+    public class ExtendDeviceFlowCodes : DeviceFlowCodes
+    {
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string AddRemark { get; set; }
+    }
+    public class RegisterPersistedGrant : PersistedGrantDbContext
+    {
+        ////new IdentityServer4.EntityFramework.Entities.PersistedGrant
+        //public DbSet<PersistedGrant> persistedGrants { get; set; }
+        //public DbSet<DeviceFlowCodes> DeviceFlowCodes { get; set; }
+
+        public RegisterPersistedGrant(DbContextOptions<PersistedGrantDbContext> options, OperationalStoreOptions storeOptions) : base(options, storeOptions)
+        {
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<ExtendDeviceFlowCodes>(e => { 
+            
+            });
         }
     }
 }

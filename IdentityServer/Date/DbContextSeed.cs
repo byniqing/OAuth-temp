@@ -121,7 +121,10 @@ namespace IdentityServer.Date
                     //var grant = scope.ServiceProvider.GetService<PersistedGrantDbContext>();
                     //grant.PersistedGrants.Add(new IdentityServer4.EntityFramework.Entities.PersistedGrant
                     //{
-                    //    ClientId=""
+                    //    ClientId = ""
+                    //});
+                    //grant.DeviceFlowCodes.Add(new IdentityServer4.EntityFramework.Entities.DeviceFlowCodes { 
+                    
                     //});
 
                     var configurationDbContext = scope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
