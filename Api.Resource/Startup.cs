@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -50,16 +52,41 @@ namespace Api.Resource
             //基于策略的授权,[Authorize(Policy = "ck")]
             services.AddAuthorization(options =>
             {
-                //说明必须是admin的role ,区分大小写
+                //验证权限 ，说明必须是admin的role ,区分大小写
                 //options.AddPolicy("ck", policy => policy.RequireRole("Admin").Build());
                 //options.AddPolicy("Client", policy => policy.RequireClaim("Client").Build());
                 //options.AddPolicy("Admin", policy => policy.RequireRole("Admin").Build());
                 //options.AddPolicy("SystemOrAdmin", policy => policy.RequireRole("Admin", "System"));
                 //options.AddPolicy("A_S_O", policy => policy.RequireRole("Admin", "System", "Others"));
+
+                //https://www.helplib.com/GitHub/article_137905
+
+                //验证Claim 策略
                 options.AddPolicy("client_id", policy => policy.RequireClaim("client_id")); //必须包含client_id
+
+                /*
+                 编写作用域策略
+                验证作用域
+                 */
+                options.AddPolicy("scope6", policy => policy.RequireScope("scope2", "scope3"));
+                options.AddPolicy("scope4", policy =>
+                {
+                    policy.RequireScope("scope4");
+                    policy.RequireScope("scope5");
+                });
+
             });
 
-            services.AddControllers();
+
+            //services.AddControllers();
+
+            //创建全局授权策略，用了全局的。就不不用上面的了
+            services.AddControllers(options =>
+            {
+                //require scope1 or scope2
+                var policy = ScopePolicy.Create("scope1", "scope2");
+                options.Filters.Add(new AuthorizeFilter(policy));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
