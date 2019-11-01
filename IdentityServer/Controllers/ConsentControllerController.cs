@@ -50,10 +50,13 @@ namespace IdentityServer.Controllers
 
         /// <summary>
         ///  用户同意和拒绝，触发
+        ///  https://www.cnblogs.com/kellynic/p/6187169.html
+        ///  ValidateAntiForgeryToken： 防止CSRF（跨网站请求伪造）
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(ConsentInputModel model)
         {
             var result = await ProcessConsent(model);
@@ -90,12 +93,13 @@ namespace IdentityServer.Controllers
                     //获取所有
                     var identitResource = await _resourceStore.FindIdentityResourcesByScopeAsync(request.ScopesRequested);
 
-                    if (identitResource != null && identitResource.Any())
-                    {
-                        //获取不显示在界面，但是必须项Required的
-                        identitResource.Where(i => !i.ShowInDiscoveryDocument && i.Required).ToList()
-                            .ForEach(f => { scopes.Add(f.Name); });
-                    }
+                    //if (identitResource != null && identitResource.Any())
+                    //{
+                    //    //获取不显示在界面，但是必须项Required的
+                    //    identitResource.Where(i => !i.ShowInDiscoveryDocument && i.Required).ToList()
+                    //        .ForEach(f => { scopes.Add(f.Name); });
+                    //}
+
                     //if (ConsentOptions.EnableOfflineAccess == false)
                     //{
                     //    scopes = scopes.Where(x => x != IdentityServer4.IdentityServerConstants.StandardScopes.OfflineAccess);
@@ -144,6 +148,8 @@ namespace IdentityServer.Controllers
             if (request != null)
             {
                 var client = await _clientStore.FindClientByIdAsync(request.ClientId);
+                var client1 = await _clientStore.FindEnabledClientByIdAsync(request.ClientId);
+
                 if (client != null)
                 {
 
@@ -158,34 +164,76 @@ namespace IdentityServer.Controllers
                         ScopesConsented = model?.ScopesConsented ?? Enumerable.Empty<string>(),
                     };
 
-                    var resources = await _resourceStore.FindResourcesByScopeAsync(request.ScopesRequested);
-
-                    var apiResource = await _resourceStore.FindApiResourcesByScopeAsync(request.ScopesRequested);
-                    var identitResource = await _resourceStore.FindIdentityResourcesByScopeAsync(request.ScopesRequested);
-
-                    if (apiResource != null && apiResource.Any())
+                    var resources1 = await _resourceStore.FindResourcesByScopeAsync(request.ScopesRequested);
+                    var resources = await _resourceStore.FindEnabledResourcesByScopeAsync(request.ScopesRequested);
+                    if (resources != null && (resources.IdentityResources.Any() || resources.ApiResources.Any()))
                     {
-                        cvm.ResourceScopes = apiResource.SelectMany(i => i.Scopes)
-
-                            .Select(s => CreateScopeViewModel(s, cvm.ScopesConsented.Contains(s.Name) || model == null));
+                        return CreateConsentViewModel(model, returnUrl, request, client, resources);
                     }
+                    //else
+                    //{
+                    //    _logger.LogError("No scopes matching: {0}", request.ScopesRequested.Aggregate((x, y) => x + ", " + y));
+                    //}
 
-                    if (identitResource != null && identitResource.Any())
-                    {
-                        cvm.IdentityScopes = identitResource
-                            //过滤掉不显示在界面的项
-                            .Where(w => w.ShowInDiscoveryDocument)
-                            .Select(s => CreateScopeViewModel(s, cvm.ScopesConsented.Contains(s.Name) || model == null));
-                    }
 
-                    if (resources != null && (resources.ApiResources.Any() || resources.IdentityResources.Any()))
-                    {
+                    //var apiResource = await _resourceStore.FindApiResourcesByScopeAsync(request.ScopesRequested);
+                    //var identitResource = await _resourceStore.FindIdentityResourcesByScopeAsync(request.ScopesRequested);
 
-                    }
+                    //if (apiResource != null && apiResource.Any())
+                    //{
+                    //    cvm.ResourceScopes = apiResource.SelectMany(i => i.Scopes)
+
+                    //        .Select(s => CreateScopeViewModel(s, cvm.ScopesConsented.Contains(s.Name) || model == null));
+                    //}
+
+                    //if (identitResource != null && identitResource.Any())
+                    //{
+                    //    cvm.IdentityScopes = identitResource.Select(s => CreateScopeViewModel(s, cvm.ScopesConsented.Contains(s.Name) || model == null));
+
+                    //    //cvm.IdentityScopes = identitResource
+                    //    //    //过滤掉不显示在界面的项
+                    //    //    .Where(w => w.ShowInDiscoveryDocument)
+                    //    //    .Select(s => CreateScopeViewModel(s, cvm.ScopesConsented.Contains(s.Name) || model == null));
+                    //}
+
+                   
                 }
             }
             return cvm;
         }
+
+        private ConsentViewModel CreateConsentViewModel(
+           ConsentInputModel model, string returnUrl,
+           AuthorizationRequest request,
+           Client client, Resources resources)
+        {
+            var vm = new ConsentViewModel
+            {
+                RememberConsent = model?.RememberConsent ?? true,
+                ScopesConsented = model?.ScopesConsented ?? Enumerable.Empty<string>(),
+
+                ReturnUrl = returnUrl,
+
+                ClientName = client.ClientName ?? client.ClientId,
+                ClientUrl = client.ClientUri,
+                ClientLogoUrl = client.LogoUri,
+                AllowRememberConsent = client.AllowRememberConsent
+            };
+
+            vm.IdentityScopes = resources.IdentityResources.Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
+            vm.ResourceScopes = resources.ApiResources.SelectMany(x => x.Scopes).Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
+
+
+            //if (ConsentOptions.EnableOfflineAccess && resources.OfflineAccess)
+            //{
+            //    vm.ResourceScopes = vm.ResourceScopes.Union(new ScopeViewModel[] {
+            //        GetOfflineAccessScope(vm.ScopesConsented.Contains(IdentityServer4.IdentityServerConstants.StandardScopes.OfflineAccess) || model == null)
+            //    });
+            //}
+
+            return vm;
+        }
+
         private ScopeViewModel CreateScopeViewModel(IdentityResource scope, bool check)
         {
             return new ScopeViewModel

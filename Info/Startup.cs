@@ -80,12 +80,17 @@ namespace Info
                 options.ClientSecret = "secret";
                 //来自identityserver的令牌持久化在cookie中
                 options.SaveTokens = true;
+                //options.Scope.Clear(); //这会删除所有默认的scope
+                 
                 //options.AccessDeniedPath //定义远程登录取消页面？？
                 //options.Scope.Add("openid");
                 //options.Scope.Add("profile");
+
+                //向服务器发起，我想要的权限和用户信息，前提的服务器允许
                 //options.Scope.Add("email");
                 options.Scope.Add("offline_access");
                 options.Scope.Add("OtherInfo"); //api权限
+                options.Scope.Add("oidc1");
                 options.ResponseType = OpenIdConnectResponseType.Code;// "id_token code";// OpenIdConnectResponseType.CodeIdToken;
                 /*
                这样会去请求UserInfoEndpoint获取到信息后绑定到access_token中
@@ -146,7 +151,7 @@ namespace Info
             /*
              顺序很重要，否则授权不通过
              添加顺序：认证，授权
-             执行顺序：授权，认证
+             执行顺序：认证，授权，因为都没有认证通过，就没必要判断权限了
              */
             app.UseAuthentication(); //先添加认证中间件
             app.UseAuthorization(); //在添加授权中间件

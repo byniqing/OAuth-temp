@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Api.Resource.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -61,32 +62,42 @@ namespace Api.Resource
 
                 //https://www.helplib.com/GitHub/article_137905
 
-                //验证Claim 策略
-                options.AddPolicy("client_id", policy => policy.RequireClaim("client_id")); //必须包含client_id
+                //验证Claim 策略 [Authorize(Policy = "client_id")]
+                //options.AddPolicy("client_id", policy => policy.RequireClaim("client_id")); //必须包含client_id
 
                 /*
                  编写作用域策略
                 验证作用域
                  */
-                options.AddPolicy("scope6", policy => policy.RequireScope("scope2", "scope3"));
-                options.AddPolicy("scope4", policy =>
-                {
-                    policy.RequireScope("scope4");
-                    policy.RequireScope("scope5");
-                });
+                options.AddPolicy("OtherInfo", policy => policy.RequireScope("OtherInfo"));
+                //options.AddPolicy("oidc1", policy => policy.RequireScope("oidc1"));
 
+                options.AddPolicy("OtherInfo", policy => policy.Requirements.Add(new PermissionRequirement("")));
+
+                //如果想配置不同的多个策略,意思是要同时满足以下策略
+                //options.AddPolicy("reqscope", policy =>
+                //{
+                //    //Requirements
+                //    policy.RequireScope("OtherInfo");
+                //    policy.RequireClaim("client_id");
+                //    //policy.Requirements.Add(null);
+                //    //policy.AddRequirements(new PermissionRequirement(""));
+                //});
             });
 
+            services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
 
-            //services.AddControllers();
+            services.AddControllers();
 
-            //创建全局授权策略，用了全局的。就不不用上面的了
-            services.AddControllers(options =>
-            {
-                //require scope1 or scope2
-                var policy = ScopePolicy.Create("scope1", "scope2");
-                options.Filters.Add(new AuthorizeFilter(policy));
-            });
+            //创建全局授权策略，用了全局的。就不不用上面的授权
+            //也不需要再控制器上面加  Authorize标签
+            //services.AddControllers(options =>
+            //{
+            //    //require scope1 or scope2
+            //    var policy = ScopePolicy.Create("OtherInfo", "scope2");
+                
+            //    options.Filters.Add(new AuthorizeFilter(policy));
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -107,7 +118,9 @@ namespace Api.Resource
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                     name: "default",
+                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

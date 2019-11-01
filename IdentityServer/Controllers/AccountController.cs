@@ -186,7 +186,7 @@ namespace IdentityServer.Controllers
         /// <param name="logoutId"></param>
         /// <returns></returns>
         [HttpGet("Logout")]
-        public async Task<IActionResult> Logout(string logoutId,string returnurl)
+        public async Task<IActionResult> Logout(string logoutId, string returnurl)
         {
             //获取logoid
             var _logoutid = await _interaction.CreateLogoutContextAsync();

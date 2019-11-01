@@ -13,6 +13,7 @@ namespace IdentityServer
     public class Config
     {
         //https://www.jianshu.com/p/ad20944d9446
+        //https://www.cnblogs.com/tianyamoon/p/9490953.html
         /// <summary>
         /// 用户的身份信息
         /// </summary>
@@ -60,19 +61,29 @@ namespace IdentityServer
         /// <returns></returns>
         public static List<ApiResource> GetApiResources()
         {
+            var test = new ApiResource("api", "Demo API", new[]
+            {
+                JwtClaimTypes.Subject,
+                JwtClaimTypes.Email,
+                JwtClaimTypes.Name,
+                JwtClaimTypes.Role,
+                JwtClaimTypes.PhoneNumber
+            });
+
             var oidc = new ApiResource
             {
                 Name = "用户信息", //这是资源名称
                 Description = "获取用户的基本信息",
                 DisplayName = "都可以是默认值",
                 UserClaims = new List<string> { JwtClaimTypes.Role },
-                ApiSecrets = { new Secret("trtrt".Sha256())},
+                ApiSecrets = { new Secret("trtrt".Sha256()) },
+                //Enabled = true, //是否启用
                 //作用域，对应下面的Cliet的 AllowedScopes
                 Scopes = {
                      new Scope{
                         Name="OtherInfo",
                         Description="描述",
-                        DisplayName="获得您的昵称、头像、性别",
+                        DisplayName="获得您的评论",
                         Required=true,
                         Emphasize=true, //是否强调
                         UserClaims=new List<string>{ JwtClaimTypes.Role}
@@ -123,7 +134,8 @@ namespace IdentityServer
                 Claims = new List<Claim> {
                     new Claim(JwtClaimTypes.Role, "admin")
                 },
-
+                //简写方式
+                //AllowedScopes = { "openid", "profile", "email", "api" },
                 /*
                  如果客户端使用的认证是
                  */
@@ -149,7 +161,8 @@ namespace IdentityServer
                     //"90",
                     //"address",
                     "OtherInfo",
-                    "address"
+                    "address",
+                    "oidc1"
                 },
 
                 //客户端默认传过来的是这个地址，如果跟这个不一直就会异常
@@ -161,12 +174,15 @@ namespace IdentityServer
                 RedirectUris = {
                     "http://localhost:5009/signin-oidc"
                 },
+                FrontChannelLogoutUri = "http://localhost:5009/signout-oidc",
                 //注销后重定向的地址
                 PostLogoutRedirectUris = {
                     "http://localhost:5009/signout-callback-oidc"
                 },
+                AllowedCorsOrigins = { "http://localhost:5009" },
                 /*
                  开启后，客户端才能options.Scope.Add("offline_access")
+                 允许刷新tokoen
                  */
                 AllowOfflineAccess = true, ////offline_access(开启refresh token)
                 //AccessTokenLifetime = 3600, //token有效期，默认是3600秒 （一个小时）
@@ -175,6 +191,11 @@ namespace IdentityServer
                  */
                 AlwaysIncludeUserClaimsInIdToken = true,
                 //AccessTokenLifetime token 过期时间
+
+                // IdToken的有效期，默认5分钟
+                //IdentityTokenLifetime = 300,
+                // AccessToken的有效期，默认1小时
+                //AccessTokenLifetime = 3600
             };
 
             var ClientCredentials = new Client
@@ -276,7 +297,7 @@ namespace IdentityServer
             };
             return new List<Client> {
                code,
-                
+
            };
         }
 
@@ -301,10 +322,13 @@ namespace IdentityServer
                         new Claim("Email","cnblgos@sina.com"),
                         new Claim("website","http://www.cnblogs.com"),
                         new Claim("a","admin"),
-                        //在System.Security.Claims中国
+                        //ClaimTypes在System.Security.Claims中
                         new Claim(ClaimTypes.Actor,"头像"),
-                        //在IdentityModel中
+                        //JwtClaimTypes在IdentityModel中
                         new Claim(JwtClaimTypes.Address,"地址"),
+                         //new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
+                        new Claim(JwtClaimTypes.WebSite, "http://alice.com"),
+                        //new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServerConstants.ClaimValueTypes.Json)
                     }
                 }
             };
