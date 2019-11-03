@@ -59,7 +59,7 @@ namespace IdentityServer.Controllers
         [HttpGet]
         public IActionResult Index(string returnUrl)
         {
-            var configurationDbContext = HttpContext.RequestServices.GetRequiredService<ConfigurationDbContext>();
+            //var configurationDbContext = HttpContext.RequestServices.GetRequiredService<ConfigurationDbContext>();
 
             //ViewBag.returnUrl11 = returnUrl;
             return View();

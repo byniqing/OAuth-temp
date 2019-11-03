@@ -68,29 +68,40 @@ namespace IdentityServer.Date
                         Email = "cnblogs@163.com",
                         //PasswordHash = "",
                         //Avatar = "https://www.cnblogs.com/images/logo_small.gif",
-                        //SecurityStamp = "ad", //设置密码的加密key
+                        SecurityStamp = "ab", //设置密码的加密key
                     };
                     var userResult = await _userManger.CreateAsync(defaultUser, "123456");
 
-                    //把用户添加到角色权限组
-                    await _userManger.AddToRoleAsync(defaultUser, "admin");
-
-                    if (!userResult.Succeeded)
+                    if (userResult.Succeeded)
                     {
-                        logger.LogError("创建失败");
-                        //logger.LogInformation("初始化用户失败");
-                        userResult.Errors.ToList().ForEach(e =>
-                        {
-                            logger.LogError(e.Description);
-                        });
-                    }
 
-                    var result11 = _userManger.AddClaimsAsync(defaultUser, new Claim[]{
+
+                        //把用户添加到角色权限组
+                        await _userManger.AddToRoleAsync(defaultUser, "admin");
+
+                        if (!userResult.Succeeded)
+                        {
+                            logger.LogError("创建失败");
+                            //logger.LogInformation("初始化用户失败");
+                            userResult.Errors.ToList().ForEach(e =>
+                            {
+                                logger.LogError(e.Description);
+                            });
+                        }
+
+                        //可以添加用户的claim
+                        var result11 = _userManger.AddClaimsAsync(defaultUser, new Claim[]{
                             new Claim(JwtClaimTypes.Name, "姓名"),
                             new Claim(JwtClaimTypes.Email, "cnblogs@163.com"),
                             new Claim(JwtClaimTypes.Role, "admin")
                         }).Result;
+                    }
+                    else
+                    {
+                        logger.LogError("创建失败:" + userResult.Errors);
+                    }
                 }
+
 
             }
             catch (Exception ex)
@@ -124,7 +135,7 @@ namespace IdentityServer.Date
                     //    ClientId = ""
                     //});
                     //grant.DeviceFlowCodes.Add(new IdentityServer4.EntityFramework.Entities.DeviceFlowCodes { 
-                    
+
                     //});
 
                     var configurationDbContext = scope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();

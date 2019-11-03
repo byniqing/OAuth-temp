@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Api.Resource.Authorization;
+using Api.Resource.Models;
+using IdentityModel;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -36,7 +40,7 @@ namespace Api.Resource
             //Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme
             var scheme = JwtBearerDefaults.AuthenticationScheme;
             //默认的认证方式是Bearer认证,如果怕拼写错误，可以直接用常量
-            services.AddAuthentication(scheme)
+            services.AddAuthentication("Bearer")
             //配置要验证的信息
             .AddIdentityServerAuthentication(options =>
             {
@@ -44,9 +48,13 @@ namespace Api.Resource
                 //第一次会去认证服务器获取配置信息
                 options.Authority = "http://localhost:5008"; //必填
                 //options.ApiName = "userinfo";
-                options.ApiName = "用户信息";
-                options.ApiSecret = "secret";
+                /*
+                 如果第三方没有获取用户信息，也就是scope，则会401，有可能有多个，干脆不填写
+                 */
+                //options.ApiName = "用户信息";  //资源名称，认证服务注册的资源列表名称一致，
+                //options.ApiSecret = "secret";
                 //options.SaveToken = true;
+                options.SupportedTokens = SupportedTokens.Both;
                 options.RequireHttpsMetadata = false;//暂时取消Https验证，
             });
 
@@ -58,7 +66,7 @@ namespace Api.Resource
                 //options.AddPolicy("Client", policy => policy.RequireClaim("Client").Build());
                 //options.AddPolicy("Admin", policy => policy.RequireRole("Admin").Build());
                 //options.AddPolicy("SystemOrAdmin", policy => policy.RequireRole("Admin", "System"));
-                //options.AddPolicy("A_S_O", policy => policy.RequireRole("Admin", "System", "Others"));
+                options.AddPolicy("A_S_O", policy => policy.RequireRole("Admin", "System", "Others"));
 
                 //https://www.helplib.com/GitHub/article_137905
 
@@ -72,7 +80,9 @@ namespace Api.Resource
                 options.AddPolicy("OtherInfo", policy => policy.RequireScope("OtherInfo"));
                 //options.AddPolicy("oidc1", policy => policy.RequireScope("oidc1"));
 
-                options.AddPolicy("OtherInfo", policy => policy.Requirements.Add(new PermissionRequirement("")));
+                //基于scope策略
+                options.AddPolicy("reqscope",
+                    policy => policy.Requirements.Add(new PermissionRequirement("", JwtClaimTypes.Scope, "")));
 
                 //如果想配置不同的多个策略,意思是要同时满足以下策略
                 //options.AddPolicy("reqscope", policy =>
@@ -85,8 +95,9 @@ namespace Api.Resource
                 //});
             });
 
+            services.AddSingleton<UserStore>();
             services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
-
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddControllers();
 
             //创建全局授权策略，用了全局的。就不不用上面的授权
@@ -95,7 +106,7 @@ namespace Api.Resource
             //{
             //    //require scope1 or scope2
             //    var policy = ScopePolicy.Create("OtherInfo", "scope2");
-                
+
             //    options.Filters.Add(new AuthorizeFilter(policy));
             //});
         }

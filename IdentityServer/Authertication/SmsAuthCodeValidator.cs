@@ -7,6 +7,16 @@ using System.Threading.Tasks;
 
 namespace IdentityServer.Authertication
 {
+    /*
+     * form-data 方式
+     * 
+     grant_type:sms_auth_code
+client_id:android
+client_secret:secret
+scope:openid profile offline_access OtherInfo
+phone:15919099881
+auth_code:111
+         */
     public class SmsAuthCodeValidator: IExtensionGrantValidator
     {
         //private IUserService _userService;
@@ -41,7 +51,7 @@ namespace IdentityServer.Authertication
             //}
 
             //context.Result = new GrantValidationResult(userId.ToString(), GrantType);
-            context.Result = new GrantValidationResult("", GrantType);
+            context.Result = new GrantValidationResult("3", GrantType);
         }
     }
 }

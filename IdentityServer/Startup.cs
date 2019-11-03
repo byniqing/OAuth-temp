@@ -17,6 +17,7 @@ using IdentityServer.Date;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using IdentityServer4.EntityFramework.DbContexts;
+using IdentityServer.Authertication;
 
 namespace IdentityServer
 {
@@ -123,6 +124,8 @@ namespace IdentityServer
                     build.UseSqlServer(persistedGrantDb, sql => sql.MigrationsAssembly(migrationAssembly));
                 };
             })
+            //.AddExtensionGrantValidator<SmsAuthCodeValidator>()
+            //.AddResourceOwnerValidator<CustomResourceOwnerPasswordValidator>()
             .AddProfileService<ProfileService>();
             //.Services.AddTransient<IProfileService, ProfileService>(); ;
             //.AddConfigurationStore<ConfigurationDbContext>(o => { });

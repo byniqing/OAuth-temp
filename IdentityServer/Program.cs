@@ -32,7 +32,7 @@ namespace IdentityServer
                 host.MigrationDbContext<ApplicationDbContext>((context, service) =>
                 {
                     new DbContextSeed().ApplicationDbAsyncSpeed(context, service).Wait();
-                    new DbContextSeed().ConfigurationDbAsyncSpeed(service).Wait();
+                    //new DbContextSeed().ConfigurationDbAsyncSpeed(service).Wait();
                 });
             }
 

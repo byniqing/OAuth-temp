@@ -77,6 +77,7 @@ namespace IdentityServer
                 DisplayName = "都可以是默认值",
                 UserClaims = new List<string> { JwtClaimTypes.Role },
                 ApiSecrets = { new Secret("trtrt".Sha256()) },
+                Properties = new Dictionary<string, string> { { "a", "b" } },
                 //Enabled = true, //是否启用
                 //作用域，对应下面的Cliet的 AllowedScopes
                 Scopes = {
@@ -297,7 +298,27 @@ namespace IdentityServer
             };
             return new List<Client> {
                code,
-
+               new Client
+                {
+                    ClientId = "android",
+                    ClientSecrets = new List<Secret> {
+                        new Secret("secret".Sha256())
+                    },
+                    RefreshTokenExpiration = TokenExpiration.Sliding,
+                    AllowOfflineAccess = true,
+                    RequireClientSecret = false, //说明可以不传client_secret 除非很信任的程序
+                    AllowedGrantTypes = new List<string> { "sms_auth_code" },
+                    AlwaysIncludeUserClaimsInIdToken = true,
+                    AllowedScopes = new List<string> {
+                        //"gateway_api","user_api",
+                         "OtherInfo",
+                        "address",
+                        "oidc1",
+                        IdentityServerConstants.StandardScopes.OfflineAccess,
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
+                    },
+                }
            };
         }
 

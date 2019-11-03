@@ -88,7 +88,6 @@ namespace Info.Controllers
                 //        { "scheme", provider },
                 //    }
             };
-
             return Challenge(props, scheme);
 
 

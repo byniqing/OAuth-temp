@@ -15,6 +15,7 @@ using IdentityServer.Services;
 using Microsoft.AspNetCore.Identity;
 using IdentityServer.Date;
 using Microsoft.EntityFrameworkCore;
+using IdentityServer.Authertication;
 
 namespace IdentityServer
 {
@@ -38,6 +39,14 @@ namespace IdentityServer
                .AddEntityFrameworkStores<ApplicationDbContext>()
                .AddDefaultTokenProviders();
 
+            //≈‰÷√√‹¬Î◊¢≤·∑Ω Ω
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 1;
+            });
             //services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
             //services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, UserClaimsFactory>();
 
@@ -56,6 +65,7 @@ namespace IdentityServer
            .AddInMemoryApiResources(Config.GetApiResources())
            .AddInMemoryIdentityResources(Config.GetIdentityResource())
            .AddInMemoryClients(Config.GetClients())
+           .AddExtensionGrantValidator<SmsAuthCodeValidator>()
            //.AddInMemoryPersistedGrants()
            //.AddTestUsers(Config.GetTestUsers());
            .AddAspNetIdentity<ApplicationUser>() //“¿¿µnuget∞¸£∫IdentityServer4.AspNetIdentity
