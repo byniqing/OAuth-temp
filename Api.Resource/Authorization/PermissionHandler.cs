@@ -75,7 +75,7 @@ namespace Api.Resource.Authorization
                         }
                         var s = JwtClaimTypes.Scope;
                         var userIdClaim = context.User.FindFirst(_ => _.Type == JwtClaimTypes.Subject);
-
+                        var roleId = int.Parse(context.User.Claims.Where(x => x.Type == "role_id").FirstOrDefault().Value);
 
                         //判断是否是第三方
 
@@ -85,7 +85,7 @@ namespace Api.Resource.Authorization
 
                         if (userIdClaim != null)
                         {
-                            if (_userStore.CheckPermission(subjectId, route))
+                            if (_userStore.CheckPermission(subjectId, roleId, route))
                             {
                                 context.Succeed(requirement);
                             }

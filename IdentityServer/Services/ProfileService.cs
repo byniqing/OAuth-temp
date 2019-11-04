@@ -21,10 +21,13 @@ namespace IdentityServer.Services
     public class ProfileService : IProfileService
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
 
-        public ProfileService(UserManager<ApplicationUser> userManager)
+        public ProfileService(UserManager<ApplicationUser> userManager,
+            RoleManager<ApplicationRole> roleManager)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         /// <summary>
@@ -65,11 +68,13 @@ namespace IdentityServer.Services
              这里区分，就可以用role，角色区分，因为不同的角色权限是不同的
              */
 
-            //在已经验证的请求中，可以获取一开始给第三方赋予的角色
-            var a = context.ValidatedRequest.ClientClaims.FirstOrDefault(w => w.Type == "role").Value;
+            //在已经验证的请求中，可以获取一开始给第三方赋予的角色,但UserInfoEndpoint时候，
+            //ValidatedRequest会为空，
+            //var a = context.ValidatedRequest.ClientClaims.FirstOrDefault(w => w.Type == "role").Value;
+
 
             //或者直接从client中获取
-            var cleintRole = context.Client.Claims.FirstOrDefault(_ => _.Type == "role").Value;
+            var clientRole = context.Client.Claims.FirstOrDefault(_ => _.Type == "role").Value;
 
 
             //获得登录用户的ID
@@ -81,9 +86,20 @@ namespace IdentityServer.Services
             if (user == null)
                 throw new ArgumentException("Invalid subject identifier");
 
+            var cks = await _roleManager.FindByNameAsync(clientRole);
+            var myi = cks.Id;
+
+            var role_id = _roleManager.Roles.First(_ => _.Name == clientRole).Id.ToString();
+
             var claims = GetClaimsFromUser(user).ToList();
+
+            claims.AddRange(new List<Claim>
+            {
+               new Claim(JwtClaimTypes.Role, clientRole),//返回第三方的角色
+               new Claim("role_id", role_id) //角色ID
+            });
+
             //var issuedClaims = claims.ToList();
-            claims.Add(new Claim(JwtClaimTypes.Role, cleintRole)); //返回第三方的角色
 
             context.IssuedClaims = claims;
 

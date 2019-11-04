@@ -52,7 +52,17 @@ namespace Api.Resource.Controllers
         [HttpGet("Firend")]
         public ActionResult GetFirend()
         {
-            return Ok(new { name = User.Identity.Name });
+            return Ok(new { name = "获取我的好友" });
+        }
+
+        /// <summary>
+        /// 修改资料
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("Update")]
+        public string Update()
+        {
+            return "修改资料成功";
         }
 
     }

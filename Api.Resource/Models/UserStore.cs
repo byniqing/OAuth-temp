@@ -131,6 +131,94 @@ namespace Api.Resource.Models
                 },
 
             },
+
+              new User {
+                Id=3,
+                Name="admin",
+                Password="111111",
+                Email="admin@gmail.com",
+                PhoneNumber="18800000000",
+                Birthday = DateTime.Now,
+                userRoles=new List<UserRole>
+                {
+                     new UserRole
+                     {
+                        Id=1,
+                        UserId=3,
+                        RoleId=2,
+                        Role=new Role
+                        {
+                            Id=2,
+                            Name="thirdParty"
+                        },
+                        Permissions=new List<RolePermission>
+                        {
+                            new RolePermission
+                            {
+                                Id=1,
+                                RoleId=2,
+                                PermissionName=Permission.UserCreate,
+                                permissionResources=new List<PermissionResource>
+                                {
+                                    //测试，第三方角色，只能访问这2个接口
+                                    new PermissionResource{ Id=1,RolePermissionId=1,Url="api/Identity/OtherInfo"},
+                                    new PermissionResource{ Id=1,RolePermissionId=1,Url="api/Identity/oidc1"}
+                                }
+                            },
+                            new RolePermission
+                            {
+                                Id=2,
+                                RoleId=2,
+                                PermissionName=Permission.UserDelete,
+                                permissionResources=new List<PermissionResource>
+                                {
+                                    new PermissionResource{ Id=2,RolePermissionId=2,Url="api/Identity/del"},
+                                    new PermissionResource{ Id=2,RolePermissionId=2,Url="api/Identity/all"}
+                                }
+                            }
+                        }
+                     },
+                     new UserRole
+                     {
+                        Id=2,
+                        UserId=3,
+                        RoleId=3,
+                        Role=new Role
+                        {
+                            Id=3,
+                            Name="System"
+                        },
+                        Permissions=new List<RolePermission>
+                        {
+                            new RolePermission
+                            {
+                                Id=5,
+                                RoleId=3,
+                                PermissionName=Permission.UserRead,
+                                permissionResources=new List<PermissionResource>
+                                {
+                                    //如果是system，代表自己，则可以修改自己的资料
+                                    new PermissionResource{ Id=1,RolePermissionId=5,Url="api/Identity/OtherInfo"},
+                                    new PermissionResource{ Id=1,RolePermissionId=5,Url="api/Identity/oidc1"},
+                                    new PermissionResource{ Id=1,RolePermissionId=5,Url="api/Identity/firend"}
+                                }
+                            },
+                            new RolePermission
+                            {
+                                Id=5,
+                                RoleId=3,
+                                PermissionName=Permission.UserUpdate,
+                                permissionResources=new List<PermissionResource>
+                                {
+                                    //如果是system，代表自己，则可以修改自己的资料
+                                    new PermissionResource{ Id=1,RolePermissionId=5,Url="api/Identity/Update"}
+                                }
+                            }
+                        }
+                     }
+                },
+
+            },
         };
 
 
@@ -197,7 +285,14 @@ namespace Api.Resource.Models
         //    //return user.Permissions.Any(p => permissionName.StartsWith(p.PermissionName));
         //}
 
-        public bool CheckPermission(int userId, string url)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId">用户id</param>
+        /// <param name="roleId">角色id</param>
+        /// <param name="url">请求资源的路径</param>
+        /// <returns></returns>
+        public bool CheckPermission(int userId, int roleId, string url)
         {
             var user = Find(userId);
             if (user == null) return false;
@@ -218,13 +313,11 @@ namespace Api.Resource.Models
 
 
             return user.userRoles.Any() //用户角色
-                && user.userRoles.Any(u => u.Permissions.Any(_ => _.RoleId == u.RoleId)) //用户权限
-                && user.userRoles.Any(
-                    u => u.Permissions.Any(
-                        p => p.permissionResources.Any(
-                            _ => _.RolePermissionId == p.Id && _.Url == url)
-                        )
-                    );//用于权限可以操作的具体资源
+                && user.userRoles.Any(u => u.Permissions.Any(_ => _.RoleId == roleId)) //用户角色
+                && user.userRoles.Any(u => u.Permissions.Any(_ => _.RoleId == roleId
+                   && _.permissionResources.Any(p => p.RolePermissionId == _.Id //角色对应的权限
+                   && p.Url.ToLower() == url.ToLower()))//统一小写比较，不区分大小写
+                );
 
             //if (role != null && role.Permissions.Any())
             //{

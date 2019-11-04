@@ -308,7 +308,7 @@ namespace IdentityServer
                     //或者
                     Claims=new List<Claim>{
                             //自己内部用，设置大权限
-                            new Claim(JwtClaimTypes.Role, "Admin"),
+                            //new Claim(JwtClaimTypes.Role, "Admin"),
                             new Claim(JwtClaimTypes.Role, "System"),
                     },
                     RefreshTokenExpiration = TokenExpiration.Sliding,
