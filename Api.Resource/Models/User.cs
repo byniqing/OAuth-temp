@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Api.Resource.Models
 {
+    //https://www.cnblogs.com/liangxiaofeng/p/5809451.html
     /// <summary>
     /// 用户
     /// </summary>
@@ -29,12 +30,17 @@ namespace Api.Resource.Models
         /// <summary>
         /// 用户所属角色
         /// </summary>
-        public string Role { get; set; }
+        //public string Role { get; set; }
+
+        /// <summary>
+        /// 用户角色
+        /// </summary>
+        public List<UserRole> userRoles { get; set; }
 
         /// <summary>
         /// 角色对应的权限
         /// </summary>
 
-        public List<UserPermission> Permissions { get; set; }
+        //public List<UserPermission> Permissions { get; set; }
     }
 }

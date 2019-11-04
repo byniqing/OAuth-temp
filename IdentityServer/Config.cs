@@ -133,7 +133,7 @@ namespace IdentityServer
                 //RequireConsent = true, //不现实授权页面
                 //ClientClaimsPrefix = "",
                 Claims = new List<Claim> {
-                    new Claim(JwtClaimTypes.Role, "admin")
+                    new Claim(JwtClaimTypes.Role, "thirdParty") // 第三方角色
                 },
                 //简写方式
                 //AllowedScopes = { "openid", "profile", "email", "api" },
@@ -303,6 +303,13 @@ namespace IdentityServer
                     ClientId = "android",
                     ClientSecrets = new List<Secret> {
                         new Secret("secret".Sha256())
+                    },
+                    //Claims={ new Claim(JwtClaimTypes.Role, "Admin"),new Claim(JwtClaimTypes.Role, "System") },
+                    //或者
+                    Claims=new List<Claim>{
+                            //自己内部用，设置大权限
+                            new Claim(JwtClaimTypes.Role, "Admin"),
+                            new Claim(JwtClaimTypes.Role, "System"),
                     },
                     RefreshTokenExpiration = TokenExpiration.Sliding,
                     AllowOfflineAccess = true,

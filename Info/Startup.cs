@@ -43,7 +43,6 @@ namespace Info
                  * 将会执行AddCookie()的处理程序
                  */
                 options.DefaultChallengeScheme = cookie;
-
                 /*
                  指定oidc为默认登录方式
                  也就是说没有授权则执行oidc的Handler 
@@ -80,6 +79,10 @@ namespace Info
                 options.ClientSecret = "secret";
                 //来自identityserver的令牌持久化在cookie中
                 options.SaveTokens = true;
+                //options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                //{
+                   
+                //};
                 //options.Scope.Clear(); //这会删除所有默认的scope
                  
                 //options.AccessDeniedPath //定义远程登录取消页面？？

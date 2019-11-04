@@ -124,7 +124,6 @@ namespace IdentityServer.Controllers
             {
                 // 把同意的结果发送给 identityserver
                 await _interaction.GrantConsentAsync(request, grantedConsent);
-
                 // indicate that's it ok to redirect back to authorization endpoint
                 result.RedirectUri = model.ReturnUrl;
                 //var ck = new Uri(model.ReturnUrl);

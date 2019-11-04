@@ -126,6 +126,7 @@ namespace IdentityServer
             })
             //.AddExtensionGrantValidator<SmsAuthCodeValidator>()
             //.AddResourceOwnerValidator<CustomResourceOwnerPasswordValidator>()
+             .AddExtensionGrantValidator<SmsAuthCodeValidator>()
             .AddProfileService<ProfileService>();
             //.Services.AddTransient<IProfileService, ProfileService>(); ;
             //.AddConfigurationStore<ConfigurationDbContext>(o => { });

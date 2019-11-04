@@ -18,6 +18,10 @@ namespace Api.Resource.Controllers
         [HttpGet("success")]
         public string Get()
         {
+            var ck = User.Claims.Where(w => w.Type == "role").FirstOrDefault().Value;
+            var ck1 = User.Claims.Where(w => w.Type == "role").FirstOrDefault();
+            var ck2 = User.Claims.Where(w => w.Type == "role");
+            var ck3 = User.Claims.Where(w => w.Type == "role").ToList();
             return "success";
         }
     }

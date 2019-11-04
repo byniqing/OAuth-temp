@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Api.Resource.Models
 {
-    public class Permissions
+    public class Permission
     {
         public const string Role = "Role";
         public const string RoleCreate = "Role.Create";

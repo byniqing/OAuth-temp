@@ -46,6 +46,7 @@ namespace IdentityServer.Date
                         NormalizedName = "Admin"
                     };
                     var roleResult = await _roleManager.CreateAsync(role);
+                    await _roleManager.CreateAsync(new ApplicationRole { Name="System",NormalizedName="System"});
                 }
 
                 //if (!context.Users.Any())
@@ -68,7 +69,7 @@ namespace IdentityServer.Date
                         Email = "cnblogs@163.com",
                         //PasswordHash = "",
                         //Avatar = "https://www.cnblogs.com/images/logo_small.gif",
-                        SecurityStamp = "ab", //设置密码的加密key
+                        SecurityStamp = "cnblogs", //设置密码的加密key
                     };
                     var userResult = await _userManger.CreateAsync(defaultUser, "123456");
 
@@ -77,8 +78,8 @@ namespace IdentityServer.Date
 
 
                         //把用户添加到角色权限组
-                        await _userManger.AddToRoleAsync(defaultUser, "admin");
-
+                        //await _userManger.AddToRoleAsync(defaultUser, "admin"); //添加一个角色
+                        await _userManger.AddToRolesAsync(defaultUser, new[] { "Admin", "System" }); //添加多个角色
                         if (!userResult.Succeeded)
                         {
                             logger.LogError("创建失败");

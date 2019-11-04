@@ -43,9 +43,9 @@ namespace Api.Resource.Authorization
                 if (context.User.IsInRole(role)) //这里区分大小写
                 {
                 }
-                if (context.User.IsInRole(user.Role)) //这里区分大小写
-                {
-                }
+                //if (context.User.IsInRole(user.Role)) //这里区分大小写
+                //{
+                //}
                 if (context.User.IsInRole("admin")) //这里区分大小写
                 {
                     context.Succeed(requirement);

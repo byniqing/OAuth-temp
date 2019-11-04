@@ -5,17 +5,21 @@ using System.Threading.Tasks;
 
 namespace Api.Resource.Models
 {
-    public class UserPermission
+    /// <summary>
+    /// 角色拥有的权限项
+    /// </summary>
+    public class RolePermission
     {
         public int Id { get; set; }
-        /// <summary>
-        /// 用户id
-        /// </summary>
-        public int UserId { get; set; }
 
         /// <summary>
-        /// 权限名称
-        /// CRUD
+        /// 角色id
+        /// 关联Role表id
+        /// </summary>
+        public int RoleId { get; set; }
+
+        /// <summary>
+        /// 权限项名称 CRUD
         /// Create
         /// Read
         /// Update
@@ -24,8 +28,8 @@ namespace Api.Resource.Models
         public string PermissionName { get; set; }
 
         /// <summary>
-        /// 当前权限可以操作的数据
+        /// 当前权限可以操作的数据,拥有的资源
         /// </summary>
-        public List<PermissionAction> permissionAction { get; set; }
+        public List<PermissionResource> permissionResources { get; set; }
     }
 }
