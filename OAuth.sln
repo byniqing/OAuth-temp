@@ -11,7 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "第三方客户端", "第�
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.Resource", "Api.Resource\Api.Resource.csproj", "{744A5B39-BEEF-4ED5-92A1-514234F9D8B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Info", "Info\Info.csproj", "{8A078C94-942F-44FC-9419-F561D636C122}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Info", "Info\Info.csproj", "{8A078C94-942F-44FC-9419-F561D636C122}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Admin", "Identity.Admin\Identity.Admin.csproj", "{CA6B7673-FB9B-4153-A848-604A6F0E23BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,10 @@ Global
 		{8A078C94-942F-44FC-9419-F561D636C122}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A078C94-942F-44FC-9419-F561D636C122}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A078C94-942F-44FC-9419-F561D636C122}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA6B7673-FB9B-4153-A848-604A6F0E23BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA6B7673-FB9B-4153-A848-604A6F0E23BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA6B7673-FB9B-4153-A848-604A6F0E23BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA6B7673-FB9B-4153-A848-604A6F0E23BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
