@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using IdentityModel;
+using System.ComponentModel;
 
 namespace Api.Resource.Controllers
 {
@@ -20,6 +21,7 @@ namespace Api.Resource.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("OtherInfo")]
+        [DisplayName("测试)")]
         //[Authorize(policy: "OtherInfo")]
         public ActionResult Get()
         {
@@ -49,8 +51,8 @@ namespace Api.Resource.Controllers
         /// 获取我的好友
         /// </summary>
         /// <returns></returns>
-        [HttpGet("Firend")]
-        public ActionResult GetFirend()
+        [HttpGet("Firend/{userid}")]
+        public ActionResult GetFirend(int userid)
         {
             return Ok(new { name = "获取我的好友" });
         }
@@ -65,5 +67,39 @@ namespace Api.Resource.Controllers
             return "修改资料成功";
         }
 
+
+        /// <summary>
+        /// 这种方式：前端必须传 application/json 才能映射到
+        /// 默认就是：[FromBody]
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        [HttpPost("Update")]
+        public string UpdateShow(Info  info)
+        {
+            return "修改资料成功";
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        [HttpPost("form")]
+        public string fors([FromForm]Info info)
+        {
+            return "修改资料成功";
+        }
+
+        [HttpPost("h/{userid}")]
+        public string geth(int userid,[FromBody] int id)
+        {
+            return "修改资料成功";
+        }
+    }
+
+    public class Info
+    {
+        public int userId { get; set; }
+        public string name { get; set; }
     }
 }

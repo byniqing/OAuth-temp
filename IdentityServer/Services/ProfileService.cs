@@ -89,6 +89,14 @@ namespace IdentityServer.Services
             var cks = await _roleManager.FindByNameAsync(clientRole);
             var myi = cks.Id;
 
+
+            var myrol = await _roleManager.FindByNameAsync(clientRole); //这里的角色名称是标准化的名称，所以不用管大小写
+            var myrol1 = await _roleManager.FindByNameAsync("ThirdParty");
+
+            //获取RoleClaims
+            var mycls = await _roleManager.GetClaimsAsync(myrol);
+
+
             var role_id = _roleManager.Roles.First(_ => _.Name == clientRole).Id.ToString();
 
             var claims = GetClaimsFromUser(user).ToList();
@@ -98,6 +106,8 @@ namespace IdentityServer.Services
                new Claim(JwtClaimTypes.Role, clientRole),//返回第三方的角色
                new Claim("role_id", role_id) //角色ID
             });
+
+            claims.AddRange(mycls);
 
             //var issuedClaims = claims.ToList();
 

@@ -51,7 +51,7 @@ auth_code:111
             //}
 
             //context.Result = new GrantValidationResult(userId.ToString(), GrantType);
-            context.Result = new GrantValidationResult("3", GrantType);
+            context.Result = new GrantValidationResult("1", GrantType);
         }
     }
 }

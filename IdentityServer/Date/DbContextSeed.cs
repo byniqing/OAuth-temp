@@ -47,6 +47,17 @@ namespace IdentityServer.Date
                     };
                     var roleResult = await _roleManager.CreateAsync(role);
                     await _roleManager.CreateAsync(new ApplicationRole { Name="System",NormalizedName="System"});
+
+                    //第三方
+                    var trole = new ApplicationRole
+                    {
+                        Name = "ThirdParty",
+                        NormalizedName = "thirdParty"
+                    };
+                    var third =  await _roleManager.CreateAsync(trole);
+                    //action 指动作，意思是该角色可以做的事情，不管是是CRUD，都可以理解为一个action
+                    await _roleManager.AddClaimAsync(trole, new Claim("action", "api/Identity/OtherInfo"));
+                    await _roleManager.AddClaimAsync(trole, new Claim("action", "api/Identity/oidc1"));
                 }
 
                 //if (!context.Users.Any())
@@ -57,7 +68,6 @@ namespace IdentityServer.Date
 
                 //    await context.SaveChangesAsync();
                 //}
-
 
                 //https://www.cnblogs.com/rocketRobin/p/9070684.html
                 //如果没有用户，则创建一个
@@ -76,7 +86,6 @@ namespace IdentityServer.Date
                     if (userResult.Succeeded)
                     {
 
-
                         //把用户添加到角色权限组
                         //await _userManger.AddToRoleAsync(defaultUser, "admin"); //添加一个角色
                         await _userManger.AddToRolesAsync(defaultUser, new[] { "Admin", "System" }); //添加多个角色
@@ -89,6 +98,7 @@ namespace IdentityServer.Date
                                 logger.LogError(e.Description);
                             });
                         }
+
 
                         //可以添加用户的claim
                         var result11 = _userManger.AddClaimsAsync(defaultUser, new Claim[]{

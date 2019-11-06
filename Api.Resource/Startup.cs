@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 using System.Threading.Tasks;
 using Api.Resource.Authorization;
+using Api.Resource.Filter;
+using Api.Resource.Library;
 using Api.Resource.Models;
 using IdentityModel;
 using IdentityServer4.AccessTokenValidation;
@@ -18,6 +22,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
 
 namespace Api.Resource
 {
@@ -98,7 +103,24 @@ namespace Api.Resource
             services.AddSingleton<UserStore>();
             services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddControllers();
+            //services.AddControllers();
+            services.AddControllers(_ =>
+            {
+                _.Filters.Add(new UserOwnerFilter());
+            }).AddJsonOptions(options =>
+             {
+                 //自定义返回时间格式
+                 //options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
+                 //options.JsonSerializerOptions.Converters.Add(new DateTimeNullConverter()); //可空的
+                 //options.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
+                 options.JsonSerializerOptions.PropertyNamingPolicy = null; //取消默认驼峰
+             });
+
+            //路由小写
+            services.AddRouting(options => options.LowercaseUrls = true);
+
+            //全局日志记录过滤器
+            //services.AddMvc(m => m.Filters.Add<UserOwnerFilter>());
 
             //创建全局授权策略，用了全局的。就不不用上面的授权
             //也不需要再控制器上面加  Authorize标签
