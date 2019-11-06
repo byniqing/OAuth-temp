@@ -27,7 +27,7 @@ namespace Api.Resource.Models
         /// </summary>
         public Role Role { get; set; }
         /// <summary>
-        /// 角色拥有的权限项
+        /// 角色拥有的权限
         /// </summary>
 
         public List<RolePermission> Permissions { get; set; }

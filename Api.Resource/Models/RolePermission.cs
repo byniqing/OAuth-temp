@@ -28,7 +28,7 @@ namespace Api.Resource.Models
         public string PermissionName { get; set; }
 
         /// <summary>
-        /// 当前权限可以操作的数据,拥有的资源
+        /// 当前权限可以操作的数据,拥有的资源，也就是数据权限
         /// </summary>
         public List<PermissionResource> permissionResources { get; set; }
     }

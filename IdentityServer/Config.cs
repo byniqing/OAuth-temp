@@ -108,7 +108,7 @@ namespace IdentityServer
         /// <returns></returns>
         public static List<Client> GetClients()
         {
-            var code = new Client
+            var oidc = new Client
             {
                 ClientId = "Info.Client",
                 ClientName = "Info客户端",
@@ -198,78 +198,81 @@ namespace IdentityServer
                 // AccessToken的有效期，默认1小时
                 //AccessTokenLifetime = 3600
             };
-
-            var ClientCredentials = new Client
+            #region 密码模式 ResourceOwnerPassword
+            var resourceOwnerPassword = new Client
             {
-                ClientId = "Info.Client",
-                ClientName = "Info客户端",
+                ClientId = "userinfo_pwd",
+                AllowedGrantTypes = { GrantType.ResourceOwnerPassword },//客户端输入：password
                 ClientSecrets = { new Secret("secret".Sha256()) },
-                ClientUri = "http://www.cnblogs.com", //客户端
-                LogoUri = "https://www.cnblogs.com/images/logo_small.gif",
-                /*
-                  response_type(响应类型)		    Flow（流程）
-                    code			        Authorization Code Flow
-                    id_token		        Implicit Flow
-                    id_token token		    Implicit Flow
-                    code id_token		    Hybrid Flow
-                    code token		        Hybrid Flow
-                    code id_token token		Hybrid Flow
-
-                Client端传的类型跟授权服务器授权类型必须一一对应
-                AllowedGrantTypes模式决定了响应类型
-                 */
-
-                //允许的授权类型
-                AllowedGrantTypes = { GrantType.ClientCredentials },
-                //RequireConsent = true, //不现实授权页面
-                //ClientClaimsPrefix = "",
-                Claims = new List<Claim> {
-                    new Claim(JwtClaimTypes.Role, "admin")
-                },
-
-                /*
-                 如果客户端使用的认证是
-                 */
-                //AllowedGrantTypes = GrantTypes.Hybrid,
-                //允许客户端的作用域，包括用户信息和APi资源权限
-                AllowedScopes = {
-                    IdentityServerConstants.StandardScopes.Profile,
-                    IdentityServerConstants.StandardScopes.OpenId, //直接用封装的变量也行
-                                                                   //"openid", //直接用字符串也行
-                    IdentityServerConstants.StandardScopes.Email,
-                    //IdentityServerConstants.StandardScopes.OfflineAccess,
-                    //"offline_access",
-                    //"90",
-                    //"address",
-                    "OtherInfo",
-                    "address"
-                },
-
-                //客户端默认传过来的是这个地址，如果跟这个不一直就会异常
-                /*
-                   授权成功后，返回地址
-                   客户端哪里触发调用的地址，就会回调当前地址
-                   比如：访问admin控制器未授权，调整授权服务器成功后，就会回调到admin页面
-                 */
-                RedirectUris = {
-                    "http://localhost:5009/signin-oidc"
-                },
-                //注销后重定向的地址
-                PostLogoutRedirectUris = {
-                    "http://localhost:5009/signout-callback-oidc"
-                },
-                /*
-                 开启后，客户端才能options.Scope.Add("offline_access")
-                 */
-                AllowOfflineAccess = true, ////offline_access(开启refresh token)
-                //AccessTokenLifetime = 3600, //token有效期，默认是3600秒 （一个小时）
-                /*
-                 这样就会把返回的profile信息包含在idtoken中
-                 */
+                ClientName = "客户端名称",
+                RefreshTokenUsage = TokenUsage.ReUse,
                 AlwaysIncludeUserClaimsInIdToken = true,
-                //AccessTokenLifetime token 过期时间
+                AllowOfflineAccess = true,
+                AllowedScopes = { "OtherInfo", "oidc1" } //
+            };
+            #endregion
+            #region ClientCredentials
+            var clientCredentials = new Client
+            {
+                /******************客户端 请求对应的字段*******************
+                 client_id：客户端的ID，必选
+                 grant_type：授权类型，必选，此处固定值“code”
+                 client_secret：客户端的密码，必选
+                 scope：申请的权限范围，可选，如果传了必须是正确的，否则也不通过
+                 ************************************/
+
+                //这个Client集合里面，ClientId必须是唯一的
+                ClientId = "780987652", // 客户端ID，客户端传过来的必须是这个，验证才能通过,
+                AllowedGrantTypes = { GrantType.ClientCredentials },// 授权类型，指客户端可以使用的模式
+                ClientSecrets = { new Secret("secret".Sha256()) }, //客户端密钥
+                RequireClientSecret = false, //不验证secret ，一般是信得过的第三方
+
+                ClientName = "客户端名称",
+                Description = "描述",
+                //Claims = new List<Claim> {
+                //    new Claim("super","super")
+                //},
+                /*
+                 权限范围，对应的ApiResouce，这里是客户端模式，对应的是用户资源，所以是ApiResouce
+                 如果是oidc 这对应的是identityResouece，身份资源
+                 所以是取决于AllowedGrantTypes的类型
+
+                允许客户端访问的API作用域
+                 */
+                AllowedScopes = { "OtherInfo", "oidc1" }
             };
 
+            #endregion
+            #region 自定义
+            var sms_auth_code = new Client
+            {
+                ClientId = "android",
+                ClientSecrets = new List<Secret> {
+                        new Secret("secret".Sha256())
+                    },
+                //Claims={ new Claim(JwtClaimTypes.Role, "Admin"),new Claim(JwtClaimTypes.Role, "System") },
+                //或者
+                Claims = new List<Claim>{
+                            //自己内部用，设置大权限
+                            //new Claim(JwtClaimTypes.Role, "Admin"),
+                            new Claim(JwtClaimTypes.Role, "System"),
+                    },
+                RefreshTokenExpiration = TokenExpiration.Sliding,
+                AllowOfflineAccess = true,
+                RequireClientSecret = false, //说明可以不传client_secret 除非很信任的程序
+                AllowedGrantTypes = new List<string> { "sms_auth_code" },
+                AlwaysIncludeUserClaimsInIdToken = true,
+                AllowedScopes = new List<string> {
+                        //"gateway_api","user_api",
+                         "OtherInfo",
+                        "address",
+                        "oidc1",
+                        IdentityServerConstants.StandardScopes.OfflineAccess,
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
+                    },
+            };
+            #endregion
             var oauth = new Client
             {
                 ClientId = "OAuth.Client",
@@ -297,35 +300,12 @@ namespace IdentityServer
                 //AllowOfflineAccess = true,
             };
             return new List<Client> {
-               code,
-               new Client
-                {
-                    ClientId = "android",
-                    ClientSecrets = new List<Secret> {
-                        new Secret("secret".Sha256())
-                    },
-                    //Claims={ new Claim(JwtClaimTypes.Role, "Admin"),new Claim(JwtClaimTypes.Role, "System") },
-                    //或者
-                    Claims=new List<Claim>{
-                            //自己内部用，设置大权限
-                            //new Claim(JwtClaimTypes.Role, "Admin"),
-                            new Claim(JwtClaimTypes.Role, "System"),
-                    },
-                    RefreshTokenExpiration = TokenExpiration.Sliding,
-                    AllowOfflineAccess = true,
-                    RequireClientSecret = false, //说明可以不传client_secret 除非很信任的程序
-                    AllowedGrantTypes = new List<string> { "sms_auth_code" },
-                    AlwaysIncludeUserClaimsInIdToken = true,
-                    AllowedScopes = new List<string> {
-                        //"gateway_api","user_api",
-                         "OtherInfo",
-                        "address",
-                        "oidc1",
-                        IdentityServerConstants.StandardScopes.OfflineAccess,
-                        IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
-                    },
-                }
+               oidc,
+               sms_auth_code,
+               //resourceOwnerPassword,
+               //clientCredentials,
+               //oauth
+
            };
         }
 
