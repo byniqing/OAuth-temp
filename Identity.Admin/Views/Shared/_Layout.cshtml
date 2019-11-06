@@ -10,7 +10,8 @@
     @*<link rel="stylesheet" type="text/css" href="~/css/main.css">*@
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css" href="~/css/font-awesome.min.css">
-
+    <!--改变页面大小的样式-->
+    <link rel="stylesheet" type="text/css" href="~/css/demo.css">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -65,6 +66,7 @@
     <![endif]-->
 
 </head>
+
 <body class="app sidebar-mini">
     <!--顶部导航栏开始-->
     <div class="navbar navbar-default" id="navbar">
@@ -1389,22 +1391,35 @@
             <!--右边内容结束-->
         </div>
         <!--右下角返回顶部开始-->
-        <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+        <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse" style="z-index: 19;background-color: lightslategray;line-height: 25px;min-height: 28px;bottom: 29px;right: 0px;position:fixed;">
             <i class="icon-double-angle-up icon-only bigger-110"></i>
         </a>
         <!--右下角返回顶部结束-->
     </div>
+
     @*<div class="container">
         <main role="main" class="pb-3">*@
 
     @*</main>
         </div>*@
 
-    @*<footer class="border-top footer text-muted">
-            <div class="container">
+    @*<div class="navbar navbar-default navbar-fixed-bottom" id="navbar navbar-default">
+        op
+        </div>*@
+    <footer class="navbar navbar-default navbar-fixed-bottom" style="z-index: 19;background-color: white;line-height: 25px;min-height: 28px;border: 1px solid #D3D3D3;/* font-size: 12px; */">
+        @*<div class="container">
                 &copy; 2019 - Identity.Admin - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-            </div>
-        </footer>*@
+            </div>*@
+        <span style="float:left;padding-left:5px;width:30%;text-align: left;">当前用户：刘德华</span>
+        <span style="padding-right:5px;width:40%">
+            版权所有 ©
+            <span>2019</span>
+            <a href="http://www.bidu.com" target="_blank">测试测试公司</a>
+        </span>
+        <span style="float:right;padding-right:5px;width:30%;text-align: right;">
+            版本：V3.2.0【Spring Cloud微服务版】
+        </span>
+    </footer>
 
 
 
@@ -1412,10 +1427,10 @@
 
 
     @*<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>*@
+        <script src="~/js/site.js" asp-append-version="true"></script>*@
     @RenderSection("Scripts", required: false)
     @*<script src="~/js/jquery-3.3.1.min.js"></script>
-    <script src="~/js/popper.min.js"></script>*@
+        <script src="~/js/popper.min.js"></script>*@
     @*<script src="~/js/bootstrap.min.js"></script>*@
     @*<script src="~/js/main.js"></script>*@
     <!-- The javascript plugin to display page loading on top-->
@@ -1893,6 +1908,72 @@
             });
         })
 
+
+        //改变页面大小脚本 开始
+        var dqfl = "UI";
+        var theme_list_open = false;
+
+        $(document).ready(function () {
+            function fixHeight() {
+                var headerHeight = $("#switcher").height();
+                $("#iframe").attr("height", $(window).height() - 54 + "px");
+            }
+            $(window).resize(function () {
+                fixHeight();
+            }).resize();
+
+            $('.icon-monitor').addClass('active');
+
+            $(".icon-mobile-3").click(function () {
+                $("#by").css("overflow-y", "auto");
+                $('#iframe-wrap').removeClass().addClass('mobile-width-3');
+                $('.icon-tablet,.icon-mobile-1,.icon-monitor,.icon-mobile-2,.icon-mobile-3').removeClass('active');
+                $(this).addClass('active');
+                return false;
+            });
+
+            $(".icon-mobile-2").click(function () {
+                $("#by").css("overflow-y", "auto");
+                $('#iframe-wrap').removeClass().addClass('mobile-width-2');
+                $('.icon-tablet,.icon-mobile-1,.icon-monitor,.icon-mobile-2,.icon-mobile-3').removeClass('active');
+                $(this).addClass('active');
+                return false;
+            });
+
+
+            $(".icon-mobile-1").click(function () {
+                $("#by").css("overflow-y", "auto");
+                $('#iframe-wrap').removeClass().addClass('mobile-width');
+                $('.icon-tablet,.icon-mobile,.icon-monitor,.icon-mobile-2,.icon-mobile-3').removeClass('active');
+                $(this).addClass('active');
+                return false;
+            });
+
+            $(".icon-tablet").click(function () {
+                $("#by").css("overflow-y", "auto");
+                $('#iframe-wrap').removeClass().addClass('tablet-width');
+                $('.icon-tablet,.icon-mobile-1,.icon-monitor,.icon-mobile-2,.icon-mobile-3').removeClass('active');
+                $(this).addClass('active');
+                return false;
+            });
+
+            $(".icon-monitor").click(function () {
+                $("#by").css("overflow-y", "hidden");
+                $('#iframe-wrap').removeClass().addClass('full-width');
+                $('.icon-tablet,.icon-mobile-1,.icon-monitor,.icon-mobile-2,.icon-mobile-3').removeClass('active');
+                $(this).addClass('active');
+                return false;
+            });
+
+            if (dqfl.indexOf("APP模板") != -1) {
+                $("#by").css("overflow-y", "auto");
+                $('#iframe-wrap').removeClass().addClass('mobile-width-2');
+                $('.icon-tablet,.icon-mobile-1,.icon-monitor,.icon-mobile-2,.icon-mobile-3').removeClass('active');
+                $(this).addClass('active');
+                return false;
+            }
+        });
+                                    //改变页面大小脚本 结束
     </script>
 </body>
 </html>
