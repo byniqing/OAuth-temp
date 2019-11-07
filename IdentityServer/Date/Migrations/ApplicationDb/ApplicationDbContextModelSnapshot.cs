@@ -48,6 +48,29 @@ namespace IdentityServer.Date.Migrations.ApplicationDb
                     b.ToTable("AspNetRoles");
                 });
 
+            modelBuilder.Entity("IdentityServer.Models.ApplicationUseAuthorization", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2019, 11, 7, 11, 39, 22, 709, DateTimeKind.Local).AddTicks(9635));
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AspNetUserAuthorizations");
+                });
+
             modelBuilder.Entity("IdentityServer.Models.ApplicationUser", b =>
                 {
                     b.Property<int>("Id")

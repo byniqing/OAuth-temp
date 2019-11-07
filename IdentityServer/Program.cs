@@ -53,7 +53,7 @@ namespace IdentityServer
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<TestStartup>();
+                    webBuilder.UseStartup<Startup>();
                     webBuilder.UseUrls("http://localhost:5008");
                 });
     }

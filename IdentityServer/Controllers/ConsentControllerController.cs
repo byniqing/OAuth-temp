@@ -9,6 +9,10 @@ using Microsoft.Extensions.Logging;
 using IdentityServer4.Models;
 using IdentityServer.ViewModels;
 using IdentityServer.Common;
+using Microsoft.AspNetCore.Identity;
+using IdentityServer.Models;
+using IdentityServer.Date;
+using IdentityServer4.EntityFramework.DbContexts;
 
 namespace IdentityServer.Controllers
 {
@@ -21,15 +25,24 @@ namespace IdentityServer.Controllers
         private readonly IResourceStore _resourceStore;
         private readonly IIdentityServerInteractionService _interaction;
         private readonly ILogger<ConsentController> _logger;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly ConfigurationDbContext _configurationDbContext;
 
         public ConsentController(IClientStore clientStore,
             IResourceStore resourceStore,
             IIdentityServerInteractionService interaction,
-             ILogger<ConsentController> logger)
+            UserManager<ApplicationUser> userManager,
+            ApplicationDbContext applicationDbContext,
+            ConfigurationDbContext configurationDbContext,
+        ILogger<ConsentController> logger)
         {
             _clientStore = clientStore;
             _resourceStore = resourceStore;
             _interaction = interaction;
+            _userManager = userManager;
+            _applicationDbContext = applicationDbContext;
+            _configurationDbContext = configurationDbContext;
             _logger = logger;
         }
         /// <summary>
@@ -129,6 +142,34 @@ namespace IdentityServer.Controllers
                 //var ck = new Uri(model.ReturnUrl);
                 //result.RedirectUri = "http://localhost:5006/";
                 result.ClientId = request.ClientId;
+
+                var id = _configurationDbContext.Clients.ToList().Find(f => f.ClientId == request.ClientId).Id;
+                var entity = _applicationDbContext.applicationUseAuthorizations.FirstOrDefault(_ => _.ClientId == id);
+                //判断是否授权过
+                if (entity != null && !entity.Enabled)
+                {
+                    entity.Enabled = true;
+                    _applicationDbContext.Update(entity);
+                    _applicationDbContext.SaveChanges();
+                }
+                else
+                {
+                    //给用户添加第三方授权信息
+                    await _applicationDbContext.AddAsync(new ApplicationUseAuthorization
+                    {
+                        ClientId = id,
+                        Enabled = true
+                    });
+                    ////给用户添加第三方授权信息
+                    //_applicationDbContext.applicationUseAuthorizations.Add(new ApplicationUseAuthorization
+                    //{
+                    //    ClientId = id,
+                    //    Enabled = true
+                    //});
+                    _applicationDbContext.SaveChanges();
+                }
+
+
             }
             else
             {
@@ -195,7 +236,7 @@ namespace IdentityServer.Controllers
                     //    //    .Select(s => CreateScopeViewModel(s, cvm.ScopesConsented.Contains(s.Name) || model == null));
                     //}
 
-                   
+
                 }
             }
             return cvm;

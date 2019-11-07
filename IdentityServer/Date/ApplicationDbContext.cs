@@ -18,6 +18,7 @@ namespace IdentityServer.Date
     //https://www.cnblogs.com/lonelyxmas/p/10597446.html
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, int>
     {
+        public DbSet<ApplicationUseAuthorization> applicationUseAuthorizations { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         { }
         protected override void OnModelCreating(ModelBuilder builder)
@@ -33,6 +34,14 @@ namespace IdentityServer.Date
                 entity.HasKey(h => h.Id); //主键
                 entity.Property(p => p.Id).ValueGeneratedOnAdd(); //主键自增
                 //entity.Ignore(i => i.NormalizedEmail); //忽略该字段，即：不映射该字段到表中
+            });
+
+            builder.Entity<ApplicationUseAuthorization>(e => {
+                e.ToTable("AspNetUserAuthorizations")
+                .Property(_=>_.Id).ValueGeneratedOnAdd().HasDefaultValue(1);
+                e.Property(_ => _.Created).HasDefaultValue(DateTime.Now);
+                e.HasKey(_ => _.Id);
+                
             });
         }
     }
@@ -62,6 +71,10 @@ namespace IdentityServer.Date
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ApiResource>(c => c.HasKey(a => a.Id));
+
+
+
             modelBuilder.ConfigureClientContext(storeOptions);
             modelBuilder.ConfigureResourcesContext(storeOptions);
             base.OnModelCreating(modelBuilder);
@@ -71,7 +84,7 @@ namespace IdentityServer.Date
     public class test : DbContext, IPersistedGrantDbContext
     {
         private readonly OperationalStoreOptions storeOptions;
-        
+
         public test(DbContextOptions<test> options)
          : base(options)
         {
@@ -101,7 +114,7 @@ namespace IdentityServer.Date
     /// <summary>
     /// 扩展DeviceFlowCodes表
     /// </summary>
-    public class ExtendDeviceFlowCodes : DeviceFlowCodes
+    public class ExtendDeviceFlowCodes //: DeviceFlowCodes
     {
         /// <summary>
         /// 备注
@@ -114,15 +127,19 @@ namespace IdentityServer.Date
         //public DbSet<PersistedGrant> persistedGrants { get; set; }
         //public DbSet<DeviceFlowCodes> DeviceFlowCodes { get; set; }
 
+        //public DbSet<PersistedGrant> PersistedGrants { get; set; }
+
+        public DbSet<ExtendDeviceFlowCodes> test1 { get; set; }
+
         public RegisterPersistedGrant(DbContextOptions<PersistedGrantDbContext> options, OperationalStoreOptions storeOptions) : base(options, storeOptions)
         {
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<ExtendDeviceFlowCodes>(e => { 
-            
-            });
+            //modelBuilder.Entity<DeviceFlowCodes>(e => { 
+            //e.OwnsOne(e=>e.)
+            //});
         }
     }
 }

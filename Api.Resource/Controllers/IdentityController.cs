@@ -38,7 +38,7 @@ namespace Api.Resource.Controllers
         //[Authorize(Policy = "oidc1")]
         public ActionResult Name(string userid)
         {
-            //判断授权用户和userid是否是同一个人
+            //判断授权用户和userId是否是同一个人
 
             var subjectId = User.Claims.Where(x => x.Type == JwtClaimTypes.Subject).FirstOrDefault().Value;
 
@@ -51,8 +51,8 @@ namespace Api.Resource.Controllers
         /// 获取我的好友
         /// </summary>
         /// <returns></returns>
-        [HttpGet("Firend/{userid}")]
-        public ActionResult GetFirend(int userid)
+        [HttpGet("Firend/{userId}")]
+        public ActionResult GetFirend(int userId)
         {
             return Ok(new { name = "获取我的好友" });
         }
@@ -90,8 +90,8 @@ namespace Api.Resource.Controllers
             return "修改资料成功";
         }
 
-        [HttpPost("h/{userid}")]
-        public string geth(int userid,[FromBody] int id)
+        [HttpPost("h/{id}")]
+        public string geth(int id, [FromBody] int userId)
         {
             return "修改资料成功";
         }

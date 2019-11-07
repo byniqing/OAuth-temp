@@ -106,7 +106,7 @@ namespace Api.Resource
             //services.AddControllers();
             services.AddControllers(_ =>
             {
-                _.Filters.Add(new UserOwnerFilter());
+                //_.Filters.Add(new UserOwnerFilter());
             }).AddJsonOptions(options =>
              {
                  //自定义返回时间格式

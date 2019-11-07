@@ -14,6 +14,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using IdentityModel;
 using Newtonsoft.Json.Linq;
+using Info.Date;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace Info
 {
@@ -29,7 +32,17 @@ namespace Info
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            /*
+              Add-Migration init -Context InfoDbContext
+              Update-Database -Context InfoDbContext
+             */
+            var migrationAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             services.AddControllersWithViews();
+            //services.AddSingleton<InfoDbContext>();
+            services.AddDbContext<InfoDbContext>(_ =>
+            {
+                _.UseSqlServer(Configuration.GetConnectionString("InfoDb"));
+            });
             var oidc = OpenIdConnectDefaults.DisplayName; //OpenIdConnect
             var cookie = CookieAuthenticationDefaults.AuthenticationScheme;
             services.AddAuthentication(options =>
@@ -81,10 +94,10 @@ namespace Info
                 options.SaveTokens = true;
                 //options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 //{
-                   
+
                 //};
                 //options.Scope.Clear(); //这会删除所有默认的scope
-                 
+
                 //options.AccessDeniedPath //定义远程登录取消页面？？
                 //options.Scope.Add("openid");
                 //options.Scope.Add("profile");

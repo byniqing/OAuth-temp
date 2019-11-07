@@ -65,13 +65,14 @@ namespace Api.Resource.Authorization
                 var IsInAction = claims.Any(_ => _.Type == "action" && _.Value.ToLower() == route.ToLower());
 
                 //用户会有多个角色，不能只获取第一个，所以直接判断是否办好admin 角色
+                //或者直接根据角色，重新再数据库查询
                 var IsInRole = claims.Any(x => x.Type == JwtClaimTypes.Role && x.Value.ToLower() == "admin");
                 if (IsInRole || IsInAction)
                 {
                     context.Succeed(requirement);
                 }
                 else context.Fail();
-                //if (context.User.IsInRole("admin")) //这里区分大小写,如果是Admin ,则是false
+                //if (context.User.IsInRole("admin")) //这里区分大小写,如果User中Claim是Admin ,则是false
                 //{
                 //    context.Succeed(requirement);
                 //}
