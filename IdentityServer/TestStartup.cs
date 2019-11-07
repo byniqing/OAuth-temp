@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using IdentityServer.Date;
 using Microsoft.EntityFrameworkCore;
 using IdentityServer.Authertication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace IdentityServer
 {
@@ -47,6 +48,25 @@ namespace IdentityServer
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 1;
             });
+            #region 本地用cookie
+            var cookie = CookieAuthenticationDefaults.AuthenticationScheme;
+            services.AddAuthentication(options =>
+            {
+                /*
+                 使用cookie作为本地登录用户
+                 */
+                options.DefaultScheme = cookie;
+                /*
+                 * 当需要用户登录时，我们将使用cookie协议
+                 * 将会执行AddCookie()的处理程序
+                 */
+                options.DefaultChallengeScheme = cookie;
+            })
+             .AddCookie(cookie, options =>
+             {
+                 options.LoginPath = "/account";
+             });
+            #endregion
             //services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
             //services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, UserClaimsFactory>();
 
@@ -85,7 +105,7 @@ namespace IdentityServer
             services.AddControllersWithViews();
         }
 
-       
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

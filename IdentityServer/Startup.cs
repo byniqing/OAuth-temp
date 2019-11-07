@@ -18,6 +18,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer.Authertication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace IdentityServer
 {
@@ -90,6 +91,25 @@ namespace IdentityServer
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 1;
             });
+            #region 本地用cookie
+            var cookie = CookieAuthenticationDefaults.AuthenticationScheme;
+            services.AddAuthentication(options =>
+            {
+                /*
+                 使用cookie作为本地登录用户
+                 */
+                options.DefaultScheme = cookie;
+                /*
+                 * 当需要用户登录时，我们将使用cookie协议
+                 * 将会执行AddCookie()的处理程序
+                 */
+                options.DefaultChallengeScheme = cookie;
+            })
+             .AddCookie(cookie, options =>
+             {
+                 options.LoginPath = "/account";
+             }); 
+            #endregion
 
             //注册ids中间件
             services.AddIdentityServer(options =>
