@@ -36,12 +36,13 @@ namespace IdentityServer.Date
                 //entity.Ignore(i => i.NormalizedEmail); //忽略该字段，即：不映射该字段到表中
             });
 
-            builder.Entity<ApplicationUseAuthorization>(e => {
+            builder.Entity<ApplicationUseAuthorization>(e =>
+            {
                 e.ToTable("AspNetUserAuthorizations")
-                .Property(_=>_.Id).ValueGeneratedOnAdd().HasDefaultValue(1);
+                .Property(_ => _.Id).ValueGeneratedOnAdd().HasDefaultValue(1);
                 e.Property(_ => _.Created).HasDefaultValue(DateTime.Now);
                 e.HasKey(_ => _.Id);
-                
+
             });
         }
     }
@@ -93,7 +94,8 @@ namespace IdentityServer.Date
         public test(DbContextOptions<PersistedGrantDbContext> options, OperationalStoreOptions storeOptions)
         : base(options)
         {
-            this.storeOptions = storeOptions ?? throw new ArgumentNullException(nameof(storeOptions));
+            //this.storeOptions = storeOptions ?? throw new ArgumentNullException(nameof(storeOptions));
+            this.storeOptions = storeOptions ?? throw new Exception("空对象");
         }
 
         public DbSet<PersistedGrant> PersistedGrants { get; set; }
@@ -116,30 +118,62 @@ namespace IdentityServer.Date
     /// </summary>
     public class ExtendDeviceFlowCodes //: DeviceFlowCodes
     {
+        public int Id { get; set; }
         /// <summary>
         /// 备注
         /// </summary>
         public string AddRemark { get; set; }
     }
-    public class RegisterPersistedGrant : PersistedGrantDbContext
+
+    public class ParDeviceFlowCodes : DeviceFlowCodes
     {
+        public string name { get; set; }
+    }
+
+    public class show
+    {
+        public string name { get; set; }
+    }
+
+    public class RegisterPersistedGrant : PersistedGrantDbContext<PersistedGrantDbContext>
+    {
+        //https://www.cnblogs.com/liangxiaofeng/p/5807051.html
         ////new IdentityServer4.EntityFramework.Entities.PersistedGrant
         //public DbSet<PersistedGrant> persistedGrants { get; set; }
-        //public DbSet<DeviceFlowCodes> DeviceFlowCodes { get; set; }
+        //public new DbSet<ParDeviceFlowCodes> DeviceFlowCodes { get; set; }
 
         //public DbSet<PersistedGrant> PersistedGrants { get; set; }
-
+        private readonly OperationalStoreOptions storeOptions;
         public DbSet<ExtendDeviceFlowCodes> test1 { get; set; }
 
-        public RegisterPersistedGrant(DbContextOptions<PersistedGrantDbContext> options, OperationalStoreOptions storeOptions) : base(options, storeOptions)
+        public RegisterPersistedGrant(DbContextOptions<RegisterPersistedGrant> options, OperationalStoreOptions storeOptions) : base(options, storeOptions)
         {
+            this.storeOptions = storeOptions ?? throw new ArgumentNullException(nameof(storeOptions));
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            //modelBuilder.Entity<ExtendDeviceFlowCodes>(e => e.HasNoKey()); //这样就说明是没有主键的
+            modelBuilder.Entity<ExtendDeviceFlowCodes>(e => e.HasKey(_ => _.Id));
+
+            modelBuilder.Entity<show>(e => e.ToTable("DeviceCodes"));
+
             //modelBuilder.Entity<DeviceFlowCodes>(e => { 
             //e.OwnsOne(e=>e.)
             //});
+        }
+    }
+
+    public class PersistedGrantMysqlDbContext : PersistedGrantDbContext<PersistedGrantDbContext>
+    {
+        public PersistedGrantMysqlDbContext(DbContextOptions<PersistedGrantMysqlDbContext> options, OperationalStoreOptions storeOptions) : base(options, storeOptions)
+        {
+
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.PersistedGrant", e => e.Property<string>("Data").HasMaxLength(20000));//这里原来是5W 超长了
         }
     }
 }

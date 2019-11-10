@@ -53,7 +53,7 @@ namespace IdentityServer.Date.Migrations.ApplicationDb
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasDefaultValue(1);
 
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
@@ -61,7 +61,7 @@ namespace IdentityServer.Date.Migrations.ApplicationDb
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2019, 11, 7, 11, 39, 22, 709, DateTimeKind.Local).AddTicks(9635));
+                        .HasDefaultValue(new DateTime(2019, 11, 10, 18, 32, 8, 327, DateTimeKind.Local).AddTicks(7384));
 
                     b.Property<bool>("Enabled")
                         .HasColumnType("bit");

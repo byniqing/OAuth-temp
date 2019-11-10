@@ -140,11 +140,11 @@ namespace IdentityServer.Date
                     scope.ServiceProvider.GetService<PersistedGrantDbContext>().Database.Migrate();
 
                     //添加
-                    //var grant = scope.ServiceProvider.GetService<PersistedGrantDbContext>();
-                    //grant.PersistedGrants.Add(new IdentityServer4.EntityFramework.Entities.PersistedGrant
-                    //{
-                    //    ClientId = ""
-                    //});
+                    var grant = scope.ServiceProvider.GetService<PersistedGrantDbContext>();
+                    grant.PersistedGrants.Add(new IdentityServer4.EntityFramework.Entities.PersistedGrant
+                    {
+                        ClientId = ""
+                    });
                     //grant.DeviceFlowCodes.Add(new IdentityServer4.EntityFramework.Entities.DeviceFlowCodes { 
 
                     //});

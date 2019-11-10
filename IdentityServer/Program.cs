@@ -32,7 +32,7 @@ namespace IdentityServer
                 host.MigrationDbContext<ApplicationDbContext>((context, service) =>
                 {
                     new DbContextSeed().ApplicationDbAsyncSpeed(context, service).Wait();
-                    new DbContextSeed().ConfigurationDbAsyncSpeed(service).Wait();
+                    //new DbContextSeed().ConfigurationDbAsyncSpeed(service).Wait();
                 });
             }
 
@@ -53,7 +53,7 @@ namespace IdentityServer
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<TestStartup>();
+                    webBuilder.UseStartup<Startup>();
                     webBuilder.UseUrls("http://localhost:5008");
                 });
     }

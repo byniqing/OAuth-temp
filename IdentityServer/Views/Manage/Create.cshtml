@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Create";
+}
+<h1></h1>
+
+<div class="bs-docs-section col-md-9" style="margin-left:217px;">
+    <div class="bs-example" data-example-id="thumbnails-with-custom-content">
+        <div class="row">
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <div class="caption" style="border: 1px solid #E5E5E5; line-height: 30px; padding: 9px;">
+                        <h3>Web应用</h3>
+                        <p>创建web</p>
+                        <p>
+                            <a asp-controller="manage" asp-action="createpc" class="btn btn-primary" role="button">创建web应用</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <div class="caption" style="border: 1px solid #E5E5E5; line-height: 30px; padding: 9px;">
+                        <h3>移动</h3>
+                        <p>创建移动</p>
+                        <p>
+                            <a href="/manage/createandroid" class="btn btn-primary" role="button">创建应用</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                <div class="col-sm-6 col-md-4">
+                    <div class="thumbnail">
+                        <div class="caption" style="border: 1px solid #E5E5E5; line-height: 30px; padding: 9px;">
+                            <h3>ApiResource</h3>
+                            <p>创建ApiResource</p>
+                            <p>
+                                <a href="/manage/createandroid" class="btn btn-primary" role="button">创建ApiResource</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

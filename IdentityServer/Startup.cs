@@ -19,6 +19,7 @@ using System.Reflection;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer.Authertication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using IdentityServer4.EntityFramework.Options;
 
 namespace IdentityServer
 {
@@ -75,6 +76,7 @@ namespace IdentityServer
              * 
              */
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(applicationDb));
+
             //services.AddDbContext<ConfigurationDbContext>(options => options.UseSqlServer(configurationDb));
             //services.AddDbContext<PersistedGrantDbContext>(options => options.UseSqlServer(persistedGrantDb));
 
@@ -108,7 +110,7 @@ namespace IdentityServer
              .AddCookie(cookie, options =>
              {
                  options.LoginPath = "/account";
-             }); 
+             });
             #endregion
 
             //注册ids中间件
@@ -137,15 +139,24 @@ namespace IdentityServer
                     sql => sql.MigrationsAssembly(migrationAssembly)); //配置为此上下文维护迁移的程序集实例，以便其他地方调用migrations
                 };
             })
-            .AddOperationalStore(options =>
-            {
-                options.ConfigureDbContext = build =>
-                {
-                    build.UseSqlServer(persistedGrantDb, sql => sql.MigrationsAssembly(migrationAssembly));
-                };
-            })
-            //.AddExtensionGrantValidator<SmsAuthCodeValidator>()
-            //.AddResourceOwnerValidator<CustomResourceOwnerPasswordValidator>()
+             .AddOperationalStore(options =>
+             {
+                 options.ConfigureDbContext = build =>
+                 {
+                     build.UseSqlServer(persistedGrantDb, sql => sql.MigrationsAssembly(migrationAssembly));
+                 };
+             })
+             //自定义扩展字段
+             // .AddOperationalStore<RegisterPersistedGrant>(options =>
+             //{
+             //    options.ConfigureDbContext = build =>
+             //    {
+             //        build.UseSqlServer(persistedGrantDb, sql => sql.MigrationsAssembly(migrationAssembly));
+             //    };
+             //})
+
+             //.AddExtensionGrantValidator<SmsAuthCodeValidator>()
+             //.AddResourceOwnerValidator<CustomResourceOwnerPasswordValidator>()
              .AddExtensionGrantValidator<SmsAuthCodeValidator>()
             .AddProfileService<ProfileService>();
             //.Services.AddTransient<IProfileService, ProfileService>(); ;

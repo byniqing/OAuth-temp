@@ -105,6 +105,8 @@ namespace Info.Controllers
             var claims = parts[1];
             var json = JObject.Parse(Encoding.UTF8.GetString(Base64Url.Decode(claims)));
             var auth_time = Utils.ConvertToDateTime(long.Parse(json.GetValue("auth_time").ToString())); //颁发时间
+
+
             var exp = Utils.ConvertToDateTime(long.Parse(json.GetValue("exp").ToString())); //过期时间
             var uu = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(Encoding.UTF8.GetString(Base64Url.Decode(claims)));
 

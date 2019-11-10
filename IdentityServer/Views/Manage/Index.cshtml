@@ -3,8 +3,127 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1></h1>
+<style>
+    .selected {
+        color: #1ea1eb;
+        cursor: pointer;
+        border-bottom: 3px solid;
+    }
 
-<div style="border:1px solid gray;height:100px;">
+    .noselected {
+        cursor: pointer;
+    }
 
+    #containt ul li {
+        width: 177px;
+        height: 50px;
+        float: left;
+        margin: 0;
+        padding: 0;
+        font-size: 1.4em;
+        line-height: 50px;
+        color: black;
+        text-align: center;
+        list-style: none;
+    }
+
+.show {
+    border: 1px solid gray;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #1ea1eb;
+    padding: 8px;
+    line-height: 20px;
+    width: 73px;
+    height: 39px;
+    margin-left:56px;
+}
+</style>
+<div id="containt">
+    <div style="border:1px solid gray;height:100px;">
+        <div></div>
+        <div></div>
+    </div>
+    <div id="tab_label" style="margin:50px auto 0px auto;text-align:left;height:35px;position:relative;">
+        <ul style="display:inline-block;width:70%;height:35px;">
+            <li class="selected">网站应用</li>
+            <li class="noselected">移动应用</li>
+        </ul>
+        <div style="position: absolute;top: 8px;right: 0px;border: 1px solid gray;border-radius: 8px;padding: 7px;cursor: pointer;color: #1ea1eb;">
+            <a asp-action="create" style="text-decoration:none;">创建应用</a>
+        </div>
+    </div>
+    <div style="margin:50px auto 0px auto;height:50px;">
+        <ul style="display:inline-block;width:100%;height:50px;background-color:#dcdfe3;">
+            <li>应用名称</li>
+            <li>ClientId</li>
+            <li>ClientSecrets</li>
+            <li>创建事件</li>
+            <li>审核状态</li>
+            <li>操作</li>
+        </ul>
+        <div id="listcontent">
+            <div>
+                <ul style="display:inline-block;width:100%;height:50px;">
+                    <li>博客园</li>
+                    <li>aijkk#2898</li>
+                    <li>aijkk#2898</li>
+                    <li>2019-11-10</li>
+                    <li>审核中</li>
+                    <li>
+                        <div class="show">
+                            <a>查看</a>
+                        </div>
+                    </li>
+                </ul>
+                <ul style="display:inline-block;width:100%;height:50px;">
+                    <li>百度</li>
+                    <li>aijkk#2898</li>
+                    <li>aijkk#2898</li>
+                    <li>2019-10-10</li>
+                    <li>审核中</li>
+                    <li>
+                        <div class="show">
+                            <a>查看</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div style="display:none;">
+                <ul style="display:inline-block;width:100%;height:50px;">
+                    <li>博客园App</li>
+                    <li>ddjkk#2898</li>
+                    <li>aijkk#2898</li>
+                    <li>2019-11-10</li>
+                    <li>审核中</li>
+                    <li>
+                        <div class="show">
+                            <a>查看</a>
+                        </div>
+                    </li>
+                </ul>
+                <ul style="display:inline-block;width:100%;height:50px;">
+                    <li>百度App</li>
+                    <li>a00kk#2898</li>
+                    <li>aijkk#2898</li>
+                    <li>2019-10-10</li>
+                    <li>审核中</li>
+                    <li>
+                        <div class="show">
+                            <a>查看</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
+<script type="text/javascript">
+    $("#tab_label").find("li").click(function () {
+        $(this).siblings().removeClass("selected").addClass("noselected").end().addClass("selected");
+        var index = $(this).index();
+        //alert(ind);
+        $("#listcontent>div").siblings().hide().eq(index).show()
+    });
+</script>

@@ -1,0 +1,178 @@
+﻿
+@{
+    ViewData["Title"] = "CreateAndroid";
+}
+<style>
+    .table {
+        border-spacing: 0;
+        border-collapse: collapse;
+    }
+
+        .table > tbody > tr > th,
+        .table > tbody > tr > td,
+        .table > tfoot > tr > td,
+        .table > tfoot > tr > th,
+        .table > thead > tr > td,
+        .table > thead > tr > th {
+            padding: 8px;
+            line-height: 1.42857143;
+            vertical-align: top;
+            border-top: 1px solid #ddd;
+        }
+</style>
+<h1>Create</h1>
+<main class="py-4">
+    <spark-register-stripe inline-template>
+        <div>
+            <div class="spark-screen container">
+                <!-- Basic Profile -->
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="card card-default">
+                            <div class="card-header">
+                                <span v-else>
+                                    基本信息
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <!--  Form -->
+                                <form asp-route="createpc">
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label text-md-right">应用名称</label>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" name="ClientName">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label text-md-right">网站域名</label>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" name="ClientUri">
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label text-md-right">Logo</label>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" name="LogoUri">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label text-md-right">授权类型</label>
+                                        <div class="col-md-5" style="position:relative;">
+                                            <select class="form-control" name="AllowedGrantTypes">
+                                                <option value="sms_auth_code">自定义类型</option>
+                                            </select>
+                                            <!-- 按钮：用于打开模态框 -->
+                                            <button style="position:absolute;right: -56px;top: 0px;" type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#myModal">
+                                                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>详情
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label text-md-right">开通权限</label>
+                                        <div class="col-md-6">
+                                            <label class="checkbox-inline disabled">
+                                                <input name="AllowedScopes" class="disabled" checked="checked" disabled="disabled" type="checkbox" id="inlineCheckbox1" value="openid">用户唯一标识
+                                                <input type="hidden" name="AllowedScopes" value="openid" />
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                <input name="AllowedScopes" type="checkbox" id="inlineCheckbox2" value="profile">获取用户信息
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                <input name="AllowedScopes" type="checkbox" id="inlineCheckbox1" value="offline_access">离线访问
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                <input name="AllowedScopes" type="checkbox" id="inlineCheckbox2" value="OtherInfo">获取评论列表
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row mb-0">
+                                        <div class="col-md-6 offset-md-4">
+                                            <button type="submit" class="btn btn-primary" style=" line-height: 31px; width: 110px;    margin-right: 53px; margin-left: 9px;">
+                                                <i class="fa fa-btn fa-check-circle"></i>提交
+                                            </button>
+                                            <a href="create" class="btn btn-primary" role="button" style="line-height: 31px; width: 101px;">返回</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </spark-register-stripe>
+</main>
+
+<!-- 模态框start -->
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- 模态框头部 -->
+            <div class="modal-header">
+                <h4 class="modal-title">response_type对应的AllowedGrantTypes</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- 模态框主体 -->
+            <div class="modal-body">
+                <div class="panel panel-default">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">response_type(响应类型)对应的AllowedGrantTypes（流程</div>
+
+                    <!-- Table -->
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>response_type</th>
+                                <th>AllowedGrantTypes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>code</td>
+                                <td>Authorization Code Flow</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>id_token</td>
+                                <td>Implicit Flow</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>id_token token</td>
+                                <td>Implicit Flow</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">4</th>
+                                <td>code id_token</td>
+                                <td>Hybrid Flow</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">5</th>
+                                <td>code token</td>
+                                <td>Hybrid Flow</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">6</th>
+                                <td>code id_token token</td>
+                                <td>Hybrid Flow</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 模态框底部 -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- 模态框end -->
