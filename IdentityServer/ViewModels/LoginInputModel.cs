@@ -28,5 +28,10 @@ namespace IdentityServer.ViewModels
         /// 用户登录方式  login/cancel
         /// </summary>
         public string button { get; set; }
+
+        /// <summary>
+        /// 用户名
+        /// </summary>
+        public string UserName { get; set; }
     }
 }

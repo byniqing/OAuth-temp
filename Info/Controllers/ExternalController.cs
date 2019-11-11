@@ -110,40 +110,40 @@ namespace Info.Controllers
             var exp = Utils.ConvertToDateTime(long.Parse(json.GetValue("exp").ToString())); //过期时间
             var uu = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(Encoding.UTF8.GetString(Base64Url.Decode(claims)));
 
-            var my = _infoDbContext.users.FirstOrDefault(_ => _.BindId == uu.BindId);
-            if (my != null)
-            {
-                var userEntity = _infoDbContext.Add(new User
-                {
-                    Email = json.GetValue("email").ToString(),
-                    UserName = json.GetValue("name").ToString()
-                }).Entity;
-                var a = GrantsType.access_token;
-                _infoDbContext.Add(new PersistedGrant
-                {
-                    UserId = userEntity.Id,
-                    CreateTime = auth_time,
-                    Expiration = exp,
-                    Token = access_token,
-                    Type = GrantsType.access_token.ToString()
-                });
+            //var my = _infoDbContext.users.FirstOrDefault(_ => _.BindId == uu.BindId);
+            //if (my != null)
+            //{
+            //    var userEntity = _infoDbContext.Add(new User
+            //    {
+            //        Email = json.GetValue("email").ToString(),
+            //        UserName = json.GetValue("name").ToString()
+            //    }).Entity;
+            //    var a = GrantsType.access_token;
+            //    _infoDbContext.Add(new PersistedGrant
+            //    {
+            //        UserId = userEntity.Id,
+            //        CreateTime = auth_time,
+            //        Expiration = exp,
+            //        Token = access_token,
+            //        Type = GrantsType.access_token.ToString()
+            //    });
 
-                _infoDbContext.Add(new PersistedGrant
-                {
-                    UserId = userEntity.Id,
-                    CreateTime = auth_time,
-                    Expiration = exp,
-                    Token = refresh_token,
-                    Type = GrantsType.refresh_token.ToString()
-                });
+            //    _infoDbContext.Add(new PersistedGrant
+            //    {
+            //        UserId = userEntity.Id,
+            //        CreateTime = auth_time,
+            //        Expiration = exp,
+            //        Token = refresh_token,
+            //        Type = GrantsType.refresh_token.ToString()
+            //    });
 
-                await _infoDbContext.SaveChangesAsync();
-            }
-            else
-            {
-                //更新token
+            //    await _infoDbContext.SaveChangesAsync();
+            //}
+            //else
+            //{
+            //    //更新token
 
-            }
+            //}
 
             //return RedirectToAction("UserInfo", "Account");
             return View("UserInfo");

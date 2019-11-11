@@ -124,7 +124,6 @@ namespace Info
                 //options.ClaimActions.MapJsonKey("name", "name");
                 options.ClaimActions.MapCustomJson("role", jobject => jobject.GetString("role"));
                 options.ClaimActions.MapCustomJson("ËùÓÐClaim", all => all.ToString());
-
                 //options.CallbackPath = $"/signin-oidc-{provider.Key}";
                 //options.SignedOutCallbackPath = $"/signout-callback-oidc-{provider.Key}";
                 //options.SignedOutCallbackPath = "/signin-oidc/home";

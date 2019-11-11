@@ -10,6 +10,7 @@ using Api.Resource.Library;
 using Api.Resource.Models;
 using IdentityModel;
 using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -62,7 +63,8 @@ namespace Api.Resource
                 options.SupportedTokens = SupportedTokens.Both;
                 options.RequireHttpsMetadata = false;//暂时取消Https验证，
             });
-
+            //.AddScheme<AuthenticationSchemeOptions, ApiResponseHandler>(nameof(ApiResponseHandler), o => { }); //自定义返回格式
+          
             //基于策略的授权,[Authorize(Policy = "ck")]
             services.AddAuthorization(options =>
             {

@@ -10,12 +10,14 @@ using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IdentityServer.Controllers
 {
     /// <summary>
     /// 应用管理
     /// </summary>
+    [Authorize]
     public class ManageController : Controller
     {
         private readonly ConfigurationDbContext _configurationDbContext;
@@ -67,7 +69,7 @@ namespace IdentityServer.Controllers
                 };
             client.Enabled = false; //默认是false，因为要审核
             _configurationDbContext.Clients.Add(client.ToEntity());
-            _configurationDbContext.SaveChanges();
+            //_configurationDbContext.SaveChanges();
             return View();
         }
         [HttpGet]

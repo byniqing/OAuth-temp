@@ -31,8 +31,8 @@ namespace IdentityServer
                 //DbContextSeed.EnsureSeedData(host.Services);
                 host.MigrationDbContext<ApplicationDbContext>((context, service) =>
                 {
-                    new DbContextSeed().ApplicationDbAsyncSpeed(context, service).Wait();
-                    //new DbContextSeed().ConfigurationDbAsyncSpeed(service).Wait();
+                    //new DbContextSeed().ApplicationDbAsyncSpeed(context, service).Wait();
+                    new DbContextSeed().ConfigurationDbAsyncSpeed(service).Wait();
                 });
             }
 

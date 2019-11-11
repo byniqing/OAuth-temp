@@ -61,7 +61,7 @@ namespace IdentityServer.Date.Migrations.ApplicationDb
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2019, 11, 10, 18, 32, 8, 327, DateTimeKind.Local).AddTicks(7384));
+                        .HasDefaultValue(new DateTime(2019, 11, 11, 9, 23, 25, 72, DateTimeKind.Local).AddTicks(9623));
 
                     b.Property<bool>("Enabled")
                         .HasColumnType("bit");

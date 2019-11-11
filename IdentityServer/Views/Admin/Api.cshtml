@@ -1,25 +1,8 @@
 ﻿
 @{
-    ViewData["Title"] = "CreateAndroid";
+    ViewData["Title"] = "Api";
 }
-<style>
-    .table {
-        border-spacing: 0;
-        border-collapse: collapse;
-    }
 
-        .table > tbody > tr > th,
-        .table > tbody > tr > td,
-        .table > tfoot > tr > td,
-        .table > tfoot > tr > th,
-        .table > thead > tr > td,
-        .table > thead > tr > th {
-            padding: 8px;
-            line-height: 1.42857143;
-            vertical-align: top;
-            border-top: 1px solid #ddd;
-        }
-</style>
 <h1></h1>
 <main class="py-4">
     <spark-register-stripe inline-template>
@@ -38,27 +21,28 @@
                                 <!--  Form -->
                                 <form asp-route="createpc">
                                     <div class="form-group row">
-                                        <label class="col-md-4 col-form-label text-md-right">应用名称</label>
+                                        <label class="col-md-4 col-form-label text-md-right">资源名称</label>
                                         <div class="col-md-6">
-                                            <input required="required" placeholder="应用名称" pattern="*" type="text" class="form-control" name="ClientName">
+                                            <input required="required" placeholder="应用名称" pattern="*" type="text" class="form-control" name="Name">
                                             <div class="invalid-feedback">
                                                 <small style="font-size:1em;">不能为空</small>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-md-4 col-form-label text-md-right">网站域名</label>
+                                        <label class="col-md-4 col-form-label text-md-right">资源显示名称</label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="ClientUri" required="required" placeholder="网站域名" pattern="*">
+                                            <input type="text" class="form-control" name="DisplayName" required="required" placeholder="Logo" pattern="*">
                                             <div class="invalid-feedback">
                                                 <small style="font-size:1em;">不能为空</small>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="form-group row">
-                                        <label class="col-md-4 col-form-label text-md-right">Logo</label>
+                                        <label class="col-md-4 col-form-label text-md-right">资源描述</label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="LogoUri" required="required" placeholder="Logo" pattern="*">
+                                            <input type="text" class="form-control" name="Description" required="required" placeholder="资源描述" pattern="*">
                                             <div class="invalid-feedback">
                                                 <small style="font-size:1em;">不能为空</small>
                                             </div>
@@ -111,86 +95,4 @@
         </div>
     </spark-register-stripe>
 </main>
-<script type="text/javascript">
-    $(function () {
-        $("#form-date").submit(function (event) {
-            const f = $(this)
-            if (f[0].checkValidity() === false) {
-                event.preventDefault()
-                event.stopPropagation()
-            }
-            f.addClass("was-validated")
-        })
-    })
-</script>
-<!-- 模态框start -->
-<div class="modal fade" id="myModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
 
-            <!-- 模态框头部 -->
-            <div class="modal-header">
-                <h4 class="modal-title">response_type对应的AllowedGrantTypes</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-
-            <!-- 模态框主体 -->
-            <div class="modal-body">
-                <div class="panel panel-default">
-                    <!-- Default panel contents -->
-                    <div class="panel-heading">response_type(响应类型)对应的AllowedGrantTypes（流程</div>
-
-                    <!-- Table -->
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>序号</th>
-                                <th>response_type</th>
-                                <th>AllowedGrantTypes</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>code</td>
-                                <td>Authorization Code Flow</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>id_token</td>
-                                <td>Implicit Flow</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>id_token token</td>
-                                <td>Implicit Flow</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">4</th>
-                                <td>code id_token</td>
-                                <td>Hybrid Flow</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">5</th>
-                                <td>code token</td>
-                                <td>Hybrid Flow</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">6</th>
-                                <td>code id_token token</td>
-                                <td>Hybrid Flow</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 模态框底部 -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-            </div>
-
-        </div>
-    </div>
-</div>
-<!-- 模态框end -->

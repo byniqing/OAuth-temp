@@ -10,7 +10,7 @@ using IdentityServer4.EntityFramework.Mappers;
 
 namespace IdentityServer.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="Admin")]
     public class AdminController : Controller
     {
         private readonly ConfigurationDbContext _configurationDbContext;
@@ -25,13 +25,13 @@ namespace IdentityServer.Controllers
         }
 
         [HttpGet]
-        public IActionResult ApiResource()
+        public IActionResult Api()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult ApiResource(ApiResource apiResource)
+        public IActionResult Api(ApiResource apiResource)
         {
             _configurationDbContext.ApiResources.Add(apiResource.ToEntity());
             _configurationDbContext.SaveChanges();

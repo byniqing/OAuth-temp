@@ -166,7 +166,7 @@ namespace IdentityServer.Controllers
                     //    ClientId = id,
                     //    Enabled = true
                     //});
-                    _applicationDbContext.SaveChanges();
+                    //_applicationDbContext.SaveChanges();
                 }
 
 

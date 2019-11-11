@@ -3,7 +3,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1></h1>
 <!-- Main Content -->
 <main class="py-4">
     <spark-register-stripe inline-template>
@@ -20,13 +20,16 @@
                             </div>
                             <div class="card-body">
                                 <!-- Registration Form -->
-                                <form role="form">
+                                <form asp-route="/" novalidate id="form-date">
                                     <!-- Name -->
                                     <div class="form-group row">
-                                        <label class="col-md-4 col-form-label text-md-right">Name</label>
+                                        <label class="col-md-4 col-form-label text-md-right">UserName</label>
 
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="name">
+                                            <input type="text" class="form-control" name="UserName" required="required" placeholder="用户名" pattern="[A-Za-z0-9]{6,30}">
+                                            <div class="invalid-feedback">
+                                                <small style="font-size:1em;">请输入用户名6-30位字母或数字！</small>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -35,8 +38,10 @@
                                         <label class="col-md-4 col-form-label text-md-right">E-Mail Address</label>
 
                                         <div class="col-md-6">
-                                            <input type="email" class="form-control" name="email">
-
+                                            <input type="email" class="form-control" name="email" placeholder="请输入邮箱" required="required">
+                                            <div class="invalid-feedback">
+                                                <small style="font-size:1em;">邮箱地址格式不正确！</small>
+                                            </div>
                                         </div>
                                     </div>
                                     <!-- Password -->
@@ -44,8 +49,10 @@
                                         <label class="col-md-4 col-form-label text-md-right">Password</label>
 
                                         <div class="col-md-6">
-                                            <input type="password" class="form-control" name="password">
-
+                                            <input type="password" class="form-control" id="password" name="password" required="required" placeholder="密码">
+                                            <div class="invalid-feedback">
+                                                <small style="font-size:1em;">不能为空</small>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -54,14 +61,17 @@
                                         <label class="col-md-4 col-form-label text-md-right">Confirm Password</label>
 
                                         <div class="col-md-6">
-                                            <input type="password" class="form-control" name="password_confirmation">
+                                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required="required" placeholder="确认密码">
+                                            <div class="invalid-feedback" id="noconfir">
+                                                <small style="font-size:1em;">两次密码不一致</small>
+                                            </div>
                                         </div>
                                     </div>
                                     <!-- Register Button -->
                                     <div class="form-group row mb-0">
                                         <div class="col-md-6 offset-md-4">
                                             <button type="submit" class="btn btn-primary">
-                                                <i class="fa fa-btn fa-check-circle"></i> Register
+                                                <i class="fa fa-btn fa-check-circle">Register</i>
                                             </button>
                                         </div>
                                     </div>
@@ -75,6 +85,30 @@
     </spark-register-stripe>
 </main>
 <script type="text/javascript">
+    $(function () {
+        $("#form-date").submit(function (event) {
+            const f = $(this)
+            var pwd = $("#password").val();
+            var confirPwd = $("#password_confirmation").val();
+            if (f[0].checkValidity() === false || pwd != confirPwd) {
+                event.preventDefault()
+                event.stopPropagation()
+                if (pwd != confirPwd) {
+                    $("#noconfir").show();
+                }
+            }
+            f.addClass("was-validated")
 
+        })
+        $("#password,#password_confirmation").keyup(function () {
+            var pwd = $("#password").val();
+            var confirPwd = $("#password_confirmation").val();
+            if (pwd != confirPwd) {
+                $("#noconfir").show()
+                //$("#noconfir").show("slow");//.show("slow"),fast
+            }
+            else $("#noconfir").hide();
+        });
+    })
 </script>
 

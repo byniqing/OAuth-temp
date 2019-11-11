@@ -36,6 +36,7 @@ namespace IdentityServer
     Update-Database -Context ApplicationDbContext
     Update-Database -Context ConfigurationDbContext
     Update-Database -Context PersistedGrantDbContext
+
     ------------------------------------------------
     dotnet ef migrations add -c ConfigurationDbContex -o Date\Migrations\ConfigurationDb
 
@@ -88,11 +89,18 @@ namespace IdentityServer
             //配置密码注册方式
             services.Configure<IdentityOptions>(options =>
             {
+                //密码是否必须包含小写
                 options.Password.RequireLowercase = false;
+                //密码是否必须包含非字母数字字符
                 options.Password.RequireNonAlphanumeric = false;
+                //密码是否必须包含大写
                 options.Password.RequireUppercase = false;
+                //密码是否必须包含数字
+                options.Password.RequireDigit = false;
+                //获取或设置密码的最小长度。默认为6。
                 options.Password.RequiredLength = 1;
             });
+
             #region 本地用cookie
             var cookie = CookieAuthenticationDefaults.AuthenticationScheme;
             services.AddAuthentication(options =>
@@ -136,7 +144,8 @@ namespace IdentityServer
                 options.ConfigureDbContext = (build) =>
                 {
                     build.UseSqlServer(configurationDb,
-                    sql => sql.MigrationsAssembly(migrationAssembly)); //配置为此上下文维护迁移的程序集实例，以便其他地方调用migrations
+                    //配置为此上下文维护迁移的程序集实例，以便其他地方调用migrations，因为引用的类库和当前上下文，不在同一个命名空间
+                    sql => sql.MigrationsAssembly(migrationAssembly)); 
                 };
             })
              .AddOperationalStore(options =>
@@ -188,14 +197,14 @@ namespace IdentityServer
             app.UseRouting();
 
             /*
+             认证，
+             */
+            app.UseAuthentication();
+            /*
              授权，这是授权服务器，所以要使用授权中间件
              */
             app.UseAuthorization();
-
-            /*
-             认证，
-             */
-            //app.UseAuthentication();
+            
             //使用ids中间件
             app.UseIdentityServer();
 

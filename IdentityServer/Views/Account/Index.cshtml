@@ -14,9 +14,8 @@
                 <div class="col-lg-8">
                     <div class="card card-default">
                         <div class="card-header">Login</div>
-
                         <div class="card-body">
-                            <form asp-route="Login">
+                            <form asp-route="/">
                                 <!--这里会自动映射绑定客户端跳转过来，路径中带登ReturnUrl陆参数-->
                                 <input type="hidden" asp-for="ReturnUrl" />
 
@@ -34,7 +33,7 @@
                                     <label class="col-md-4 col-form-label text-md-right" asp-for="Password">Password</label>
 
                                     <div class="col-md-6">
-                                        <input class="form-control" asp-for="Password" placeholder="Password">
+                                        <input type="password" class="form-control" asp-for="Password" placeholder="Password">
                                     </div>
                                 </div>
 

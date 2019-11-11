@@ -37,6 +37,7 @@ namespace IdentityServer.Date
                 var logger = server.GetRequiredService<ILogger<ApplicationDbContext>>();
                 logger.LogInformation("speed Init");
 
+                #region 创建角色和角色拥有的claims
                 //创建角色， context.Roles.Any
                 if (!_roleManager.Roles.Any())
                 {
@@ -46,19 +47,22 @@ namespace IdentityServer.Date
                         NormalizedName = "Admin"
                     };
                     var roleResult = await _roleManager.CreateAsync(role);
-                    await _roleManager.CreateAsync(new ApplicationRole { Name="System",NormalizedName="System"});
 
-                    //第三方
+                    //当前系统用户的角色
+                    await _roleManager.CreateAsync(new ApplicationRole { Name = "System", NormalizedName = "System" });
+
+                    //第三方角色
                     var trole = new ApplicationRole
                     {
                         Name = "ThirdParty",
                         NormalizedName = "thirdParty"
                     };
-                    var third =  await _roleManager.CreateAsync(trole);
+                    var third = await _roleManager.CreateAsync(trole);
                     //action 指动作，意思是该角色可以做的事情，不管是是CRUD，都可以理解为一个action
-                    await _roleManager.AddClaimAsync(trole, new Claim("action", "api/Identity/OtherInfo"));
+                    var c1 = await _roleManager.AddClaimAsync(trole, new Claim("action", "api/Identity/OtherInfo"));
                     await _roleManager.AddClaimAsync(trole, new Claim("action", "api/Identity/oidc1"));
                 }
+                #endregion
 
                 //if (!context.Users.Any())
                 //{
@@ -70,13 +74,14 @@ namespace IdentityServer.Date
                 //}
 
                 //https://www.cnblogs.com/rocketRobin/p/9070684.html
-                //如果没有用户，则创建一个
+                //如果没有用户，则初始化 创建一个
+                #region 创建用户和把用户加入角色
                 if (!_userManger.Users.Any())
                 {
                     var defaultUser = new ApplicationUser
                     {
                         UserName = "Admin",
-                        Email = "cnblogs@163.com",
+                        Email = "byniqing@163.com",
                         //PasswordHash = "",
                         //Avatar = "https://www.cnblogs.com/images/logo_small.gif",
                         SecurityStamp = "cnblogs", //设置密码的加密key
@@ -99,12 +104,11 @@ namespace IdentityServer.Date
                             });
                         }
 
-
                         //可以添加用户的claim
                         var result11 = _userManger.AddClaimsAsync(defaultUser, new Claim[]{
-                            new Claim(JwtClaimTypes.Name, "姓名"),
-                            new Claim(JwtClaimTypes.Email, "cnblogs@163.com"),
-                            new Claim(JwtClaimTypes.Role, "admin")
+                            new Claim(JwtClaimTypes.Name, "管理员"),
+                            new Claim(JwtClaimTypes.Email, "byniqing@163.com"),
+                            new Claim(JwtClaimTypes.Role, "Admin")
                         }).Result;
                     }
                     else
@@ -112,7 +116,7 @@ namespace IdentityServer.Date
                         logger.LogError("创建失败:" + userResult.Errors);
                     }
                 }
-
+                #endregion
 
             }
             catch (Exception ex)
@@ -140,11 +144,11 @@ namespace IdentityServer.Date
                     scope.ServiceProvider.GetService<PersistedGrantDbContext>().Database.Migrate();
 
                     //添加
-                    var grant = scope.ServiceProvider.GetService<PersistedGrantDbContext>();
-                    grant.PersistedGrants.Add(new IdentityServer4.EntityFramework.Entities.PersistedGrant
-                    {
-                        ClientId = ""
-                    });
+                    //var grant = scope.ServiceProvider.GetService<PersistedGrantDbContext>();
+                    //grant.PersistedGrants.Add(new IdentityServer4.EntityFramework.Entities.PersistedGrant
+                    //{
+                    //    ClientId = ""
+                    //});
                     //grant.DeviceFlowCodes.Add(new IdentityServer4.EntityFramework.Entities.DeviceFlowCodes { 
 
                     //});

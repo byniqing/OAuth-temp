@@ -50,9 +50,21 @@ namespace Info.Models
         public bool PhoneNumberConfirmed { get; set; }
 
         /// <summary>
+        /// 密码
+        /// </summary>
+        public string PassWord { get; set; }
+
+
+        /// <summary>
+        /// 注册来源。
+        /// 比如第三方
+        /// 本地
+        /// </summary>
+        public string Source { get; set; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime Created { get; set; }
-
     }
 }

@@ -76,7 +76,7 @@ namespace IdentityServer
                 Description = "获取用户的基本信息",
                 DisplayName = "都可以是默认值",
                 UserClaims = new List<string> { JwtClaimTypes.Role },
-                ApiSecrets = { new Secret("trtrt".Sha256()) },
+                //ApiSecrets = { new Secret("trtrt".Sha256()) },
                 //Properties = new Dictionary<string, string> { { "a", "b" } },
                 //Enabled = true, //是否启用
                 //作用域，对应下面的Cliet的 AllowedScopes

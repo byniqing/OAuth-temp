@@ -185,7 +185,7 @@ namespace IdentityServer.Controllers
         /// </summary>
         /// <param name="logoutId"></param>
         /// <returns></returns>
-        [HttpGet("Logout")]
+        [HttpGet]
         public async Task<IActionResult> Logout(string logoutId, string returnurl)
         {
             //获取logoid
@@ -219,5 +219,15 @@ namespace IdentityServer.Controllers
             return Redirect(refererUrl);
         }
 
+
+        /// <summary>
+        /// 未授权跳转页面，即权限不够
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }

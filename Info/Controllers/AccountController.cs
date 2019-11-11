@@ -103,10 +103,35 @@ namespace Info.Controllers
         /// 用户退出
         /// </summary>
         [HttpGet]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
+            // build a return URL so the upstream provider will redirect back
+            // to us after the user has logged out. this allows us to then
+            // complete our single sign-out processing.
+
+            ///Account/Logout?logoutId=966
+            //string url = Url.Action("Logouts", new { logoutId = 966 });
+
+            //// this triggers a redirect to the external provider for sign-out
+            //return SignOut(new AuthenticationProperties { RedirectUri = url }, "OpenIdConnect");
+
             //清除本地cookie
-            HttpContext.SignOutAsync();
+            //HttpContext.SignOutAsync("OpenIdConnect");
+
+            var result = await HttpContext.AuthenticateAsync();
+
+            if (result.Properties.Items.ContainsKey("scheme"))
+            {
+                var ab = result.Properties.Items["scheme"];
+
+                var cd = result.Properties.Items[".AuthScheme"];
+                var c = User.Identity;
+            }
+            return SignOut("Cookies", "OpenIdConnect");
+
+
+            #region 这只是本地退出，不会远程退出
+            //HttpContext.SignOutAsync(); //这只是本地退出，不会远程退出
             /*
              这里会执行cookieHandler处理程序(即：AddCookid()的配置)
              会跳转到 /account
@@ -114,6 +139,13 @@ namespace Info.Controllers
             //HttpContext.ChallengeAsync();
 
             //登出，直接跳转到首页
+            //return Redirect("/"); 
+            #endregion
+        }
+        [HttpGet]
+        public IActionResult Logouts(int logoutId)
+        {
+            HttpContext.SignOutAsync();
             return Redirect("/");
         }
     }
