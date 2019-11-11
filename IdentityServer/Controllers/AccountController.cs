@@ -181,15 +181,15 @@ namespace IdentityServer.Controllers
         //    return vm;
         //}
         /// <summary>
-        /// 用户退出
+        /// 用户退出（自己退出和客户端）
         /// </summary>
-        /// <param name="logoutId"></param>
+        /// <param name="logoutId">客户端退出会调用该方法有这个值</param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> Logout(string logoutId, string returnurl)
+        public async Task<IActionResult> Logout(string logoutId)
         {
             //获取logoid
-            var _logoutid = await _interaction.CreateLogoutContextAsync();
+            //var _logoutid = await _interaction.CreateLogoutContextAsync();
 
             ////await HttpContext.SignOutAsync(IdentityServerConstants.DefaultCookieAuthenticationScheme);
             ////return RedirectToAction("index", "Home");
@@ -197,7 +197,6 @@ namespace IdentityServer.Controllers
             ////Redirect(logout.PostLogoutRedirectUri);
             //return Redirect(logout.PostLogoutRedirectUri);
             ////return View("login");
-
 
 
             //string url = Url.Action("Logout", new { logoutId = vm.LogoutId });
@@ -210,9 +209,9 @@ namespace IdentityServer.Controllers
             var logout = await _interaction.GetLogoutContextAsync(logoutId);
             //await HttpContext.SignOutAsync(); //本地退出
             await _signInManager.SignOutAsync();//本地退出
-
             if (!string.IsNullOrWhiteSpace(logout.PostLogoutRedirectUri))
             {
+                //回调客户端
                 return Redirect(logout.PostLogoutRedirectUri);
             }
             var refererUrl = Request.Headers["Referer"].ToString();

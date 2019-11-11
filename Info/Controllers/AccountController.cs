@@ -110,9 +110,8 @@ namespace Info.Controllers
             // complete our single sign-out processing.
 
             ///Account/Logout?logoutId=966
+            //如果想ids4服务器回调某个aciton。则主动传RedirectUri即可
             //string url = Url.Action("Logouts", new { logoutId = 966 });
-
-            //// this triggers a redirect to the external provider for sign-out
             //return SignOut(new AuthenticationProperties { RedirectUri = url }, "OpenIdConnect");
 
             //清除本地cookie
@@ -120,18 +119,20 @@ namespace Info.Controllers
 
             var result = await HttpContext.AuthenticateAsync();
 
+            /*
+             只有是第三方登陆的。退出的时候才通知第三方退出
+             */
             if (result.Properties.Items.ContainsKey("scheme"))
             {
-                var ab = result.Properties.Items["scheme"];
-
+                var scheme = result.Properties.Items["scheme"].ToString();
+                //或者
                 var cd = result.Properties.Items[".AuthScheme"];
-                var c = User.Identity;
+                return SignOut("Cookies", scheme);
+                //return SignOut("Cookies", "OpenIdConnect");
             }
-            return SignOut("Cookies", "OpenIdConnect");
-
 
             #region 这只是本地退出，不会远程退出
-            //HttpContext.SignOutAsync(); //这只是本地退出，不会远程退出
+            await HttpContext.SignOutAsync(); //这只是本地退出，不会远程退出
             /*
              这里会执行cookieHandler处理程序(即：AddCookid()的配置)
              会跳转到 /account
@@ -139,7 +140,7 @@ namespace Info.Controllers
             //HttpContext.ChallengeAsync();
 
             //登出，直接跳转到首页
-            //return Redirect("/"); 
+            return Redirect("/");
             #endregion
         }
         [HttpGet]
