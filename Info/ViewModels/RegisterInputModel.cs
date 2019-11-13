@@ -7,5 +7,6 @@ namespace Info.ViewModels
 {
     public class RegisterInputModel: AccountInputModel
     {
+        public string UserName { get; set; }
     }
 }

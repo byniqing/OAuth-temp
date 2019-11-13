@@ -45,7 +45,8 @@
         </div>
         <br />
         <span style="color:red">refresh_token:</span>
-        <br /><div class="warp">
+        <br />
+        <div class="warp">
             @await ViewContext.HttpContext.GetTokenAsync("refresh_token")
         </div>
         <br />
@@ -56,7 +57,7 @@
             <span>@item.Value:</span><br />
         }
     }
-    @if (ViewContext.HttpContext.GetTokenAsync("access_token").Result.Contains("."))
+    @if (User.Identity.IsAuthenticated && ViewContext.HttpContext.GetTokenAsync("access_token").Result.Contains("."))
     {
         var parts = ViewContext.HttpContext.GetTokenAsync("access_token").Result.Split('.');
         var header = parts[0];
@@ -68,7 +69,5 @@
         <br />
         <span>邮箱：@json.GetValue("email")</span>
     }
-
-
 </body>
 </html>

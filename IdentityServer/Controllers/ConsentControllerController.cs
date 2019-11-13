@@ -144,30 +144,30 @@ namespace IdentityServer.Controllers
                 result.ClientId = request.ClientId;
 
                 var id = _configurationDbContext.Clients.ToList().Find(f => f.ClientId == request.ClientId).Id;
-                var entity = _applicationDbContext.applicationUseAuthorizations.FirstOrDefault(_ => _.ClientId == id);
-                //判断是否授权过
-                if (entity != null && !entity.Enabled)
-                {
-                    entity.Enabled = true;
-                    _applicationDbContext.Update(entity);
-                    _applicationDbContext.SaveChanges();
-                }
-                else
-                {
-                    //给用户添加第三方授权信息
-                    await _applicationDbContext.AddAsync(new ApplicationUseAuthorization
-                    {
-                        ClientId = id,
-                        Enabled = true
-                    });
-                    ////给用户添加第三方授权信息
-                    //_applicationDbContext.applicationUseAuthorizations.Add(new ApplicationUseAuthorization
-                    //{
-                    //    ClientId = id,
-                    //    Enabled = true
-                    //});
-                    //_applicationDbContext.SaveChanges();
-                }
+                //var entity = _applicationDbContext.applicationUseAuthorizations.FirstOrDefault(_ => _.ClientId == id);
+                ////判断是否授权过
+                //if (entity != null && !entity.Enabled)
+                //{
+                //    entity.Enabled = true;
+                //    _applicationDbContext.Update(entity);
+                //    _applicationDbContext.SaveChanges();
+                //}
+                //else
+                //{
+                //    //给用户添加第三方授权信息
+                //    await _applicationDbContext.AddAsync(new ApplicationUseAuthorization
+                //    {
+                //        ClientId = id,
+                //        Enabled = true
+                //    });
+                //    ////给用户添加第三方授权信息
+                //    //_applicationDbContext.applicationUseAuthorizations.Add(new ApplicationUseAuthorization
+                //    //{
+                //    //    ClientId = id,
+                //    //    Enabled = true
+                //    //});
+                //    //_applicationDbContext.SaveChanges();
+                //}
 
 
             }

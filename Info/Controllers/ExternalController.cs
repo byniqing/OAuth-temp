@@ -10,6 +10,7 @@ using Info.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Info.Controllers
@@ -86,6 +87,13 @@ namespace Info.Controllers
             //result.Properties.Items["scheme"];
             //result.Properties.Items[".Token.access_token"];
             //result.Properties.Items[".Token.refresh_token"];
+            var scheme = string.Empty;
+            if (result.Properties.Items.ContainsKey("scheme"))
+            {
+                scheme = result.Properties.Items["scheme"].ToString();
+                //或者
+                //scheme = result.Properties.Items[".AuthScheme"];
+            }
 
             var ide = result.Principal.Identities.ToList();
 
@@ -97,46 +105,68 @@ namespace Info.Controllers
 
             var parts = access_token.Split('.');
             var header = parts[0];
-            var claims = parts[1];
-            var json = JObject.Parse(Encoding.UTF8.GetString(Base64Url.Decode(claims)));
-            var auth_time = Utils.ConvertSecondsToDateTime(long.Parse(json.GetValue("auth_time").ToString())); //颁发时间
-            var exp = Utils.ConvertSecondsToDateTime(long.Parse(json.GetValue("exp").ToString())); //过期时间
-            var uu = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(Encoding.UTF8.GetString(Base64Url.Decode(claims)));
+            var payload = parts[1];
+            var json = Encoding.UTF8.GetString(Base64Url.Decode(payload));
+            var claims = JObject.Parse(json);
+            var auth_time = Utils.ConvertSecondsToDateTime(long.Parse(claims.GetValue("auth_time").ToString())); //颁发时间
+            var exp = Utils.ConvertSecondsToDateTime(long.Parse(claims.GetValue("exp").ToString())); //过期时间
 
-            //var my = _infoDbContext.users.FirstOrDefault(_ => _.BindId == uu.BindId);
-            //if (my != null)
-            //{
-            //    var userEntity = _infoDbContext.Add(new User
-            //    {
-            //        Email = json.GetValue("email").ToString(),
-            //        UserName = json.GetValue("name").ToString()
-            //    }).Entity;
-            //    var a = GrantsType.access_token;
-            //    _infoDbContext.Add(new PersistedGrant
-            //    {
-            //        UserId = userEntity.Id,
-            //        CreateTime = auth_time,
-            //        Expiration = exp,
-            //        Token = access_token,
-            //        Type = GrantsType.access_token.ToString()
-            //    });
+            //反序列化
+            var user = JsonConvert.DeserializeObject<User>(Encoding.UTF8.GetString(Base64Url.Decode(json)));
 
-            //    _infoDbContext.Add(new PersistedGrant
-            //    {
-            //        UserId = userEntity.Id,
-            //        CreateTime = auth_time,
-            //        Expiration = exp,
-            //        Token = refresh_token,
-            //        Type = GrantsType.refresh_token.ToString()
-            //    });
+            /*
+             这里要明确一点，就是第三方哪个字段是唯一的，
+             比如QQ登陆。那么QQ号就是唯一的。就必须获取QQ号码作为该平台的账号
+             现在假定ids4服务器email是唯一的（暂且不讨论可以更换）
+             */
+            var userModel = _infoDbContext.users.FirstOrDefault(_ => _.Email == user.Email);
+            if (userModel == null) //新增
+            {
+                var userEntity = _infoDbContext.Add(new User
+                {
+                    Email = claims.GetValue("email").ToString(),
+                    UserName = claims.GetValue("name").ToString(),
+                    BindId = int.Parse(claims.GetValue("sub").ToString()),
+                    Source = scheme
+                }).Entity;
+                var a = GrantsType.access_token;
+                _infoDbContext.Add(new PersistedGrant
+                {
+                    UserId = userEntity.Id,
+                    CreateTime = auth_time,
+                    Expiration = exp,
+                    Token = access_token,
+                    Type = GrantsType.access_token.ToString()
+                });
+            }
+            else
+            {
+                var grant = _infoDbContext.persistedGrants.Where(_ => _.UserId == userModel.Id);
+                if (grant != null)
+                {
+                    var ref_token = grant.First(_ => _.Type == GrantsType.refresh_token.ToString());
+                    var acc_token = grant.First(_ => _.Type == GrantsType.access_token.ToString());
 
-            //    await _infoDbContext.SaveChangesAsync();
-            //}
-            //else
-            //{
-            //    //更新token
+                    if (ref_token != null)
+                    {
+                        ref_token.CreateTime = auth_time;
+                        ref_token.Expiration = exp;
+                        ref_token.Token = refresh_token;
+                    }
+                    if (acc_token != null)
+                    {
+                        ref_token.CreateTime = auth_time;
+                        ref_token.Expiration = exp;
+                        ref_token.Token = access_token;
+                    }
+                }
 
-            //}
+                //更新user 防止用户更新过资料
+                userModel.Email = claims.GetValue("email").ToString();
+                userModel.UserName = claims.GetValue("name").ToString();
+                userModel.Source = scheme;
+            }
+            await _infoDbContext.SaveChangesAsync();
 
             //return RedirectToAction("UserInfo", "Account");
             return View("UserInfo");

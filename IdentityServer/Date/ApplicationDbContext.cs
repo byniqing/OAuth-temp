@@ -18,7 +18,7 @@ namespace IdentityServer.Date
     //https://www.cnblogs.com/lonelyxmas/p/10597446.html
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, int>
     {
-        public DbSet<ApplicationUseAuthorization> applicationUseAuthorizations { get; set; }
+        //public DbSet<ApplicationUseAuthorization> applicationUseAuthorizations { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         { }
         protected override void OnModelCreating(ModelBuilder builder)
@@ -36,14 +36,14 @@ namespace IdentityServer.Date
                 //entity.Ignore(i => i.NormalizedEmail); //忽略该字段，即：不映射该字段到表中
             });
 
-            builder.Entity<ApplicationUseAuthorization>(e =>
-            {
-                e.ToTable("AspNetUserAuthorizations")
-                .Property(_ => _.Id).ValueGeneratedOnAdd().HasDefaultValue(1);
-                e.Property(_ => _.Created).HasDefaultValue(DateTime.Now);
-                e.HasKey(_ => _.Id);
+            //builder.Entity<ApplicationUseAuthorization>(e =>
+            //{
+            //    e.ToTable("AspNetUserAuthorizations")
+            //    .Property(_ => _.Id).ValueGeneratedOnAdd().HasDefaultValue(1);
+            //    e.Property(_ => _.Created).HasDefaultValue(DateTime.Now);
+            //    e.HasKey(_ => _.Id);
 
-            });
+            //});
         }
     }
     //http://www.it1352.com/684096.html

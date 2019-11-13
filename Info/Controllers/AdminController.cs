@@ -14,6 +14,7 @@ namespace Info.Controllers
     {
         public IActionResult Index()
         {
+            var ck = User.Identity.Name;
             return View();
         }
 

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Info.Date;
 using Info.Models;
+using Common;
 
 namespace Info.Controllers
 {
@@ -58,7 +59,7 @@ namespace Info.Controllers
                 //or 
                 var c = OAuthDefaults.DisplayName;
 
-                var user = _infoDbContext.users.FirstOrDefault(_ => _.Email == model.Email && _.PassWord == model.Password);
+                var user = _infoDbContext.users.FirstOrDefault(_ => _.Email == model.Email && _.PassWord == Utils.MD5(model.Password));
 
                 if (user != null)
                 {
@@ -122,24 +123,6 @@ namespace Info.Controllers
             return View();
         }
 
-        /// <summary>
-        /// 用户注册
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public IActionResult Register(RegisterInputModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                _infoDbContext.Add(new User
-                {
-                    Email = model.Email,
-                });
-            }
-            ModelState.AddModelError(string.Empty, "输入有误！");
-            return View();
-        }
 
         /// <summary>
         /// 用户退出
