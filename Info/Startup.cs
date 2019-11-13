@@ -38,7 +38,6 @@ namespace Info
              */
             var migrationAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             services.AddControllersWithViews();
-            //services.AddSingleton<InfoDbContext>();
             services.AddDbContext<InfoDbContext>(_ =>
             {
                 _.UseSqlServer(Configuration.GetConnectionString("InfoDb"));

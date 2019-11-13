@@ -9,6 +9,51 @@ namespace Common
 {
     public static class Utils
     {
+        #region 时间戳获取和转换
+        /// <summary>
+        /// 获取时间毫秒数
+        /// 长度为13位
+        /// </summary>
+        /// <returns></returns>
+        public static long GetMillisecondsTimeStamp()
+        {
+            //return (long)(DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")).Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalMilliseconds);
+            DateTime time = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return (long)(DateTime.Now.AddHours(-8) - time).TotalMilliseconds;
+
+        }
+        /// <summary>
+        /// 获取时间秒数
+        /// 长度为10位
+        /// </summary>
+        /// <returns></returns>
+        public static long GetSecondsTimeStamp()
+        {
+            DateTime time = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return (long)(DateTime.Now.AddHours(-8) - time).TotalSeconds;
+
+        }
+        /// <summary>
+        /// 时间戳转换为日期（时间戳单位毫秒）
+        /// </summary>
+        /// <param name="TimeStamp"></param>
+        /// <returns></returns>
+        public static DateTime ConvertMillisecondsToDateTime(long timeStamp)
+        {
+            var time = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return time.AddMilliseconds(timeStamp).AddHours(8);
+        }
+        /// <summary>
+        /// 时间戳转换为日期（时间戳单位秒）
+        /// </summary>
+        /// <param name="TimeStamp"></param>
+        /// <returns></returns>
+        public static DateTime ConvertSecondsToDateTime(long timeStamp)
+        {
+            var time = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return time.AddSeconds(timeStamp).AddHours(8);
+        } 
+        #endregion
         #region 随机数生成
         /// <summary>
         /// 生成随机字符
@@ -55,7 +100,6 @@ namespace Common
             return str;
         }
         #endregion
-
         #region RSA加密解密
         /// <summary>
         /// 加密
@@ -142,7 +186,7 @@ namespace Common
             {
                 throw ex;
             }
-        } 
+        }
         #endregion
 
         /*

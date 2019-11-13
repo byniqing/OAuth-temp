@@ -20,7 +20,7 @@ namespace Info.Date
         {
             modelBuilder.Entity<User>(entity =>
             {
-                entity.ToTable("users").HasKey(_=>_.Id);
+                entity.ToTable("Users").HasKey(_=>_.Id);
                 entity.Property(_ => _.Id).ValueGeneratedOnAdd();
                 entity.Property(_ => _.EmailConfirmed).HasDefaultValue(0);
                 entity.Property(_ => _.PhoneNumberConfirmed).HasDefaultValue(0);

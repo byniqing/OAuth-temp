@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common;
 using IdentityModel;
-using Info.Common;
 using Info.Date;
 using Info.Models;
 using Microsoft.AspNetCore.Authentication;
@@ -17,8 +17,6 @@ namespace Info.Controllers
     public class ExternalController : Controller
     {
         private readonly IAuthenticationSchemeProvider _schemeProvider;
-        private string a = null;
-        private static string b = null;
         private readonly InfoDbContext _infoDbContext;
         public ExternalController(IAuthenticationSchemeProvider schemeProvider, InfoDbContext infoDbContext)
         {
@@ -35,9 +33,6 @@ namespace Info.Controllers
         [HttpGet]
         public IActionResult Challenge(string provider, string returnUrl)
         {
-            a = provider;
-            b = provider;
-
             var schemes = _schemeProvider.GetAllSchemesAsync().Result;
             var schemeTe = OpenIdConnectDefaults.DisplayName;
             //判断是否已经授权
@@ -104,10 +99,8 @@ namespace Info.Controllers
             var header = parts[0];
             var claims = parts[1];
             var json = JObject.Parse(Encoding.UTF8.GetString(Base64Url.Decode(claims)));
-            var auth_time = Utils.ConvertToDateTime(long.Parse(json.GetValue("auth_time").ToString())); //颁发时间
-
-
-            var exp = Utils.ConvertToDateTime(long.Parse(json.GetValue("exp").ToString())); //过期时间
+            var auth_time = Utils.ConvertSecondsToDateTime(long.Parse(json.GetValue("auth_time").ToString())); //颁发时间
+            var exp = Utils.ConvertSecondsToDateTime(long.Parse(json.GetValue("exp").ToString())); //过期时间
             var uu = Newtonsoft.Json.JsonConvert.DeserializeObject<User>(Encoding.UTF8.GetString(Base64Url.Decode(claims)));
 
             //var my = _infoDbContext.users.FirstOrDefault(_ => _.BindId == uu.BindId);
