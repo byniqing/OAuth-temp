@@ -1,4 +1,4 @@
-﻿
+﻿@model IdentityServer.ViewModels.ApplicationViewModel
 @{
     ViewData["Title"] = "Index";
 }
@@ -28,17 +28,17 @@
         list-style: none;
     }
 
-.show {
-    /*border: 1px solid gray;
+    .show {
+        /*border: 1px solid gray;
     border-radius: 8px;*/
-    cursor: pointer;
-    color: #1ea1eb;
-    /*padding: 8px;
+        cursor: pointer;
+        color: #1ea1eb;
+        /*padding: 8px;
     line-height: 20px;
     width: 73px;
     height: 39px;
     margin-left:56px;*/
-}
+    }
 </style>
 <div id="containt">
     <div style="border:1px solid gray;height:100px;">
@@ -65,30 +65,21 @@
         </ul>
         <div id="listcontent">
             <div>
-                <ul style="display:inline-block;width:100%;height:50px;">
-                    <li>博客园</li>
-                    <li>aijkk#2898</li>
-                    <li>aijkk#2898</li>
-                    <li>2019-11-10</li>
-                    <li>审核中</li>
-                    <li>
-                        <div class="show">
-                            <a>查看</a>
-                        </div>
-                    </li>
-                </ul>
-                <ul style="display:inline-block;width:100%;height:50px;">
-                    <li>百度</li>
-                    <li>aijkk#2898</li>
-                    <li>aijkk#2898</li>
-                    <li>2019-10-10</li>
-                    <li>审核中</li>
-                    <li>
-                        <div class="show">
-                            <a>查看</a>
-                        </div>
-                    </li>
-                </ul>
+                @if (Model != null)
+                {
+                    <ul style="display:inline-block;width:100%;height:50px;">
+                        <li>@Model.ClientName</li>
+                        <li>@Model.ClientId</li>
+                        <li>@Model.ClientSecrets</li>
+                        <li>@Model.Created.ToString("yyyy-MM-dd")</li>
+                        <li>@((Model.Enable)?"审核成功":"审核中")</li>
+                        <li>
+                            <div class="show">
+                                <a>查看</a>
+                            </div>
+                        </li>
+                    </ul>
+                }
             </div>
             <div style="display:none;">
                 <ul style="display:inline-block;width:100%;height:50px;">

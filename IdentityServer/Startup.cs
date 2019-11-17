@@ -125,6 +125,7 @@ namespace IdentityServer
             services.AddIdentityServer(options =>
             {
                 options.UserInteraction.LoginUrl = "/account";
+                //options.UserInteraction.ErrorUrl
                 //默认值是可以根据自己修改
                 //options.UserInteraction.LoginUrl = "/Account/Login"; //没有授权，跳转的登陆页面
                 //options.UserInteraction.LogoutUrl = ""; //退出页面

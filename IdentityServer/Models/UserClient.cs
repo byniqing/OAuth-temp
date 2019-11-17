@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 namespace IdentityServer.Models
 {
     /// <summary>
-    /// 用户授权第三方客户端的信息
+    /// 用户开通的应用授权
     /// </summary>
-    public class ApplicationUseAuthorization
+    public class UserClient
     {
         public int Id { get; set; }
 
@@ -17,10 +17,16 @@ namespace IdentityServer.Models
         /// </summary>
         public int ClientId { get; set; }
 
-        ///// <summary>
-        ///// 当用取消授权后，置为false(0)
-        ///// </summary>
-        //public bool Enabled { get; set; }
+        /// <summary>
+        /// 用户id
+        /// </summary>
+        public int UserId { get; set; }
+
+        /// <summary>
+        /// 应用类型。web,aid(android的简称)
+        /// </summary>
+        public string Type { get; set; }
+       
         /// <summary>
         /// 创建时间
         /// </summary>

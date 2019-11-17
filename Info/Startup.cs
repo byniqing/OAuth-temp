@@ -91,6 +91,7 @@ namespace Info
                 options.ClientSecret = "secret";
                 //来自identityserver的令牌持久化在cookie中
                 options.SaveTokens = true;
+                //options.AccessDeniedPath = "";
                 //options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 //{
 

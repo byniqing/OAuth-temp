@@ -144,7 +144,7 @@ namespace IdentityServer.Controllers
                 result.ClientId = request.ClientId;
 
                 var id = _configurationDbContext.Clients.ToList().Find(f => f.ClientId == request.ClientId).Id;
-                //var entity = _applicationDbContext.applicationUseAuthorizations.FirstOrDefault(_ => _.ClientId == id);
+                var entity = _applicationDbContext.applicationUseAuthorizations.FirstOrDefault(_ => _.ClientId == id);
                 ////判断是否授权过
                 //if (entity != null && !entity.Enabled)
                 //{
@@ -203,7 +203,6 @@ namespace IdentityServer.Controllers
                         RememberConsent = model?.RememberConsent ?? true,
                         ScopesConsented = model?.ScopesConsented ?? Enumerable.Empty<string>(),
                     };
-
                     var resources1 = await _resourceStore.FindResourcesByScopeAsync(request.ScopesRequested);
                     var resources = await _resourceStore.FindEnabledResourcesByScopeAsync(request.ScopesRequested);
                     if (resources != null && (resources.IdentityResources.Any() || resources.ApiResources.Any()))

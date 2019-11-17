@@ -25,8 +25,8 @@ namespace IdentityServer
                 //如果直接用这个变量，授权界面显示的英文,不好
                 //new IdentityResources.OpenId(),
                  //new IdentityResources.Profile(),
-                 new IdentityResources.Address(),
-                new IdentityResources.Email(),
+                 //new IdentityResources.Address(),
+                //new IdentityResources.Email(),
                 new IdentityResource{
                      Name="openid",
                      DisplayName="用户唯一标识",
@@ -39,6 +39,7 @@ namespace IdentityServer
                      DisplayName="获得您的昵称、头像、性别",
                      Description="一些基本信息",
                      Required=true,
+                     //UserClaims=new List<string>{ JwtClaimTypes.Role}, //请求该资源的时候，必须包含该claim
                      ShowInDiscoveryDocument=false //既然是必须的。就不用显示在界面
                 },
                 new IdentityResource{
@@ -76,13 +77,13 @@ namespace IdentityServer
                 Description = "获取用户的基本信息",
                 DisplayName = "都可以是默认值",
                 UserClaims = new List<string> { JwtClaimTypes.Role },
-                //ApiSecrets = { new Secret("trtrt".Sha256()) },
-                //Properties = new Dictionary<string, string> { { "a", "b" } },
+                //ApiSecrets = { new Secret("trtrt".Sha256()) }, //保存在[ApiSecrets]表中的
+                //Properties = new Dictionary<string, string> { { "a", "b" } }, //保存在[dbo].[ApiProperties]表中
                 //Enabled = true, //是否启用
                 //作用域，对应下面的Cliet的 AllowedScopes
                 Scopes = {
                      new Scope{
-                        Name="OtherInfo",
+                        Name="comment",
                         Description="描述",
                         DisplayName="获得您的评论",
                         Required=true,
@@ -90,9 +91,9 @@ namespace IdentityServer
                         UserClaims=new List<string>{ JwtClaimTypes.Role}
                     },
                     new Scope{
-                        Name="oidc1", //这里是指定客户端能使用的范围名称 , 是唯一的
+                        Name="info", //这里是指定客户端能使用的范围名称 , 是唯一的
                         Description="描述",
-                        DisplayName="获得你的个人信息，好友关系",
+                        DisplayName="获得你的好友列表",
                     }
                 }
             };
@@ -159,11 +160,9 @@ namespace IdentityServer
                     IdentityServerConstants.StandardScopes.Email,
                     //IdentityServerConstants.StandardScopes.OfflineAccess,
                     //"offline_access",
-                    //"90",
                     //"address",
-                    "OtherInfo",
-                    "address",
-                    "oidc1"
+                    "comment",
+                    "info"
                 },
 
                 //客户端默认传过来的是这个地址，如果跟这个不一直就会异常

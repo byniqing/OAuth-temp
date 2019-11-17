@@ -59,8 +59,8 @@ namespace IdentityServer.Date
                     };
                     var third = await _roleManager.CreateAsync(trole);
                     //action 指动作，意思是该角色可以做的事情，不管是是CRUD，都可以理解为一个action
-                    var c1 = await _roleManager.AddClaimAsync(trole, new Claim("action", "api/Identity/OtherInfo"));
-                    await _roleManager.AddClaimAsync(trole, new Claim("action", "api/Identity/oidc1"));
+                    var c1 = await _roleManager.AddClaimAsync(trole, new Claim("action", "api/User/comment"));
+                    await _roleManager.AddClaimAsync(trole, new Claim("action", "api/User/info"));
                 }
                 #endregion
 
@@ -162,15 +162,15 @@ namespace IdentityServer.Date
                     configurationDbContext.Database.Migrate();
 
                     //client 第三方客户端信息
-                    if (!configurationDbContext.Clients.Any())
-                    {
-                        foreach (var client in Config.GetClients())
-                        {
-                            //client.ToEntity() 会把当前实体映射到EF实体
-                            configurationDbContext.Clients.Add(client.ToEntity());
-                        }
-                        await configurationDbContext.SaveChangesAsync();
-                    }
+                    //if (!configurationDbContext.Clients.Any())
+                    //{
+                    //    foreach (var client in Config.GetClients())
+                    //    {
+                    //        //client.ToEntity() 会把当前实体映射到EF实体
+                    //        configurationDbContext.Clients.Add(client.ToEntity());
+                    //    }
+                    //    await configurationDbContext.SaveChangesAsync();
+                    //}
 
                     //ApiResources Api资源信息
                     if (!configurationDbContext.ApiResources.Any())

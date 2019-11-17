@@ -61,10 +61,7 @@ namespace IdentityServer.Date.Migrations.ApplicationDb
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2019, 11, 11, 9, 23, 25, 72, DateTimeKind.Local).AddTicks(9623));
-
-                    b.Property<bool>("Enabled")
-                        .HasColumnType("bit");
+                        .HasDefaultValue(new DateTime(2019, 11, 17, 16, 55, 46, 548, DateTimeKind.Local).AddTicks(7283));
 
                     b.HasKey("Id");
 
@@ -136,6 +133,32 @@ namespace IdentityServer.Date.Migrations.ApplicationDb
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("IdentityServer.Models.UserClient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2019, 11, 17, 16, 55, 46, 551, DateTimeKind.Local).AddTicks(3354));
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserClients");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

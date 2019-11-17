@@ -1,4 +1,4 @@
-﻿
+﻿@model IdentityServer.ViewModels.ManageViewModel
 @{
     ViewData["Title"] = "CreatePC";
 }
@@ -84,19 +84,58 @@
                                     <div class="form-group row">
                                         <label class="col-md-4 col-form-label text-md-right">开通权限</label>
                                         <div class="col-md-6">
-                                            <label class="checkbox-inline disabled">
-                                                <input name="AllowedScopes" class="disabled" checked="checked" disabled="disabled" type="checkbox" id="inlineCheckbox1" value="openid">用户唯一标识
-                                                <input type="hidden" name="AllowedScopes" value="openid" />
-                                            </label>
-                                            <label class="checkbox-inline">
-                                                <input name="AllowedScopes" type="checkbox" id="inlineCheckbox2" value="profile">获取用户信息
-                                            </label>
-                                            <label class="checkbox-inline">
-                                                <input name="AllowedScopes" type="checkbox" id="inlineCheckbox1" value="offline_access">离线访问
-                                            </label>
-                                            <label class="checkbox-inline">
-                                                <input name="AllowedScopes" type="checkbox" id="inlineCheckbox2" value="OtherInfo">获取评论列表
-                                            </label>
+                                            @if (Model.IdentityScopes != null && Model.IdentityScopes.Any())
+                                            {
+                                                foreach (var scope in Model.IdentityScopes)
+                                                {
+                                                    <label class="checkbox-inline">
+                                                        <input name="AllowedScopes"
+                                                               class="disabled"
+                                                               checked="@scope.Checked"
+                                                               disabled="@scope.Required"
+                                                               type="checkbox"
+                                                               value="@scope.Name">
+                                                        @scope.DisplayName
+                                                    </label>
+                                                    if (scope.Required)
+                                                    {
+                                                        <input type="hidden" name="AllowedScopes" value="@scope.Name" />
+                                                    }
+                                                }
+                                            }
+                                            @if (Model.ResourceScopes != null && Model.ResourceScopes.Any())
+                                            {
+                                                foreach (var scope in Model.ResourceScopes)
+                                                {
+                                                    <label class="checkbox-inline">
+                                                        <input name="AllowedScopes"
+                                                               class="disabled"
+                                                               checked="@scope.Checked"
+                                                               disabled="@scope.Required"
+                                                               type="checkbox"
+                                                               value="@scope.Name">
+                                                        @scope.DisplayName
+                                                    </label>
+                                                    if (scope.Required)
+                                                    {
+                                                        <input type="hidden" name="AllowedScopes" value="@scope.Name" />
+                                                    }
+                                                }
+                                            }
+
+                                            @*<label class="checkbox-inline disabled">
+                                                    <input name="AllowedScopes" class="disabled" checked="checked" disabled="disabled" type="checkbox" id="inlineCheckbox1" value="openid">用户唯一标识
+                                                    <input type="hidden" name="AllowedScopes" value="openid" />
+                                                </label>
+                                                <label class="checkbox-inline">
+                                                    <input name="AllowedScopes" type="checkbox" id="inlineCheckbox2" value="profile">获取用户信息
+                                                </label>
+                                                <label class="checkbox-inline">
+                                                    <input name="AllowedScopes" type="checkbox" id="inlineCheckbox1" value="offline_access">离线访问
+                                                </label>
+                                                <label class="checkbox-inline">
+                                                    <input name="AllowedScopes" type="checkbox" id="inlineCheckbox2" value="OtherInfo">获取评论列表
+                                                </label>*@
                                         </div>
                                     </div>
                                     <div class="form-group row mb-0">
