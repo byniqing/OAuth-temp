@@ -87,8 +87,8 @@ namespace Info
                 //options.SignInScheme = OpenIdConnectDefaults.DisplayName;
                 options.Authority = "http://localhost:5008"; //授权服务器地址
                 options.RequireHttpsMetadata = false;
-                options.ClientId = "Info.Client";
-                options.ClientSecret = "secret";
+                options.ClientId = "5440496238";
+                options.ClientSecret = "saQR67zTYy";
                 //来自identityserver的令牌持久化在cookie中
                 options.SaveTokens = true;
                 //options.AccessDeniedPath = "";
@@ -105,9 +105,9 @@ namespace Info
                 //向服务器发起，我想要的权限和用户信息，前提的服务器允许
                 //options.Scope.Add("email");
                 options.Scope.Add("offline_access");
-                options.Scope.Add("OtherInfo"); //api权限
-                options.Scope.Add("oidc1");
-                options.ResponseType = OpenIdConnectResponseType.Code;// "id_token code";// OpenIdConnectResponseType.CodeIdToken;
+                options.Scope.Add("comment"); //api权限
+                //options.Scope.Add("info");
+                options.ResponseType = OpenIdConnectResponseType.CodeIdToken;// "id_token code";// OpenIdConnectResponseType.CodeIdToken;
                 /*
                这样会去请求UserInfoEndpoint获取到信息后绑定到access_token中
                */

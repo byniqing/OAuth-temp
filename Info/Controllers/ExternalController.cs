@@ -166,7 +166,7 @@ namespace Info.Controllers
                 userModel.UserName = claims.GetValue("name").ToString();
                 userModel.Source = scheme;
             }
-            await _infoDbContext.SaveChangesAsync();
+            //await _infoDbContext.SaveChangesAsync();
 
             //return RedirectToAction("UserInfo", "Account");
             return View("UserInfo");

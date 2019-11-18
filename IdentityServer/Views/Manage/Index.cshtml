@@ -1,4 +1,5 @@
-﻿@model IdentityServer.ViewModels.ApplicationViewModel
+﻿@model List<IdentityServer.ViewModels.ApplicationViewModel>
+@using Common
 @{
     ViewData["Title"] = "Index";
 }
@@ -50,66 +51,149 @@
             <li class="selected">网站应用</li>
             <li class="noselected">移动应用</li>
         </ul>
-        <div style="position: absolute;top: 8px;right: 0px;border: 1px solid gray;border-radius: 8px;padding: 7px;cursor: pointer;color: #1ea1eb;">
-            <a asp-action="create" style="text-decoration:none;">创建应用</a>
-        </div>
+        @*<div style="position: absolute;top: 8px;right: 0px;border: 1px solid gray;border-radius: 8px;padding: 7px;cursor: pointer;color: #1ea1eb;">
+                <a asp-action="create" style="text-decoration:none;">创建应用</a>
+            </div>*@
     </div>
     <div style="margin:50px auto 0px auto;height:50px;">
         <ul style="display:inline-block;width:100%;height:50px;background-color:#dcdfe3;">
             <li>应用名称</li>
             <li>ClientId</li>
-            <li>ClientSecrets</li>
-            <li>创建事件</li>
+            <li>ClientSecret</li>
+            <li>创建时间</li>
             <li>审核状态</li>
             <li>操作</li>
         </ul>
         <div id="listcontent">
-            <div>
-                @if (Model != null)
-                {
-                    <ul style="display:inline-block;width:100%;height:50px;">
-                        <li>@Model.ClientName</li>
-                        <li>@Model.ClientId</li>
-                        <li>@Model.ClientSecrets</li>
-                        <li>@Model.Created.ToString("yyyy-MM-dd")</li>
-                        <li>@((Model.Enable)?"审核成功":"审核中")</li>
+            <div style="position:relative;">
+                <ul style="display:inline-block;width:100%;height:50px;">
+                    @if (Model != null && Model.Any(_ => _.Type == ApplicationType.web.ToString()))
+                    {
+                        foreach (var m in Model.Where(_ => _.Type == ApplicationType.web.ToString()))
+                        {
+                            <li>@m.ClientName</li>
+                            <li>@m.ClientId</li>
+                            <li>@m.ClientSecrets</li>
+                            <li>@m.Created.ToString("yyyy-MM-dd")</li>
+                            <li>@((m.Enable) ? "审核成功" : "审核中")</li>
+                            <li>
+                                <div class="show">
+                                    <!-- 按钮：用于打开模态框 -->
+                                    <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#myModal-@m.Id">
+                                        <span class="glyphicon glyphicon-star" aria-hidden="true">查看</span>
+                                    </button>
+                                </div>
+                            </li>
+                            <li>
+                                <!-- 模态框start -->
+                                <div class="modal fade" id="myModal-@m.Id" style="color: gray;padding-left: 17px;font-size: 16px;text-align: left;">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <!-- 模态框头部 -->
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">权限信息</h4>
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            </div>
+
+                                            <!-- 模态框主体 -->
+                                            <div class="modal-body">
+                                                <div class="panel panel-default">
+                                                    <!-- Default panel contents -->
+                                                    <div class="panel-heading" style="cursor:default;"></div>
+                                                    <div class="form-group row" style="margin-bottom:0px;border-bottom:1px solid gray;">
+                                                        <label class="col-md-4 col-form-label text-md-center">授权类型</label>
+                                                        <div class="col-md-8" style="border-left:1px solid gray;padding-left:30px;">
+                                                            @m.GrantType
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row" style="border-bottom:1px solid gray;">
+                                                        <label class="col-md-4 col-form-label text-md-center">开通的权限</label>
+                                                        <div class="col-md-8" style="border-left:1px solid gray;padding-left:30px;">
+                                                            @if (m.scopeViewModels != null && m.scopeViewModels.Any())
+                                                            {
+                                                                foreach (var scope in m.scopeViewModels)
+                                                                {
+                                                                    if (m.AllowedScopes != null && m.AllowedScopes.Any())
+                                                                    {
+                                                                        var chk = m.AllowedScopes.Any(_ => _.Scope == scope.Name);
+                                                                        <label class="checkbox-inline">
+                                                                            <input name="AllowedScopes"
+                                                                                   class="disabled"
+                                                                                   checked="@chk"
+                                                                                   disabled="disabled"
+                                                                                   type="checkbox"
+                                                                                   value="@scope.Name">
+                                                                            @scope.DisplayName (@scope.Name)
+                                                                        </label>
+                                                                    }
+
+                                                                }
+                                                            }
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- 模态框底部 -->
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 模态框end -->
+                            </li>
+                        }
+                    }
+                    else
+                    {
                         <li>
-                            <div class="show">
-                                <a>查看</a>
+                            <div style="position: absolute;top: -150px;right: 53px;border: 1px solid gray;border-radius: 5px;cursor: pointer;color: #1ea1eb;font-size: 17px;width: 84px;line-height: 38px;">
+                                <a asp-action="create" style="text-decoration:none;">创建应用</a>
                             </div>
                         </li>
-                    </ul>
-                }
+                    }
+                </ul>
             </div>
             <div style="display:none;">
-                <ul style="display:inline-block;width:100%;height:50px;">
-                    <li>博客园App</li>
-                    <li>ddjkk#2898</li>
-                    <li>aijkk#2898</li>
-                    <li>2019-11-10</li>
-                    <li>审核中</li>
-                    <li>
-                        <div class="show">
-                            <a>查看</a>
-                        </div>
-                    </li>
-                </ul>
-                <ul style="display:inline-block;width:100%;height:50px;">
-                    <li>百度App</li>
-                    <li>a00kk#2898</li>
-                    <li>aijkk#2898</li>
-                    <li>2019-10-10</li>
-                    <li>审核中</li>
-                    <li>
-                        <div class="show">
-                            <a>查看</a>
-                        </div>
-                    </li>
-                </ul>
+                <div style="position:relative;">
+                    <ul style="display:inline-block;width:100%;height:50px;">
+                        @if (Model != null && Model.Any(_ => _.Type == ApplicationType.aid.ToString()))
+                        {
+                            foreach (var m in Model.Where(_ => _.Type == ApplicationType.aid.ToString()))
+                            {
+                                <li>@m.ClientName</li>
+                                <li>@m.ClientId</li>
+                                <li>@m.ClientSecrets</li>
+                                <li>@m.Created.ToString("yyyy-MM-dd")</li>
+                                <li>@((m.Enable) ? "审核成功" : "审核中")</li>
+                                <li>
+                                    <div class="show">
+                                        <!-- 按钮：用于打开模态框 -->
+                                        <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#myModal">
+                                            <span class="glyphicon glyphicon-star" aria-hidden="true">查看</span>
+                                        </button>
+                                    </div>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li>
+                                <div style="position: absolute;top: -150px;right: 53px;border: 1px solid gray;border-radius: 5px;cursor: pointer;color: #1ea1eb;font-size: 17px;width: 84px;line-height: 38px;">
+                                    <a asp-action="create" style="text-decoration:none;">创建应用</a>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 <script type="text/javascript">
     $("#tab_label").find("li").click(function () {
         $(this).siblings().removeClass("selected").addClass("noselected").end().addClass("selected");

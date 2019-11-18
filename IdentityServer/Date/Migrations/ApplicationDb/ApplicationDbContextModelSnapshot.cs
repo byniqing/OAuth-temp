@@ -61,7 +61,7 @@ namespace IdentityServer.Date.Migrations.ApplicationDb
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2019, 11, 17, 16, 55, 46, 548, DateTimeKind.Local).AddTicks(7283));
+                        .HasDefaultValue(new DateTime(2019, 11, 18, 13, 55, 11, 216, DateTimeKind.Local).AddTicks(9826));
 
                     b.HasKey("Id");
 
@@ -148,7 +148,7 @@ namespace IdentityServer.Date.Migrations.ApplicationDb
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2019, 11, 17, 16, 55, 46, 551, DateTimeKind.Local).AddTicks(3354));
+                        .HasDefaultValue(new DateTime(2019, 11, 18, 13, 55, 11, 220, DateTimeKind.Local).AddTicks(812));
 
                     b.Property<string>("Type")
                         .HasColumnType("nvarchar(50)");

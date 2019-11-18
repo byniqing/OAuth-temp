@@ -26,9 +26,11 @@
                                         <label class="col-md-4 col-form-label text-md-right">UserName</label>
 
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="UserName" required="required" placeholder="用户名" pattern="[A-Za-z0-9]{6,30}">
+                                            @*<input type="text" class="form-control" name="UserName" required="required" placeholder="用户名" pattern="[A-Za-z0-9]{6,30}">*@
+                                            <input type="text" class="form-control" name="UserName" required="required" placeholder="用户名" pattern="[A-Za-z]{3,30}">
                                             <div class="invalid-feedback">
-                                                <small style="font-size:1em;">请输入用户名6-30位字母或数字！</small>
+                                                @*<small style="font-size:1em;">请输入用户名6-30位字母或数字！</small>*@
+                                                <small style="font-size:1em;">请输入用户名长度为3-30位，必须包含字母！</small>
                                             </div>
                                         </div>
                                     </div>
@@ -98,7 +100,6 @@
                 }
             }
             f.addClass("was-validated")
-
         })
         $("#password,#password_confirmation").keyup(function () {
             var pwd = $("#password").val();

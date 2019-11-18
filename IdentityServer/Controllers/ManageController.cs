@@ -35,7 +35,7 @@ namespace IdentityServer.Controllers
         private readonly IIdentityServerInteractionService _interaction;
         public ManageController(ConfigurationDbContext configurationDbContext,
             IIdentityServerInteractionService interaction,
-            IConfigurationDbContext ic1,
+        IConfigurationDbContext ic1,
         IResourceStore resourceStore, ApplicationDbContext applicationDbContext)
         {
             _configurationDbContext = configurationDbContext;
@@ -48,76 +48,66 @@ namespace IdentityServer.Controllers
             //http://www.cocoachina.com/articles/112766
             //var cks12 = HttpContext.RequestServices.GetRequiredService<ConfigurationDbContext>();
 
+            var vmList = new List<ApplicationViewModel>();
             ApplicationViewModel vm = null;
             var userId = int.Parse(User.FindFirstValue("sub"));
 
             //var client = _configurationDbContext.Clients;
-            var app = _applicationDbContext.userClients.FirstOrDefault(_ => _.UserId == userId);
-            if (app != null)
+            var app = _applicationDbContext.userClients.Where(_ => _.UserId == userId);
+            if (app != null && app.Any())
             {
-                var client = await GetClientAsync(app.ClientId);
-                //var myApp = client.FirstOrDefault(_ => _.Id == app.ClientId);
-                if (client != null)
+                foreach (var item in app)
                 {
-                    vm = new ApplicationViewModel
+                    var client = await ConfiguratioBase.GetClientAsync(_configurationDbContext, item.ClientId);
+                    if (client != null)
                     {
-                        ClientId = client.ClientId,
-                        //ClientSecrets = client.ClientSecrets.Find(_ => _.ClientId == client.Id).Value,
-                        ClientSecrets = client.Claims.Find(c => c.Type == "secret").Value,
-                        Created = client.Created,
-                        Enable = client.Enabled,
-                        ClientName = client.ClientName
-                    };
+                        vm = new ApplicationViewModel
+                        {
+                            ClientId = client.ClientId,
+                            //ClientSecrets = client.ClientSecrets.Find(_ => _.ClientId == client.Id).Value,
+                            ClientSecrets = client.Claims.Find(c => c.Type == "secret").Value,
+                            Created = client.Created,
+                            Enable = client.Enabled,
+                            AllowedScopes = client.AllowedScopes,
+                            ClientName = client.ClientName,
+                            Type = item.Type,
+                            Id = client.Id,
+                            GrantType = client.AllowedGrantTypes.Find(_ => _.ClientId == item.ClientId)?.GrantType,
+                        };
+                        var resources = await _resourceStore.GetAllEnabledResourcesAsync();
+                        if (resources != null && (resources.IdentityResources.Any() || resources.ApiResources.Any()))
+                        {
+                            vm.scopeViewModels = new List<ScopeViewModel>();
+                            if (resources.IdentityResources.Any())
+                            {
+                                var resource = resources.IdentityResources.Select(x => ConfiguratioBase.CreateScopeViewModel(x)).ToArray();
+                                if (resource != null && resource.Any())
+                                {
+                                    vm.scopeViewModels.AddRange(resource);
+                                }
+                            }
+                            if (resources.ApiResources.Any())
+                            {
+                                var resource = resources.ApiResources.SelectMany(x => x.Scopes).Select(x => ConfiguratioBase.CreateScopeViewModel(x)).ToArray();
+                                if (resource != null && resource.Any())
+                                {
+                                    vm.scopeViewModels.AddRange(resource);
+                                }
+                            }
+                        }
+                        vmList.Add(vm);
+                    }
                 }
-
             }
-            return View(vm);
+            return View(vmList);
         }
 
-        public Task<IdentityServer4.EntityFramework.Entities.Client> GetClientAsync(int id)
-        {
-            return _configurationDbContext.Clients
-                .Include(x => x.AllowedGrantTypes)
-                .Include(x => x.RedirectUris)
-                .Include(x => x.PostLogoutRedirectUris)
-                .Include(x => x.AllowedScopes)
-                .Include(x => x.ClientSecrets)
-                .Include(x => x.Claims)
-                .Include(x => x.IdentityProviderRestrictions)
-                .Include(x => x.AllowedCorsOrigins)
-                .Include(x => x.Properties)
-                .Where(x => x.Id == id)
-                    .SingleOrDefaultAsync();
-        }
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
-        private ScopeViewModel CreateScopeViewModel(IdentityResource scope)
-        {
-            return new ScopeViewModel
-            {
-                Checked = scope.Required,
-                Required = scope.Required,
-                Description = scope.Description,
-                DisplayName = scope.DisplayName,
-                Emphasize = scope.Emphasize,
-                Name = scope.Name
-            };
-        }
-        private ScopeViewModel CreateScopeViewModel(Scope scope)
-        {
-            return new ScopeViewModel
-            {
-                Checked = scope.Required,
-                Required = scope.Required,
-                Description = scope.Description,
-                DisplayName = scope.DisplayName,
-                Emphasize = scope.Emphasize,
-                Name = scope.Name
-            };
-        }
+
         [HttpGet]
         public async Task<IActionResult> CreatePc()
         {
@@ -128,10 +118,11 @@ namespace IdentityServer.Controllers
             var vm = new ManageViewModel();
             if (resources != null && (resources.IdentityResources.Any() || resources.ApiResources.Any()))
             {
-                vm.IdentityScopes = resources.IdentityResources.Select(x => CreateScopeViewModel(x)).ToArray();
-                vm.ResourceScopes = resources.ApiResources.SelectMany(x => x.Scopes).Select(x => CreateScopeViewModel(x)).ToArray();
+                if (resources.IdentityResources.Any())
+                    vm.IdentityScopes = resources.IdentityResources.Select(x => ConfiguratioBase.CreateScopeViewModel(x)).ToArray();
+                if (resources.ApiResources.Any())
+                    vm.ResourceScopes = resources.ApiResources.SelectMany(x => x.Scopes).Select(x => ConfiguratioBase.CreateScopeViewModel(x)).ToArray();
             }
-
             return View(vm);
         }
         /// <summary>
@@ -216,9 +207,22 @@ namespace IdentityServer.Controllers
                     new Claim("secret", secrets) //把密钥保存起来
                 };
             client.Enabled = false; //默认是false，因为要审核
-            _configurationDbContext.Clients.Add(client.ToEntity());
+            var entity = _configurationDbContext.Clients.Add(client.ToEntity()).Entity;
             _configurationDbContext.SaveChanges();
-            return View();
+            var rows = _configurationDbContext.SaveChanges();
+            if (rows > 0)
+            {
+                var userId = int.Parse(User.FindFirstValue("sub"));
+                //记录用户申请的授权
+                _applicationDbContext.userClients.Add(new UserClient
+                {
+                    ClientId = entity.Id,
+                    UserId = userId,
+                    Type = ApplicationType.web.ToString()
+                });
+                _applicationDbContext.SaveChanges();
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }
