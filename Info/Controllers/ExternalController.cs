@@ -39,7 +39,7 @@ namespace Info.Controllers
             //判断是否已经授权
             if (User.Identity.IsAuthenticated)
             {
-                return View("UserInfo");
+                return RedirectToAction("Index", "About");
             }
 
             // start challenge and roundtrip the return URL and scheme 
@@ -103,6 +103,11 @@ namespace Info.Controllers
             //刷新token必须存在服务端，不能暴露给客户端
             var refresh_token = result.Properties.GetTokenValue("refresh_token");
 
+
+            var abc = result.Properties.GetTokens();
+
+
+
             var parts = access_token.Split('.');
             var header = parts[0];
             var payload = parts[1];
@@ -112,7 +117,7 @@ namespace Info.Controllers
             var exp = Utils.ConvertSecondsToDateTime(long.Parse(claims.GetValue("exp").ToString())); //过期时间
 
             //反序列化
-            var user = JsonConvert.DeserializeObject<User>(Encoding.UTF8.GetString(Base64Url.Decode(json)));
+            var user = JsonConvert.DeserializeObject<User>(json);
 
             /*
              这里要明确一点，就是第三方哪个字段是唯一的，
@@ -127,17 +132,39 @@ namespace Info.Controllers
                     Email = claims.GetValue("email").ToString(),
                     UserName = claims.GetValue("name").ToString(),
                     BindId = int.Parse(claims.GetValue("sub").ToString()),
+                    Address = user.Address,
+                    EmailConfirmed = user.EmailConfirmed,
+                    PhoneNumber = user.PhoneNumber,
+                    PhoneNumberConfirmed = user.PhoneNumberConfirmed,
                     Source = scheme
                 }).Entity;
-                var a = GrantsType.access_token;
-                _infoDbContext.Add(new PersistedGrant
+                var row = await _infoDbContext.SaveChangesAsync();
+                if (row > 0)
                 {
-                    UserId = userEntity.Id,
-                    CreateTime = auth_time,
-                    Expiration = exp,
-                    Token = access_token,
-                    Type = GrantsType.access_token.ToString()
-                });
+                    if (!string.IsNullOrWhiteSpace(access_token))
+                    {
+                        _infoDbContext.Add(new PersistedGrant
+                        {
+                            UserId = userEntity.Id,
+                            CreateTime = auth_time,
+                            Expiration = exp,
+                            Token = access_token,
+                            Type = GrantsType.access_token.ToString()
+                        });
+                    }
+                    if (!string.IsNullOrWhiteSpace(refresh_token))
+                    {
+                        _infoDbContext.Add(new PersistedGrant
+                        {
+                            UserId = userEntity.Id,
+                            CreateTime = auth_time,
+                            Expiration = exp,
+                            Token = refresh_token,
+                            Type = GrantsType.refresh_token.ToString()
+                        });
+                        await _infoDbContext.SaveChangesAsync();
+                    }
+                }
             }
             else
             {
@@ -165,11 +192,11 @@ namespace Info.Controllers
                 userModel.Email = claims.GetValue("email").ToString();
                 userModel.UserName = claims.GetValue("name").ToString();
                 userModel.Source = scheme;
+                await _infoDbContext.SaveChangesAsync();
             }
-            //await _infoDbContext.SaveChangesAsync();
 
             //return RedirectToAction("UserInfo", "Account");
-            return View("UserInfo");
+            return RedirectToAction("Index", "About");
         }
     }
 }

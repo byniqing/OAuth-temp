@@ -17,6 +17,14 @@ using Newtonsoft.Json.Linq;
 using Info.Date;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using static IdentityModel.OidcConstants;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Http;
+using Info.AuthTokenHelpers;
+using IdentityModel.Client;
+using System.IdentityModel.Tokens.Jwt;
+using Info.Configuration;
+using System.Net.Http;
 
 namespace Info
 {
@@ -32,6 +40,46 @@ namespace Info
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //    services
+            //.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            /*
+             注意：注册的更好方法IHttpContextAccessor是调用AddHttpContextAccessor Extension方法，
+             */
+            //services.AddHttpContextAccessor();
+
+            //services.AddHttpClient();
+            //services.Configure<AuthServiceSettings>(Configuration);
+
+            //services.add
+            services.AddSingleton(serviceProvider =>
+            {
+                var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+                return configuration.GetSection("AuthServiceSettings");
+            });
+
+            services.AddSingleton<IDiscoveryCache>(serviceProvider =>
+            {
+                //var authServiceConfig = serviceProvider.GetRequiredService<AuthServiceSettings>();
+                //var factory = serviceProvider.GetRequiredService<IHttpClientFactory>();
+                //return new DiscoveryCache(authServiceConfig.Authority, () => factory.CreateClient());
+
+                //var factory = serviceProvider.GetRequiredService<IHttpClientFactory>();
+                return new DiscoveryCache("http://localhost:5008");
+            });
+
+            services
+                .AddTransient<CustomCookieAuthenticationEvents>()
+                .AddTransient<ITokenRefresher, TokenRefresher>()
+                .AddTransient<AccessTokenHttpMessageHandler>()
+                .AddTransient<HttpClient>()
+                .AddHttpContextAccessor();
+
+            //services
+            //    .AddHttpClient<ITokenRefresher, TokenRefresher>();
+
+
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
             /*
               Add-Migration init -Context InfoDbContext
               Update-Database -Context InfoDbContext
@@ -67,11 +115,12 @@ namespace Info
                 //options.DefaultChallengeScheme = "oidc";
                 //options.DefaultAuthenticateScheme = "oidc";
 
-
             })
              .AddCookie(cookie, options =>
             {
                 options.LoginPath = "/account";
+                //options.ExpireTimeSpan = TimeSpan.FromSeconds(30);
+                //options.EventsType = typeof(CustomCookieAuthenticationEvents);
             })
             //.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,options =>
             //{
@@ -83,6 +132,9 @@ namespace Info
             //openid connect协议的处理程序
             .AddOpenIdConnect(oidc, "OpenID Connect", options =>
             {
+                var authServiceConfig = Configuration.Get<AuthServiceSettings>();
+                var app = Configuration.Get<AuthServiceSettings>();
+
                 //options.SignInScheme = "Cookies";
                 //options.SignInScheme = OpenIdConnectDefaults.DisplayName;
                 options.Authority = "http://localhost:5008"; //授权服务器地址
@@ -91,6 +143,17 @@ namespace Info
                 options.ClientSecret = "saQR67zTYy";
                 //来自identityserver的令牌持久化在cookie中
                 options.SaveTokens = true;
+                /*
+                 指示身份验证会话生存期（例如cookies）应匹配
+
+                身份验证令牌的。如果令牌不提供生存期信息
+
+                然后将使用正常会话生存期。这在默认情况下是禁用的。
+                 */
+                //options.UseTokenLifetime = true;
+                // options.JwtValidationClockSkew = TimeSpan.FromSeconds(0);
+
+
                 //options.AccessDeniedPath = "";
                 //options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 //{
@@ -104,10 +167,14 @@ namespace Info
 
                 //向服务器发起，我想要的权限和用户信息，前提的服务器允许
                 //options.Scope.Add("email");
-                options.Scope.Add("offline_access");
+                options.Scope.Add(OidcConstants.StandardScopes.OfflineAccess);
+                //options.Scope.Add("offline_access");
+
                 options.Scope.Add("comment"); //api权限
                 //options.Scope.Add("info");
-                options.ResponseType = OpenIdConnectResponseType.CodeIdToken;// "id_token code";// OpenIdConnectResponseType.CodeIdToken;
+                //options.ResponseType = OpenIdConnectResponseType.Code;// "id_token code";// OpenIdConnectResponseType.CodeIdToken;
+                //或者
+                options.ResponseType = ResponseTypes.Code;
                 /*
                这样会去请求UserInfoEndpoint获取到信息后绑定到access_token中
                */
@@ -141,6 +208,20 @@ namespace Info
                         OAuthFailureHandler.HandleResponse();
                         return Task.FromResult(0);
                     },
+                    //https://blog.codingmilitia.com/2019/06/22/aspnet-024-from-zero-to-overkill-integrating-identityserver4-part4-back-for-front
+                    //在重定向到身份提供程序进行身份验证之前调用
+                    //OnRedirectToIdentityProvider = context => 
+                    //{
+                    //    /*
+                    //     如果是SPA页面，直接请求某个页面，可以捕获
+                    //     */
+                    //    if (!context.HttpContext.Request.Path.StartsWithSegments("/auth/login"))
+                    //    {
+                    //        context.HttpContext.Response.StatusCode = 401;
+                    //        context.HandleResponse();
+                    //    }
+                    //    return Task.CompletedTask;
+                    //}
                 };
             });
         }

@@ -121,10 +121,10 @@ namespace IdentityServer.Services
             var claims = new List<Claim>
             {
                 //ClaimTypes.NameIdentifier
-                new Claim(JwtClaimTypes.Subject, user.Id+""),
+                new Claim(JwtClaimTypes.Subject, user.Id.ToString()),
                 new Claim(JwtClaimTypes.PreferredUserName, user.UserName),
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
-                new Claim(JwtClaimTypes.Name,"2刘德华")
+                new Claim(JwtClaimTypes.Name,user.UserName)
             };
             //获取用户角色，这里用户角色不返回了。在其他地方返回第三方的角色
             //var role = await _userManager.GetRolesAsync(user);

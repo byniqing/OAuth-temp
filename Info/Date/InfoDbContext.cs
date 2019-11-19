@@ -30,7 +30,7 @@ namespace Info.Date
                 entity.Property(_ => _.Email).HasColumnType("nvarchar(50)");
                 entity.Property(_ => _.PhoneNumber).HasColumnType("nvarchar(20)");
                 entity.Property(_ => _.PassWord).HasColumnType("nvarchar(100)");
-                entity.Property(_ => _.Source).HasColumnType("nvarchar(10)").HasDefaultValue("local"); //默认是本地
+                entity.Property(_ => _.Source).HasColumnType("nvarchar(100)").HasDefaultValue("local"); //默认是本地
             });
 
             modelBuilder.Entity<PersistedGrant>(entity =>

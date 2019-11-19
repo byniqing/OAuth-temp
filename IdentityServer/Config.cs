@@ -185,6 +185,7 @@ namespace IdentityServer
                  允许刷新tokoen
                  */
                 AllowOfflineAccess = true, ////offline_access(开启refresh token)
+                //AbsoluteRefreshTokenLifetime=0
                 //AccessTokenLifetime = 3600, //token有效期，默认是3600秒 （一个小时）
                 /*
                  这样就会把返回的profile信息包含在idtoken中
@@ -196,6 +197,26 @@ namespace IdentityServer
                 //IdentityTokenLifetime = 300,
                 // AccessToken的有效期，默认1小时
                 //AccessTokenLifetime = 3600
+
+                /*
+                 AccessTokenLifetime = 1800,//设置AccessToken过期时间
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                    
+                    //RefreshTokenExpiration = TokenExpiration.Absolute,//刷新令牌将在固定时间点到期
+                    AbsoluteRefreshTokenLifetime = 2592000,//RefreshToken的最长生命周期,默认30天
+                    RefreshTokenExpiration = TokenExpiration.Sliding,//刷新令牌时，将刷新RefreshToken的生命周期。RefreshToken的总生命周期不会超过AbsoluteRefreshTokenLifetime。
+                    SlidingRefreshTokenLifetime = 3600,//以秒为单位滑动刷新令牌的生命周期。
+                    //按照现有的设置，如果3600内没有使用RefreshToken，那么RefreshToken将失效。即便是在3600内一直有使用RefreshToken，RefreshToken的总生命周期不会超过30天。所有的时间都可以按实际需求调整。
+
+                    AllowOfflineAccess = true,//如果要获取refresh_tokens ,必须把AllowOfflineAccess设置为true
+                    AllowedScopes = new List<string>
+                    {
+                        "api",
+                        StandardScopes.OfflineAccess, //如果要获取refresh_tokens ,必须在scopes中加上OfflineAccess
+                        StandardScopes.OpenId,//如果要获取id_token,必须在scopes中加上OpenId和Profile，id_token需要通过refresh_tokens获取AccessToken的时候才能拿到（还未找到原因）
+                        StandardScopes.Profile//如果要获取id_token,必须在scopes中加上OpenId和Profile
+                    }
+                 */
             };
             #region 密码模式 ResourceOwnerPassword
             var resourceOwnerPassword = new Client
