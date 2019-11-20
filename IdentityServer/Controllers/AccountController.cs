@@ -62,6 +62,9 @@ namespace IdentityServer.Controllers
             //var configurationDbContext = HttpContext.RequestServices.GetRequiredService<ConfigurationDbContext>();
 
             //ViewBag.returnUrl11 = returnUrl;
+
+            if (User.Identity.IsAuthenticated) return Redirect("/");
+
             return View();
         }
 

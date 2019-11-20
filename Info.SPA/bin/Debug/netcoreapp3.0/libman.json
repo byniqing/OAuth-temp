@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "defaultProvider": "unpkg",
+  "libraries": [
+    {
+      "library": "oidc-client@1.9.1",
+      "destination": "wwwroot",
+      "files": [
+        "dist/oidc-client.js",
+        "dist/oidc-client.min.js"
+      ]
+    }
+  ]
+}

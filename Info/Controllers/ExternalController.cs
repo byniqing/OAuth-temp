@@ -103,7 +103,8 @@ namespace Info.Controllers
             //刷新token必须存在服务端，不能暴露给客户端
             var refresh_token = result.Properties.GetTokenValue("refresh_token");
 
-
+            var a1 = result.Properties.GetTokenValue("refresh_token");
+            var a2 = result.Properties.GetTokenValue("expires_at");
             var abc = result.Properties.GetTokens();
 
 
@@ -182,9 +183,9 @@ namespace Info.Controllers
                     }
                     if (acc_token != null)
                     {
-                        ref_token.CreateTime = auth_time;
-                        ref_token.Expiration = exp;
-                        ref_token.Token = access_token;
+                        acc_token.CreateTime = auth_time;
+                        acc_token.Expiration = exp;
+                        acc_token.Token = access_token;
                     }
                 }
 

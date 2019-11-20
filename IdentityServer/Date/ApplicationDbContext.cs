@@ -41,14 +41,14 @@ namespace IdentityServer.Date
             builder.Entity<ApplicationUseAuthorization>(e =>
             {
                 e.ToTable("AspNetUserAuthorizations")
-                .Property(_ => _.Id).ValueGeneratedOnAdd().HasDefaultValue(1);
+                .Property(_ => _.Id).ValueGeneratedOnAdd();
                 e.Property(_ => _.Created).HasDefaultValue(DateTime.Now);
                 e.HasKey(_ => _.Id);
             });
             builder.Entity<UserClient>(e =>
             {
                 e.ToTable("UserClients")
-                .Property(_ => _.Id).ValueGeneratedOnAdd().HasDefaultValue(1);
+                .Property(_ => _.Id).ValueGeneratedOnAdd();
                 e.Property(_ => _.Created).HasDefaultValue(DateTime.Now);
                 e.Property(_ => _.Type).HasColumnType("nvarchar(50)");
                 e.HasKey(_ => _.Id);

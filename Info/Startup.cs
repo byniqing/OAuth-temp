@@ -118,6 +118,10 @@ namespace Info
             })
              .AddCookie(cookie, options =>
             {
+                /*
+                 第三方登录成功，没有设置cookie过期时间
+                 那么该cookie是会话级别的。即。浏览器不关闭，会一直在线
+                 */
                 options.LoginPath = "/account";
                 //options.ExpireTimeSpan = TimeSpan.FromSeconds(30);
                 //options.EventsType = typeof(CustomCookieAuthenticationEvents);

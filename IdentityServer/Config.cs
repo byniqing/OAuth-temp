@@ -319,8 +319,28 @@ namespace IdentityServer
                 //RefreshTokenUsage= TokenUsage.ReUse
                 //AllowOfflineAccess = true,
             };
+
+            var js = new Client
+            {
+                ClientId = "js",
+                ClientName = "JavaScript Client",
+                AllowedGrantTypes = GrantTypes.Implicit,
+                AllowAccessTokensViaBrowser = true,
+
+                RedirectUris = { "http://localhost:5007/callback.html" },
+                PostLogoutRedirectUris = { "http://localhost:5007/index.html" },
+                AllowedCorsOrigins = { "http://localhost:5007" },
+
+                AllowedScopes =
+                {
+                    IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.Profile,
+                    "comment"
+                }
+            };
             return new List<Client> {
                oidc,
+               js,
                sms_auth_code,
                //resourceOwnerPassword,
                //clientCredentials,

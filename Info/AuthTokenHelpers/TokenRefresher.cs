@@ -59,8 +59,8 @@ namespace Info.AuthTokenHelpers
                  new RefreshTokenRequest
                  {
                      Address = discovered.TokenEndpoint,
-                     ClientId = "WebFrontend",
-                     ClientSecret = "secret",
+                     ClientId = "5440496238",
+                     ClientSecret = "saQR67zTYy",
                      RefreshToken = refreshToken
                  }, ct);
 

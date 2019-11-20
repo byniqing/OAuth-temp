@@ -139,8 +139,8 @@ namespace IdentityServer.Controllers
             //是否已经添加过
             var userId = int.Parse(User.FindFirstValue("sub"));
             //记录用户申请的授权
-            var user = _applicationDbContext.userClients.FirstOrDefault(_ => _.UserId == userId && _.Type == ApplicationType.web.ToString());
-            if (user != null)
+            var user = _applicationDbContext.userClients.Count(_ => _.UserId == userId && _.Type == ApplicationType.web.ToString());
+            if (user >= 2) //暂时只能申请2个
             {
                 ViewBag.error = "只能创建一个web应用";
             }
@@ -153,6 +153,7 @@ namespace IdentityServer.Controllers
                 client.PostLogoutRedirectUris = new string[] { client.ClientUri + new PathString("/signout-callback-oidc") };
                 client.AlwaysIncludeUserClaimsInIdToken = true;
                 client.AllowOfflineAccess = true;
+                client.AllowedCorsOrigins = new string[] { client.ClientUri };
                 //client.IncludeJwtId = true;
                 client.ClientId = Utils.GetRandomNum(10);
                 var secrets = Utils.GetRandom(10);

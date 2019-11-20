@@ -53,7 +53,7 @@ namespace IdentityServer.Date.Migrations.ApplicationDb
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasDefaultValue(1);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
@@ -61,7 +61,7 @@ namespace IdentityServer.Date.Migrations.ApplicationDb
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2019, 11, 18, 13, 55, 11, 216, DateTimeKind.Local).AddTicks(9826));
+                        .HasDefaultValue(new DateTime(2019, 11, 20, 17, 45, 7, 584, DateTimeKind.Local).AddTicks(3991));
 
                     b.HasKey("Id");
 
@@ -140,7 +140,7 @@ namespace IdentityServer.Date.Migrations.ApplicationDb
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasDefaultValue(1);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
@@ -148,7 +148,7 @@ namespace IdentityServer.Date.Migrations.ApplicationDb
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2019, 11, 18, 13, 55, 11, 220, DateTimeKind.Local).AddTicks(812));
+                        .HasDefaultValue(new DateTime(2019, 11, 20, 17, 45, 7, 601, DateTimeKind.Local).AddTicks(8226));
 
                     b.Property<string>("Type")
                         .HasColumnType("nvarchar(50)");

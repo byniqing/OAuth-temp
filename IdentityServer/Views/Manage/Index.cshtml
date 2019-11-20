@@ -69,6 +69,7 @@
                 <ul style="display:inline-block;width:100%;height:50px;">
                     @if (Model != null && Model.Any(_ => _.Type == ApplicationType.web.ToString()))
                     {
+                        var cnt = Model.Count(_ => _.Type == ApplicationType.web.ToString());
                         foreach (var m in Model.Where(_ => _.Type == ApplicationType.web.ToString()))
                         {
                             <li>@m.ClientName</li>
@@ -145,15 +146,25 @@
                                 <!-- 模态框end -->
                             </li>
                         }
+
+                        if (cnt < 2)
+                        {
+                            <li>
+                                <div style="position: absolute;top: -150px;right: 53px;border: 1px solid gray;border-radius: 5px;cursor: pointer;color: #1ea1eb;font-size: 17px;width: 84px;line-height: 38px;">
+                                    <a asp-action="create" style="text-decoration:none;">创建应用</a>
+                                </div>
+                            </li>
+                        }
+
                     }
-                    else
-                    {
-                        <li>
-                            <div style="position: absolute;top: -150px;right: 53px;border: 1px solid gray;border-radius: 5px;cursor: pointer;color: #1ea1eb;font-size: 17px;width: 84px;line-height: 38px;">
-                                <a asp-action="create" style="text-decoration:none;">创建应用</a>
-                            </div>
-                        </li>
-                    }
+                    @*else
+                        {
+                            <li>
+                                <div style="position: absolute;top: -150px;right: 53px;border: 1px solid gray;border-radius: 5px;cursor: pointer;color: #1ea1eb;font-size: 17px;width: 84px;line-height: 38px;">
+                                    <a asp-action="create" style="text-decoration:none;">创建应用</a>
+                                </div>
+                            </li>
+                        }*@
                 </ul>
             </div>
             <div style="display:none;">
