@@ -1,0 +1,83 @@
+﻿@model Info.ViewModels.LoginInputModel
+@{
+    ViewData["Title"] = "Index";
+}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Info.Client</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/3.3.7/dist/css/bootstrap.min.css" />
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link rel="stylesheet" href="~/css/ie10-viewport-bug-workaround.css" />
+    <!-- Custom styles for this template -->
+    <link href="~/css/sticky-footer-navbar.css" rel="stylesheet">
+    <link href="~/css/signin.css" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        <!-- Navigation -->
+        <div class="navbar-accent-line"></div>
+
+        <!-- Fixed navbar -->
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    @*<a class="navbar-brand" href="#">Project name</a>*@
+                    <a class="navbar-brand" href="/">
+                        @*<img src="~/img/download.png" style="height: 35px;">*@
+                        <span>Info.Cliente</span>
+                    </a>
+                </div>
+
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            <div class="container">
+                <div class="page-header">
+                </div>
+                <partial name="_ValidationSummary" />
+
+                <form class="form-signin" asp-route="account">
+                    <h2 class="form-signin-heading">Please sign in</h2>
+                    <label for="inputEmail" class="sr-only">Email address</label>
+                    <input type="email" asp-for="Email" class="form-control" placeholder="Email address" required autofocus>
+                    <label for="inputPassword" class="sr-only">Password</label>
+                    <input type="password" asp-for="Password" class="form-control" placeholder="Password" required>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" asp-for="RememberLogin"> Remember me
+                        </label>
+                    </div>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+                    <a class="navbar-brand"
+                       asp-controller="External"
+                       asp-action="Challenge"
+                       asp-route-returnUrl="abc/a"
+                       asp-route-provider="OpenIdConnect">
+                        @*<img alt="Brand" src="...">*@
+                        ids4登陆
+                    </a>
+                </form>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="~/js/ie-emulation-modes-warning.js"></script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/3.3.7/dist/js/bootstrap.min.js"></script>
+
+    @*<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>
+

@@ -30,6 +30,8 @@ namespace IdentityServer.Date
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
 
+            //ef  Fluent Api  方式
+
             //如果默认的字段不满足自己，可以修改这里
             builder.Entity<ApplicationUser>(entity =>
             {

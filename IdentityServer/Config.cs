@@ -14,6 +14,7 @@ namespace IdentityServer
     {
         //https://www.jianshu.com/p/ad20944d9446
         //https://www.cnblogs.com/tianyamoon/p/9490953.html
+        //https://www.processon.com/view/link/5a8fba84e4b0615ac05cc2c2
         /// <summary>
         /// 用户的身份信息
         /// </summary>
@@ -185,6 +186,15 @@ namespace IdentityServer
                  允许刷新tokoen
                  */
                 AllowOfflineAccess = true, ////offline_access(开启refresh token)
+
+                //刷新token过期时间固定，即比如设置3 则3天内没有刷新过就过期
+                //RefreshTokenExpiration = TokenExpiration.Absolute,
+
+                //刷新token过期时间为滑动，即比如设置3 则3天内有刷新过就从从刷新当天起从新开始为3天
+                //但AbsoluteRefreshTokenLifetime 必须设置为0 。AbsoluteRefreshTokenLifetime默认是 30天
+                //https://www.cnblogs.com/linys2333/p/11739225.html
+                //RefreshTokenExpiration = TokenExpiration.Sliding,
+                
                 //AbsoluteRefreshTokenLifetime=0
                 //AccessTokenLifetime = 3600, //token有效期，默认是3600秒 （一个小时）
                 /*
@@ -218,6 +228,7 @@ namespace IdentityServer
                     }
                  */
             };
+            
             #region 密码模式 ResourceOwnerPassword
             var resourceOwnerPassword = new Client
             {
@@ -231,6 +242,11 @@ namespace IdentityServer
                 AllowedScopes = { "OtherInfo", "oidc1" } //
             };
             #endregion
+            /*
+             采用Client Credentials方式，即应用公钥、密钥方式获取Access Token，适用于任何类型应用，但通过它所获取的Access Token只能用于访问与用户无关的Open API，并且需要开发者提前向开放平台申请，成功对接后方能使用。认证服务器不提供像用户数据这样的重要资源，仅仅是有限的只读资源或者一些开放的 API。例如使用了第三方的静态文件服务，如Google Storage或Amazon S3。这样，你的应用需要通过外部API调用并以应用本身而不是单个用户的身份来读取或修改这些资源。这样的场景就很适合使用客户端证书授权,通过此授权方式获取Access Token仅可访问平台授权类的接口。
+
+比如获取App首页最新闻列表,由于这个数据与用户无关，所以不涉及用户登录与授权,但又不想任何人都可以调用这个WebAPI，这样场景就适用[例:比如微信公众平台授权]。
+             */
             #region ClientCredentials
             var clientCredentials = new Client
             {
@@ -322,10 +338,11 @@ namespace IdentityServer
 
             var js = new Client
             {
-                ClientId = "js",
+                ClientId = "3449072115",
                 ClientName = "JavaScript Client",
                 AllowedGrantTypes = GrantTypes.Implicit,
                 AllowAccessTokensViaBrowser = true,
+                RequireConsent = false,
 
                 RedirectUris = { "http://localhost:5007/callback.html" },
                 PostLogoutRedirectUris = { "http://localhost:5007/index.html" },
@@ -383,3 +400,9 @@ namespace IdentityServer
         }
     }
 }
+
+/*
+集成微信：https://www.jianshu.com/p/2733f1ffb763
+github:https://www.cnblogs.com/kudsu/p/11672610.html
+https://www.jianshu.com/p/613ed2a9f768
+     */

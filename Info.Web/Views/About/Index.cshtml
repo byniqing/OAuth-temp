@@ -1,0 +1,77 @@
+﻿@using Microsoft.AspNetCore.Authentication
+@using Newtonsoft.Json.Linq
+@using System.Text
+@using IdentityModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UserInfo</title>
+    <style>
+        .warp {
+            width: 100%;
+            height: 100%;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <br />
+        <form action="/Account/Logout" method="get" style="display: initial;">
+            <button id="btn">退出登陆</button>
+        </form>
+        <a href="/" style="text-decoration:none;border: 1px solid gray;padding: 10px;/* line-height: 13px; */display: inline-block;width: 42px;line-height: 5px;text-align: center;border-radius: 10px;color: black;">首页</a>
+        <br />
+        @:个人信息：
+<span>用户名：</span>@User.Identity.Name
+
+<br />
+}
+    <br />
+    @if (User.Identity.IsAuthenticated)
+    {
+        <span style="color:red">id_token:</span><br />
+        <div class="warp">
+            @await ViewContext.HttpContext.GetTokenAsync("id_token")
+        </div>
+        <br />
+        <span style="color:red">access_token:</span>
+        <br />
+        <div class="warp">
+            @await ViewContext.HttpContext.GetTokenAsync("access_token")
+        </div>
+        <br />
+        <span style="color:red">refresh_token:</span>
+        <br />
+        <div class="warp">
+            @await ViewContext.HttpContext.GetTokenAsync("refresh_token")
+        </div>
+        <br />
+        <span style="color:red">Claims信息:</span><br />
+        @foreach (var item in User.Claims)
+        {
+            <span>@item.Type:</span>
+            <span>@item.Value:</span><br />
+        }
+    }
+    @if (User.Identity.IsAuthenticated && ViewContext.HttpContext.GetTokenAsync("access_token").Result.Contains("."))
+    {
+        var parts = ViewContext.HttpContext.GetTokenAsync("access_token").Result.Split('.');
+        var header = parts[0];
+        var claims = parts[1];
+        var json = JObject.Parse(Encoding.UTF8.GetString(Base64Url.Decode(claims)));
+        <br />
+        <span style="color:red">access_token DeCode信息:</span><br />
+        <span>用户名：@json.GetValue("name")</span>
+        <br />
+        <span>邮箱：@json.GetValue("email")</span>
+    }
+</body>
+</html>

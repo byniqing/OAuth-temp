@@ -20,7 +20,7 @@ var config = {
     authority: "http://localhost:5008",
     client_id: "3449072115",
     redirect_uri: "http://localhost:5007/callback.html",
-    response_type: "id_token",
+    response_type: "id_token token",
     scope:"openid profile",
     post_logout_redirect_uri: "http://localhost:5007/index.html",
 };
