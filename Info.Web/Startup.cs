@@ -25,6 +25,7 @@ using IdentityModel.Client;
 using System.IdentityModel.Tokens.Jwt;
 using Info.Configuration;
 using System.Net.Http;
+using Authentication.GitHub;
 
 namespace Info
 {
@@ -126,6 +127,12 @@ namespace Info
                 //options.ExpireTimeSpan = TimeSpan.FromSeconds(30);
                 //options.EventsType = typeof(CustomCookieAuthenticationEvents);
             })
+             .AddGitHub(GitHubDefaults.AuthenticationScheme, GitHubDefaults.DisplayName, options =>
+             {
+                 options.ClientId = "8b4e1c7979b3b9705109";
+                 options.ClientSecret = "643aa3afb7b5a5d7e38685dd8be308278fc506d5";
+                 options.Logo = "9090";
+             })
             //.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,options =>
             //{
             //    //options.LoginPath = new PathString(Constants.SignIn);
