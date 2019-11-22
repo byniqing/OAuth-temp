@@ -67,7 +67,7 @@ namespace Authentication.GitHub
 
         // Facebook uses a non-standard term for this field.
         /// <summary>
-        /// Gets or sets the Facebook-assigned appId.
+        /// Gets or sets the GitHub-assigned appId.
         /// </summary>
         public string AppId
         {
@@ -77,7 +77,7 @@ namespace Authentication.GitHub
 
         // Facebook uses a non-standard term for this field.
         /// <summary>
-        /// Gets or sets the Facebook-assigned app secret.
+        /// Gets or sets the GitHub-assigned app secret.
         /// </summary>
         public string AppSecret
         {

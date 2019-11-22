@@ -2,3 +2,7 @@ C:\study\OAuth\Authentication.GitHub\bin\Debug\netcoreapp3.0\Authentication.GitH
 C:\study\OAuth\Authentication.GitHub\bin\Debug\netcoreapp3.0\Authentication.GitHub.dll
 C:\study\OAuth\Authentication.GitHub\obj\Debug\netcoreapp3.0\Authentication.GitHub.AssemblyInfoInputs.cache
 C:\study\OAuth\Authentication.GitHub\obj\Debug\netcoreapp3.0\Authentication.GitHub.AssemblyInfo.cs
+C:\study\OAuth\Authentication.GitHub\bin\Debug\netcoreapp3.0\Authentication.GitHub.pdb
+C:\study\OAuth\Authentication.GitHub\obj\Debug\netcoreapp3.0\Authentication.GitHub.csprojAssemblyReference.cache
+C:\study\OAuth\Authentication.GitHub\obj\Debug\netcoreapp3.0\Authentication.GitHub.dll
+C:\study\OAuth\Authentication.GitHub\obj\Debug\netcoreapp3.0\Authentication.GitHub.pdb
