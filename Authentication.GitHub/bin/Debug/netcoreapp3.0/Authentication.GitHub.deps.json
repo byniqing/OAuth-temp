@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.0": {
+      "Authentication.GitHub/1.0.0": {
+        "runtime": {
+          "Authentication.GitHub.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Authentication.GitHub/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
