@@ -24,6 +24,10 @@ Authentication.GitHub.GitHubHandler.CreateTicketAsync(ClaimsIdentity identity, A
 
         暂时解决方案：，引用本地的Microsoft.AspNetCore.Authentication.OAuth3.0
     */
+
+        /*
+         
+         */
     public class GitHubHandler : OAuthHandler<GitHubOptions>
     {
         public GitHubHandler(IOptionsMonitor<GitHubOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
