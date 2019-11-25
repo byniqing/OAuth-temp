@@ -1,0 +1,14 @@
+C:\study\OAuth\Authentication.OAuth\bin\Debug\netcoreapp3.0\Authentication.OAuth.deps.json
+C:\study\OAuth\Authentication.OAuth\bin\Debug\netcoreapp3.0\Authentication.OAuth.dll
+C:\study\OAuth\Authentication.OAuth\bin\Debug\netcoreapp3.0\Authentication.OAuth.pdb
+C:\study\OAuth\Authentication.OAuth\bin\Debug\netcoreapp3.0\Microsoft.AspNetCore.Authentication.Abstractions.dll
+C:\study\OAuth\Authentication.OAuth\bin\Debug\netcoreapp3.0\Microsoft.AspNetCore.Authentication.dll
+C:\study\OAuth\Authentication.OAuth\bin\Debug\netcoreapp3.0\Microsoft.AspNetCore.Authentication.OAuth.dll
+C:\study\OAuth\Authentication.OAuth\bin\Debug\netcoreapp3.0\Microsoft.AspNetCore.Http.Abstractions.dll
+C:\study\OAuth\Authentication.OAuth\bin\Debug\netcoreapp3.0\Microsoft.AspNetCore.WebUtilities.dll
+C:\study\OAuth\Authentication.OAuth\obj\Debug\netcoreapp3.0\Authentication.OAuth.csprojAssemblyReference.cache
+C:\study\OAuth\Authentication.OAuth\obj\Debug\netcoreapp3.0\Authentication.OAuth.AssemblyInfoInputs.cache
+C:\study\OAuth\Authentication.OAuth\obj\Debug\netcoreapp3.0\Authentication.OAuth.AssemblyInfo.cs
+C:\study\OAuth\Authentication.OAuth\obj\Debug\netcoreapp3.0\Authentication.OAuth.csproj.CopyComplete
+C:\study\OAuth\Authentication.OAuth\obj\Debug\netcoreapp3.0\Authentication.OAuth.dll
+C:\study\OAuth\Authentication.OAuth\obj\Debug\netcoreapp3.0\Authentication.OAuth.pdb
