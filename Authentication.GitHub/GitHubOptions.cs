@@ -18,6 +18,10 @@ namespace Authentication.GitHub
         public GitHubOptions()
         {
             //CallbackPath = new PathString("/signin-facebook");
+            /*
+             //关于callbackpath ,由于oauth2.0 的规范要求 请求code和请求access_token的url中的redirect_uri 必须一致，所以增加了一个第三方登录完毕以后跳回来的地址
+             https://www.cnblogs.com/forxixi/p/5864114.html
+             */
             CallbackPath = new PathString("/GitHub/CallBack");
             SendAppSecretProof = true;
             AuthorizationEndpoint = GitHubDefaults.AuthorizationEndpoint;
@@ -26,12 +30,13 @@ namespace Authentication.GitHub
             //Scope.Clear();
             Scope.Add("read:user");
             Scope.Add("user");
-            Fields.Add("name");
-            Fields.Add("email");
+            //Fields.Add("name");
+            //Fields.Add("email");
             //Fields.Add("first_name");
             //Fields.Add("last_name");
 
             ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");
+            ClaimActions.MapJsonKey(ClaimTypes.Actor, "actor");
             //ClaimActions.MapJsonSubKey("urn:facebook:age_range_min", "age_range", "min");
             //ClaimActions.MapJsonSubKey("urn:facebook:age_range_max", "age_range", "max");
             ClaimActions.MapJsonKey(ClaimTypes.DateOfBirth, "birthday");

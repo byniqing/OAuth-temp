@@ -12,6 +12,12 @@ namespace Info.Web.Controllers
         {
             return View();
         }
+        [HttpGet]
+        public IActionResult Challenge(string provider, string returnUrl)
+        {
+            return Challenge( provider);
+        }
+        [HttpGet]
         public void CallBack()
         {
 
