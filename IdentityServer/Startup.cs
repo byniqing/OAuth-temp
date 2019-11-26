@@ -20,6 +20,7 @@ using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer.Authertication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using IdentityServer4.EntityFramework.Options;
+using Microsoft.AspNetCore.Http;
 
 namespace IdentityServer
 {
@@ -188,10 +189,49 @@ namespace IdentityServer
             }
             else
             {
+                //https://www.cnblogs.com/dudu/p/6004777.html
+
+
+                //app.UseExceptionHandler("/errors/500");
+                //app.UseStatusCodePagesWithReExecute("/errors/{0}");
+
+                //app.UseExceptionHandler(errorApp =>
+                //{
+                //    errorApp.Run(async context =>
+                //    {
+                //        context.Response.StatusCode = 500;
+                //        if (context.Request.Headers["X-Requested-With"] != "XMLHttpRequest")
+                //        {
+                //            context.Response.ContentType = "text/html";
+                //            await context.Response.SendFileAsync($@"{env.WebRootPath}/errors/500.html");
+                //        }
+                //    });
+                //});
+
+                app.UseStatusCodePagesWithReExecute("/errors/{0}");
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+           
+
+            //当没有正文的响应时，重定向到指定页面，{0}点位符表示请求出错的http的状态码
+            //app.UseStatusCodePagesWithRedirects("/error/{0}");
+
+            //请求处理中间件之前调用
+            //app.UseStatusCodePages();
+
+            //app.UseStatusCodePages("text/plain", "Status code page, status code: {0}");
+
+            //自定义页面的输出类型和文字信息及状态码，用于处理程序，检查状态代码在400~599之间且没有正文的响应
+            //app.UseStatusCodePages(async context =>
+            //{
+            //    context.HttpContext.Response.ContentType = "text/plain";
+            //    await context.HttpContext.Response.WriteAsync(
+            //        "Status code page, status code: " +
+            //        context.HttpContext.Response.StatusCode);
+            //});
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();

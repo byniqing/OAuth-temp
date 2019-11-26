@@ -29,11 +29,12 @@
         list-style: none;
     }
 
-    .show {
+    .warp {
         /*border: 1px solid gray;
     border-radius: 8px;*/
-        cursor: pointer;
+        /*cursor: pointer;*/
         color: #1ea1eb;
+        margin-left: 10px;
         /*padding: 8px;
     line-height: 20px;
     width: 73px;
@@ -78,14 +79,14 @@
                             <li>@m.Created.ToString("yyyy-MM-dd")</li>
                             <li>@((m.Enable) ? "审核成功" : "审核中")</li>
                             <li>
-                                <div class="show">
+                                <div class="warp">
                                     <!-- 按钮：用于打开模态框 -->
                                     <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#myModal-@m.Id">
                                         <span class="glyphicon glyphicon-star" aria-hidden="true">查看</span>
                                     </button>
                                 </div>
-                            </li>
-                            <li>
+                                @*</li>*@
+                                @*<li>*@
                                 <!-- 模态框start -->
                                 <div class="modal fade" id="myModal-@m.Id" style="color: gray;padding-left: 17px;font-size: 16px;text-align: left;">
                                     <div class="modal-dialog">
@@ -97,19 +98,19 @@
                                             </div>
 
                                             <!-- 模态框主体 -->
-                                            <div class="modal-body">
+                                            <div class="modal-body" style="margin-top:-16px;">
                                                 <div class="panel panel-default">
                                                     <!-- Default panel contents -->
                                                     <div class="panel-heading" style="cursor:default;"></div>
-                                                    <div class="form-group row" style="margin-bottom:0px;border-bottom:1px solid gray;">
+                                                    <div class="form-group row" style="margin-bottom:0px;border-bottom:1px solid #dde1e3;">
                                                         <label class="col-md-4 col-form-label text-md-center">授权类型</label>
-                                                        <div class="col-md-8" style="border-left:1px solid gray;padding-left:30px;">
+                                                        <div class="col-md-8" style="border-left:1px solid #dde1e3;padding-left:30px;">
                                                             @m.GrantType
                                                         </div>
                                                     </div>
-                                                    <div class="form-group row" style="border-bottom:1px solid gray;">
+                                                    <div class="form-group row" style="border-bottom:1px solid #dde1e3;">
                                                         <label class="col-md-4 col-form-label text-md-center">开通的权限</label>
-                                                        <div class="col-md-8" style="border-left:1px solid gray;padding-left:30px;">
+                                                        <div class="col-md-8" style="border-left:1px solid #dde1e3;padding-left:30px;">
                                                             @if (m.scopeViewModels != null && m.scopeViewModels.Any())
                                                             {
                                                                 foreach (var scope in m.scopeViewModels)
@@ -136,7 +137,7 @@
                                                 </div>
                                             </div>
                                             <!-- 模态框底部 -->
-                                            <div class="modal-footer">
+                                            <div class="modal-footer" style="border-top:none;padding-top:0px;">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
                                             </div>
 
@@ -180,7 +181,7 @@
                                 <li>@m.Created.ToString("yyyy-MM-dd")</li>
                                 <li>@((m.Enable) ? "审核成功" : "审核中")</li>
                                 <li>
-                                    <div class="show">
+                                    <div class="warp">
                                         <!-- 按钮：用于打开模态框 -->
                                         <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#myModal">
                                             <span class="glyphicon glyphicon-star" aria-hidden="true">查看</span>

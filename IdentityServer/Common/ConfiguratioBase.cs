@@ -39,6 +39,7 @@ namespace IdentityServer.Common
         public static Task<IdentityServer4.EntityFramework.Entities.Client> GetClientAsync(IConfigurationDbContext context, int id)
         {
             return context.Clients
+                .Where(x => x.Id == id)
                 .Include(x => x.AllowedGrantTypes)
                 .Include(x => x.RedirectUris)
                 .Include(x => x.PostLogoutRedirectUris)
@@ -48,7 +49,7 @@ namespace IdentityServer.Common
                 .Include(x => x.IdentityProviderRestrictions)
                 .Include(x => x.AllowedCorsOrigins)
                 .Include(x => x.Properties)
-                .Where(x => x.Id == id)
+                //.Where(x => x.Id == id)
                     .SingleOrDefaultAsync();
         }
 

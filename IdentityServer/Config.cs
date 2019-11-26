@@ -405,4 +405,5 @@ namespace IdentityServer
 集成微信：https://www.jianshu.com/p/2733f1ffb763
 github:https://www.cnblogs.com/kudsu/p/11672610.html
 https://www.jianshu.com/p/613ed2a9f768
+https://tools.ietf.org/html/draft-ietf-oauth-device-flow-07#section-3.2
      */

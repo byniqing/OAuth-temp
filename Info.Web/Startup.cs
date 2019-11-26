@@ -126,6 +126,11 @@ namespace Info
                 options.LoginPath = "/account";
                 //options.ExpireTimeSpan = TimeSpan.FromSeconds(30);
                 //options.EventsType = typeof(CustomCookieAuthenticationEvents);
+            }).AddMicrosoftAccount(microsoftOptions =>
+            {
+                //https://www.netnr.com/home/list/109
+                microsoftOptions.ClientId = Configuration["Authentication:Microsoft:ClientId"];
+                microsoftOptions.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
             })
              .AddGitHub(GitHubDefaults.AuthenticationScheme, GitHubDefaults.DisplayName, options =>
              {

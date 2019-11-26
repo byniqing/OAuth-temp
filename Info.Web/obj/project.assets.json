@@ -15,6 +15,18 @@
           "lib/netstandard2.0/IdentityModel.dll": {}
         }
       },
+      "Microsoft.AspNetCore.Authentication.MicrosoftAccount/3.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp3.0/Microsoft.AspNetCore.Authentication.MicrosoftAccount.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.0/Microsoft.AspNetCore.Authentication.MicrosoftAccount.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
       "Microsoft.AspNetCore.Authentication.OpenIdConnect/3.0.0": {
         "type": "package",
         "dependencies": {
@@ -2651,6 +2663,19 @@
         "lib/netstandard2.0/IdentityModel.dll",
         "lib/netstandard2.0/IdentityModel.pdb",
         "lib/netstandard2.0/IdentityModel.xml"
+      ]
+    },
+    "Microsoft.AspNetCore.Authentication.MicrosoftAccount/3.0.0": {
+      "sha512": "/jsxXwNO0i9nXQfpYfjARXXPkpajniHMZAFDd/nduJ+LYX2SF1cF13o9b74X/WNmGv3LuAeQ/OW1NZ63L5Mseg==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.authentication.microsoftaccount/3.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netcoreapp3.0/Microsoft.AspNetCore.Authentication.MicrosoftAccount.dll",
+        "lib/netcoreapp3.0/Microsoft.AspNetCore.Authentication.MicrosoftAccount.xml",
+        "microsoft.aspnetcore.authentication.microsoftaccount.3.0.0.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.microsoftaccount.nuspec"
       ]
     },
     "Microsoft.AspNetCore.Authentication.OpenIdConnect/3.0.0": {
@@ -8432,6 +8457,7 @@
       "Authentication.GitHub >= 1.0.0",
       "Common >= 1.0.0",
       "IdentityModel >= 4.0.0",
+      "Microsoft.AspNetCore.Authentication.MicrosoftAccount >= 3.0.0",
       "Microsoft.AspNetCore.Authentication.OpenIdConnect >= 3.0.0",
       "Microsoft.EntityFrameworkCore >= 3.0.0",
       "Microsoft.EntityFrameworkCore.SqlServer >= 3.0.0",
@@ -8493,6 +8519,10 @@
           "IdentityModel": {
             "target": "Package",
             "version": "[4.0.0, )"
+          },
+          "Microsoft.AspNetCore.Authentication.MicrosoftAccount": {
+            "target": "Package",
+            "version": "[3.0.0, )"
           },
           "Microsoft.AspNetCore.Authentication.OpenIdConnect": {
             "target": "Package",
