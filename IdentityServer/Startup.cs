@@ -21,6 +21,7 @@ using IdentityServer.Authertication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.Http;
+using IdentityServer.MiddleWare;
 
 namespace IdentityServer
 {
@@ -236,6 +237,8 @@ namespace IdentityServer
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseRouting();
+
+            app.UseMiddleware<OutputMiddleware>();
 
             /*
              »œ÷§£¨

@@ -21,6 +21,7 @@
         }
 </style>
 <h1></h1>
+<div class="alert alert-danger" role="alert">没有权限</div>
 <main class="py-4">
     <spark-register-stripe inline-template>
         <div>
@@ -85,7 +86,7 @@
                                     <div class="form-group row">
                                         <label class="col-md-4 col-form-label text-md-right">开通权限</label>
                                         <div class="col-md-6">
-                                            @if (Model.IdentityScopes != null && Model.IdentityScopes.Any())
+                                            @if (Model != null && Model.IdentityScopes != null && Model.IdentityScopes.Any())
                                             {
                                                 foreach (var scope in Model.IdentityScopes)
                                                 {
@@ -104,7 +105,7 @@
                                                     }
                                                 }
                                             }
-                                            @if (Model.ResourceScopes != null && Model.ResourceScopes.Any())
+                                            @if (Model != null && Model.ResourceScopes != null && Model.ResourceScopes.Any())
                                             {
                                                 foreach (var scope in Model.ResourceScopes)
                                                 {

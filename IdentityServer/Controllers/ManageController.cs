@@ -33,9 +33,9 @@ namespace IdentityServer.Controllers
         private readonly IResourceStore _resourceStore;
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IIdentityServerInteractionService _interaction;
-        public ManageController(ConfigurationDbContext configurationDbContext,
+        public ManageController(
+            ConfigurationDbContext configurationDbContext,
             IIdentityServerInteractionService interaction,
-        IConfigurationDbContext ic1,
         IResourceStore resourceStore, ApplicationDbContext applicationDbContext)
         {
             _configurationDbContext = configurationDbContext;
@@ -136,17 +136,17 @@ namespace IdentityServer.Controllers
             //var AllowedGrantTypes = Request.Form["AllowedGrantTypes"];
             //var AllowedScopes = Request.Form["AllowedScopes"];
 
+            ViewBag.msg = "";
             //是否已经添加过
             var userId = int.Parse(User.FindFirstValue("sub"));
             //记录用户申请的授权
             var user = _applicationDbContext.userClients.Count(_ => _.UserId == userId && _.Type == ApplicationType.web.ToString());
             if (user >= 2) //暂时只能申请2个
             {
-                ViewBag.error = "只能创建一个web应用";
+                ViewBag.msg = "只能创建一个web应用";
             }
             else
             {
-                ViewBag.error = "";
                 //client.ClientName = User.FindFirstValue("email");
                 client.RedirectUris = new string[] { client.ClientUri + new PathString("/signin-oidc") };
                 //client.RedirectUris = new string[] { client.ClientUri + "signin-oidc" };
